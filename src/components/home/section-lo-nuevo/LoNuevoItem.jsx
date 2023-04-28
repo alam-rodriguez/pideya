@@ -9,9 +9,10 @@ import { AppContext } from '../../../context/AppContext';
 const LoNuevoItem = ({img, title, subTitle, id}) => {
   const navigate = useNavigate();
 
-  const { color1, articleSeleted, setArticleSeleted } = useContext(AppContext);
+  const { color1, articleSeleted, setArticleSeleted, viewMenu } = useContext(AppContext);
 
   const handleClick = () => {
+    if(viewMenu) return;
     setArticleSeleted({
       img, 
       title, 

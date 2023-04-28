@@ -18,12 +18,14 @@ const AppContextProvider = ({children}) => {
 
   const [articleSeleted, setArticleSeleted] = useState(null);
 
+  const [viewMenu, setViewMenu] = useState(false);
 
   return(
     <AppContext.Provider 
       value={{
         color1,
         articleSeleted, setArticleSeleted,
+        viewMenu, setViewMenu,
       }}
     >
       {children}
