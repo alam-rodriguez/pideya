@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+// ContextProvider
+import AppContextProvider from './context/AppContext';
+
+// FirebaseConfig 
+import './firebase/firebaseConfig';
+
+// Componentes
+import Home from './components/Home';
+import ErrorPage from './components/ErrorPage';
+import FirstEntry from './components/FirstEntry';
+import Article from './components/Article';
+
+// React Router
+import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
+
+// Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle';
+
 
 function App() {
+
+  // const navigate = useNavigate();
+  // const naveggar = () => {
+  //   navigate('/home')
+  // }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/home' Component={Home}></Route>
+          <Route path='/welcome' Component={FirstEntry}></Route>
+          <Route path='/article' Component={Article}></Route>
+          <Route path='/*' Component={ErrorPage}></Route>
+        </Routes>
+      </BrowserRouter>
+    </AppContextProvider>
   );
 }
 
