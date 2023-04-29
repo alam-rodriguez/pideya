@@ -31,8 +31,8 @@ function App() {
     <AppContextProvider>
       <BrowserRouter>
         <Routes>
-          <Route path='/home' Component={Home}></Route>
           <Route path='/welcome' Component={FirstEntry}></Route>
+          <Route path='/home' Component={Home}></Route>
           <Route path='/article' Component={Article}></Route>
           <Route path='/registro' Component={SingIn}></Route>
           <Route path='/ajustes' Component={Settings}></Route>
