@@ -20,12 +20,15 @@ const AppContextProvider = ({children}) => {
 
   const [viewMenu, setViewMenu] = useState(false);
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
   return(
     <AppContext.Provider 
       value={{
         color1,
         articleSeleted, setArticleSeleted,
         viewMenu, setViewMenu,
+        isAdmin, setIsAdmin
       }}
     >
       {children}

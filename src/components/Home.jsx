@@ -41,7 +41,7 @@ const Home = () => {
       { (viewMenu) ? 
         <Menu />
       : <></>}
-      <main className={`${viewMenu ? 'border border-secondary shadow-lg p-3 position-absolute overflow-hidden  h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '100%' : '',}} onClick={handleClickMain}>
+      <main className={`${viewMenu ? 'border border-secondary shadow-lg p-3 position-absolute overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '100%' : '',}} onClick={handleClickMain}>
         <Header />
         <section className='d-flex gap-3' style={{}}>
           <OrderButton 
@@ -185,6 +185,7 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Seccion de contato */}
         <ContactUs />
       </main>
       {viewMenu ? 

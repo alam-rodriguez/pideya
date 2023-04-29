@@ -11,24 +11,24 @@ import ContactUsItem from './ContactUsItem';
 
 const ContactUs = () => {
   return (
-    <section className='d-flex justify-content-around gap-4 mb-5'>
+    <section className='d-flex justify-content-around gap-2 pb-5'>
 
         <ContactUsItem
-            icon={<RiFacebookCircleLine className='display-3 me-2' />} 
+            icon={<RiFacebookCircleLine className='display-5 me-1' />} 
             title='Visitanos en' 
             appName='FACEBOOK' 
             link='https://www.google.com/'
         />
 
         <ContactUsItem
-            icon={<AiOutlineInstagram className='display-3 me-2' />} 
+            icon={<AiOutlineInstagram className='display-5 me-1' />} 
             title='Visitanos en' 
             appName='INSTAGRAM' 
             link='https://www.google.com/'
         />
 
         <ContactUsItem
-            icon={<FaWhatsapp className='display-3 me-2' />} 
+            icon={<FaWhatsapp className='display-5 me-1' />} 
             title='Visitanos en' 
             appName='WHATSAPP' 
             link='HHH'

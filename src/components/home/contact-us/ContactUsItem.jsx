@@ -10,8 +10,8 @@ const ContactUsItem = ({icon, title, appName, link}) => {
         <div className='d-flex align-items-center'>
             {icon}
             <div>
-                <p className='m-0'>{title}</p>
-                <p className='m-0 fw-bold'>{appName}</p>
+                <p className='m-0' style={{fontSize:8}}>{title}</p>
+                <p className='m-0 fw-bold' style={{fontSize:10}}>{appName}</p>
             </div>
         </div>
     </Link>
