@@ -20,8 +20,6 @@ import { useNavigate } from 'react-router-dom';
 const FirstEntry = () => {
   const navigate = useNavigate();
 
-  
-
 	const [firstEntryView, setFirstEntryView] = useState(1);
   const handleClickNextEntry = () => {
     if(firstEntryView < 5) setFirstEntryView(firstEntryView + 1);

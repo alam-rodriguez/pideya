@@ -19,52 +19,42 @@ import { existAdmin, registrarAdmin, registrarUsuario } from '../../../../fireba
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
 
-const SingIn = () => {
+const SignInLikeAdmin1 = () => {
   const navigate = useNavigate();
 
   const { isAdmin } = useContext(AppContext); 
 
   const handleClickBack = () => navigate('/home');
 
-  const handleClickGoogle = async () => {
-    // await registrarAdmin();
+  const logUserAdmin = async () => {
+    const res = await existAdmin();
+    if( res == false){
+      await registrarAdmin();
+      navigate('/registro-like-admin/details-app');
+    }else {
+      console.log('Lo siento pero no se puede cambiar el admin de la app una vez creado, para mas informacion comuniquese con el desarrollador');
+    }
   }
-  const i = () => {
 
-  }
   return (
     <section className='d-flex justify-content-center flex-column align-items-center col-9 m-auto mt-5 vh-100'>
       
-      <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} />
+      {/* <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} /> */}
 
       <h2 className='display-1 text-danger fw-bold mb-5'>Pedido ya</h2>
       <p className='text-start fw-bold fs-3'>Por favor inicia sesion con tu email.</p>
       <p>Ut nisi ad commodo veniam mollit ullamco. In Lorem cillum anim cillum et aliqua. Dolore anim cillum id veniam elit esse excepteur.</p>
 
-        <div className='w-100'>
-          <SingInButton 
-            icon={<GrFacebookOption className='fs-1 text-white' />} 
-            bgColor='bg-primary' 
-            text='Facebook' 
-            handleClick={i}
-          />
-          <SingInButton 
-            icon={<FcGoogle className='fs-1' />} 
-            bgColor='' 
-            text='Google' 
-            handleClick={registrarUsuario}
-          />
-          <SingInButton 
-            icon={<TfiEmail className='fs-1' />} 
-            bgColor='' 
-            text='Email' 
-            handleClick={i}
-          />
-        </div>     
+      <SingInButton 
+        icon={<RiAdminFill className='fs-1 text-white' />} 
+        bgColor='bg-success'
+        text='iniciar sesion como admin' 
+        handleClick={logUserAdmin}
+      />
         
       <p className='position-absolute bottom-0 w-75 text-center'>Nostrud adipisicing labore laboris amet non sint laboris aute nulla cillum est voluptate.</p>
     </section>
   )
 }
 
-export default SingIn
+export default SignInLikeAdmin1

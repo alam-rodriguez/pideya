@@ -19,6 +19,7 @@ import OrderButton from './home/OrderButton';
 import LoNuevoItem from './home/section-lo-nuevo/LoNuevoItem';
 import ContactUs from './home/contact-us/ContactUs';
 import Menu from './home/menu/Menu';
+import AddSection from './home/add-section/AddSection';
 
 // Firebase 
 import { auth, obtenerInfoApp } from '../firebase/firebase';
@@ -28,25 +29,47 @@ import { onAuthStateChanged } from 'firebase/auth';
 const Home = () => {
   const navigate = useNavigate();
 
-  const { color1, viewMenu, setViewMenu, setArticleSeleted, email, setEmail, setAppInfo } = useContext(AppContext);
+  const { color1, viewMenu, setViewMenu, setArticleSeleted, email, setEmail, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome } = useContext(AppContext);
 
   // const { nombre, setNombre, viewMenu, setViewMenu, } = useContext(AppContext);
 
   useEffect( () => {
+    // logear usuario automaticamente
+    // let emailUser;
     onAuthStateChanged(auth, (user) => {
-      if(user != null) setEmail(user.email);
+      if(user == null && goToHome == true) {
+        navigate('/welcome'); 
+        setGoToHome(false);
+        getData(''); 
+      }else if(user == null && goToHome == false){
+        getData(''); 
+      }else {
+        // emailUser =  user.email;
+        getData(user.email);
+        // console.log(emailUser);
+      }
     });
-    const f = async () => {
+    // obtener info de la app y compruebo si es admin
+    // console.log(emailUser)
+    const getData = async (emailUser) => {
       const appInfo = await obtenerInfoApp();
-      setAppInfo(appInfo);
+      if(appInfo == 'no hay datos de esta app'){
+        navigate('/registro-like-admin');
+      }else {
+        // console.log(appInfo.nombre);
+        if(appInfo.nombre == undefined){
+          navigate('/registro-like-admin/details-app');
+        } else {
+          setAppInfo(appInfo);
+          if(appInfo.admin == emailUser) setIsAdmin(true);
+        }
+      }
     }
-    f();
   }, [] );
 
   const handleClickMain = () => {
     if(viewMenu) setViewMenu(false);
   }
-
 
   return(
     <div className={`container px-4 vh-100 vw-100 position-absolute  ${viewMenu ? 'd-flex overflow-hidden py-5 overflow-hidden': ''}`} style={{}}>
@@ -197,8 +220,16 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Seccion de contato */}
+        {/* Seccion de contacto */}
         <ContactUs />
+        
+
+        {/* Seccion para agregar articulo */}
+        {isAdmin ? 
+          <AddSection />
+        : <></>
+        }
+
       </main>
       {viewMenu ? 
         <div className='w-100 d-flex flex-column bottom-0 start-0 position-absolute border-top p-3 pb-3' style={{}}>

@@ -1,6 +1,6 @@
 // importaciones
 import { initializeApp } from "firebase/app"; 
-import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { getFirestore, doc, setDoc, updateDoc, getDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -103,5 +103,15 @@ export const obtenerInfoApp = async () => {
     }
   } catch(e){
     return e;
+  }
+}
+
+// cerrar sesion de usuario
+export const logOut = async () => {
+  try{
+    await signOut(auth);
+    return true;
+  }catch(e){
+    return false;
   }
 }

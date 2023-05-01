@@ -11,7 +11,8 @@ import FirstEntry from './components/FirstEntry';
 import Article from './components/Article';
 import SingIn from './components/home/menu/sign-section/SingIn';
 import Settings from './components/home/menu/settings-section/Settings';
-import SignInLikeAdmin from './components/home/menu/sign-section/SignInLikeAdmin';
+import SignInLikeAdmin1 from './components/home/menu/sign-section/SignInLikeAdmin1';
+import SignInLikeAdmin2 from './components/home/menu/sign-section/SignInLikeAdmin2';
 
 // React Router
 import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
@@ -36,7 +37,8 @@ function App() {
           <Route path='/home' Component={Home}></Route>
           <Route path='/article' Component={Article}></Route>
           <Route path='/registro' Component={SingIn}></Route>
-          <Route path='/registro/admin' Component={SignInLikeAdmin}></Route>
+          <Route path='/registro-like-admin' Component={SignInLikeAdmin1}></Route>
+          <Route path='/registro-like-admin/details-app' Component={SignInLikeAdmin2}></Route>
           <Route path='/ajustes' Component={Settings}></Route>
           <Route path='/*' Component={ErrorPage}></Route>
         </Routes>

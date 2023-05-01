@@ -9,7 +9,7 @@ function ErrorPage() {
     const navigate = useNavigate();
 
     useEffect( () => {
-        navigate('/welcome');
+        navigate('/home');
     });
 }
 

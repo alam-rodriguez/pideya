@@ -20,7 +20,7 @@ import { registrarAdmin, registrarUsuario, infoApp } from '../../../../firebase/
 import { AppContext } from '../../../../context/AppContext';
 
 
-const SignInLikeAdmin = () => {
+const SignInLikeAdmin2 = () => {
   const navigate = useNavigate();
 
   const { isAdmin, color1 } = useContext(AppContext); 
@@ -33,13 +33,13 @@ const SignInLikeAdmin = () => {
     descripcion: '',
   });
 
-  const handleClickBack = () => navigate('/home');
+  // const handleClickBack = () => navigate('/home');
 
   const handleClickGuardarInfo = async () => {
     console.log(info);
     const res = await infoApp(info);
     if(res == true){
-      navigate('home');
+      navigate('/home');
     }
   }
 
@@ -53,7 +53,7 @@ const SignInLikeAdmin = () => {
   return (
     <section className='d-flex flex-column align-items-center col-9 m-auto vh-100' style={{paddingTop:60}}>
       
-      <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} />
+      {/* <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} /> */}
 
       <h2 className='display-1 text-danger fw-bold mb-5'>PidoYa</h2>
       <p className='text-start fw-bold fs-5'>Haz iniciado sesion como admin, pero ahora tienes que agregar mas datos</p>
@@ -93,4 +93,4 @@ const SignInLikeAdmin = () => {
   );
 }
 
-export default SignInLikeAdmin
+export default SignInLikeAdmin2
