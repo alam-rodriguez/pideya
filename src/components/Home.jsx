@@ -5,7 +5,7 @@ import { useContext, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
 
 // React Router
-import { useNavigate } from 'react-router-dom';
+import { Await, useNavigate } from 'react-router-dom';
 
 // imagen
 import pizzaOrdenar from "../images/pizzaOrdenar.png";
@@ -20,15 +20,27 @@ import LoNuevoItem from './home/section-lo-nuevo/LoNuevoItem';
 import ContactUs from './home/contact-us/ContactUs';
 import Menu from './home/menu/Menu';
 
+// Firebase 
+import { auth, obtenerInfoApp } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+// import { autoLogUser } from '../firebase/firebase';
+
 const Home = () => {
   const navigate = useNavigate();
 
-  const { color1, viewMenu, setViewMenu, setArticleSeleted } = useContext(AppContext);
+  const { color1, viewMenu, setViewMenu, setArticleSeleted, email, setEmail, setAppInfo } = useContext(AppContext);
 
   // const { nombre, setNombre, viewMenu, setViewMenu, } = useContext(AppContext);
 
   useEffect( () => {
-    
+    onAuthStateChanged(auth, (user) => {
+      if(user != null) setEmail(user.email);
+    });
+    const f = async () => {
+      const appInfo = await obtenerInfoApp();
+      setAppInfo(appInfo);
+    }
+    f();
   }, [] );
 
   const handleClickMain = () => {

@@ -22,13 +22,19 @@ const AppContextProvider = ({children}) => {
 
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const [email, setEmail] = useState(null);
+
+  const [appInfo, setAppInfo] = useState(null);
+
   return(
     <AppContext.Provider 
       value={{
         color1,
         articleSeleted, setArticleSeleted,
         viewMenu, setViewMenu,
-        isAdmin, setIsAdmin
+        isAdmin, setIsAdmin,
+        email, setEmail,
+        appInfo, setAppInfo,
       }}
     >
       {children}

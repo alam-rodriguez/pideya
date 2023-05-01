@@ -14,7 +14,7 @@ import SingInButton from './SingInButton';
 import { useNavigate } from 'react-router-dom';
 
 // Firebase 
-import { registrarAdmin, registrarUsuario } from '../../../../firebase/firebase';
+import { existAdmin, registrarAdmin, registrarUsuario } from '../../../../firebase/firebase';
 
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
@@ -68,7 +68,15 @@ const SingIn = () => {
           icon={<RiAdminFill className='fs-1 text-white' />} 
           bgColor='bg-success' 
           text='iniciar sesion como admin' 
-          handleClick={registrarAdmin}
+          handleClick={ async () => {
+            const res = await existAdmin();
+            if( res == false){
+              await registrarAdmin();
+              navigate('/registro/admin');
+            }else {
+              console.log('Lo siento pero no se puede cambiar el admin de la app una vez creado, para mas informacion comuniquese con el desarrollador');
+            }
+          }}
         />
       }
         
