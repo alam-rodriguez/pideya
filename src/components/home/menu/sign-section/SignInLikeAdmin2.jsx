@@ -14,7 +14,8 @@ import SingInButton from './SingInButton';
 import { useNavigate } from 'react-router-dom';
 
 // Firebase 
-import { registrarAdmin, registrarUsuario, infoApp } from '../../../../firebase/firebase';
+import { infoApp } from '../../../../firebase/firebaseFirestore';
+// import { registrarAdmin, registrarUsuario, infoApp } from '../../../../firebase/firebase';
 
 // Contetx
 import { AppContext } from '../../../../context/AppContext';

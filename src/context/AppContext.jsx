@@ -28,6 +28,8 @@ const AppContextProvider = ({children}) => {
 
   const [goToHome, setGoToHome] = useState(true);
 
+  const [appCategories, setAppCategories] = useState([]);
+
   return(
     <AppContext.Provider 
       value={{
@@ -37,7 +39,8 @@ const AppContextProvider = ({children}) => {
         isAdmin, setIsAdmin,
         email, setEmail,
         appInfo, setAppInfo,
-        goToHome, setGoToHome
+        goToHome, setGoToHome,
+        appCategories, setAppCategories
       }}
     >
       {children}

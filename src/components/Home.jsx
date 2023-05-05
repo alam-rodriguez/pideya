@@ -5,37 +5,32 @@ import { useContext, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
 
 // React Router
-import { Await, useNavigate } from 'react-router-dom';
-
-// imagen
-import pizzaOrdenar from "../images/pizzaOrdenar.png";
-
-// React Icons
-import { TfiReload } from 'react-icons/tfi';
+import { useNavigate } from 'react-router-dom';
 
 // Components 
 import Header from './home/Header';
-import OrderButton from './home/OrderButton';
+import OrderSection from './home/order-section/OrderSection';
 import LoNuevoItem from './home/section-lo-nuevo/LoNuevoItem';
 import ContactUs from './home/contact-us/ContactUs';
 import Menu from './home/menu/Menu';
 import AddSection from './home/add-section/AddSection';
+import UseCode from './home/use-code-section/UseCode';
 
 // Firebase 
-import { auth, obtenerInfoApp } from '../firebase/firebase';
+// import { auth, getCategories, obtenerInfoApp } from '../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { auth, getCategories, obtenerInfoApp } from '../firebase/firebaseFirestore';
 // import { autoLogUser } from '../firebase/firebase';
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const { color1, viewMenu, setViewMenu, setArticleSeleted, email, setEmail, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome } = useContext(AppContext);
+  const { color1, viewMenu, setViewMenu, setArticleSeleted, email, setEmail, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories } = useContext(AppContext);
 
   // const { nombre, setNombre, viewMenu, setViewMenu, } = useContext(AppContext);
 
   useEffect( () => {
     // logear usuario automaticamente
-    // let emailUser;
     onAuthStateChanged(auth, (user) => {
       if(user == null && goToHome == true) {
         navigate('/welcome'); 
@@ -44,24 +39,22 @@ const Home = () => {
       }else if(user == null && goToHome == false){
         getData(''); 
       }else {
-        // emailUser =  user.email;
         getData(user.email);
-        // console.log(emailUser);
+        console.log(user.email);
       }
     });
     // obtener info de la app y compruebo si es admin
-    // console.log(emailUser)
     const getData = async (emailUser) => {
       const appInfo = await obtenerInfoApp();
       if(appInfo == 'no hay datos de esta app'){
         navigate('/registro-like-admin');
       }else {
-        // console.log(appInfo.nombre);
         if(appInfo.nombre == undefined){
           navigate('/registro-like-admin/details-app');
         } else {
           setAppInfo(appInfo);
           if(appInfo.admin == emailUser) setIsAdmin(true);
+          setAppCategories(await getCategories());
         }
       }
     }
@@ -74,26 +67,18 @@ const Home = () => {
   return(
     <div className={`container px-4 vh-100 vw-100 position-absolute  ${viewMenu ? 'd-flex overflow-hidden py-5 overflow-hidden': ''}`} style={{}}>
       { (viewMenu) ? 
+        // Menu 
         <Menu />
       : <></>}
       <main className={`${viewMenu ? 'border border-secondary shadow-lg p-3 position-absolute overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '100%' : '',}} onClick={handleClickMain}>
+        {/* Header */}
         <Header />
-        <section className='d-flex gap-3' style={{}}>
-          <OrderButton 
-            text='ORDENAR AHORA'
-            textColor='text-white'
-            bgColor={color1.bgColor}
-            type='imagen'
-            seletionLetf={pizzaOrdenar}
-          />
-          <OrderButton 
-            text='REPETIR ORDEN'
-            textColor='text-success'
-            bgColor='bg-secondary-subtle'
-            type='icono'
-            seletionLetf={<TfiReload className={`${color1.textColor} display-2`} />}
-          />
-        </section>
+        
+        {/* Order Section */}
+        <OrderSection />
+
+        {/* Use Code Section */}
+        <UseCode />
 
         <section className='w-100 my-5 '>
           <div className='d-flex justify-content-between w-100'>

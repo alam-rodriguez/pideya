@@ -12,7 +12,10 @@ import { RiAdminFill } from 'react-icons/ri'
 import { useNavigate, Link } from 'react-router-dom';
 
 // Firebase 
-import { logOut } from '../../../../firebase/firebase';
+import { logOut } from '../../../../firebase/firebaseAuthGoogle';
+// import { FiLogOut } from 'react-icons/fi';
+// import { logOut } from '../../../../firebase/firebase';
+// import { FiLogOut } from 'react-icons/fi';
 
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
@@ -78,4 +81,4 @@ const Settings = () => {
   )
 }
 
-export default Settings
+export default Settings;

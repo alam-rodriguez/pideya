@@ -1,13 +1,16 @@
+// React
 import React from 'react';
 
 // React Icons
 import { HiPlusCircle } from 'react-icons/hi';
 
-const AddSection = () => {
+// Reatc Router
+import { useNavigate } from 'react-router-dom';
 
-  const handleClickAddArtice = () => {
-    console.log('ejecutando');
-  }
+const AddSection = () => {
+  const navigate = useNavigate();
+
+  const handleClickAddArtice = () => navigate('/view-articles');
 
   return (
     <section className='w-100 pb-5'>

@@ -14,7 +14,8 @@ import SingInButton from './SingInButton';
 import { useNavigate } from 'react-router-dom';
 
 // Firebase 
-import { existAdmin, registrarAdmin, registrarUsuario } from '../../../../firebase/firebase';
+// import { existAdmin, registrarAdmin, registrarUsuario } from '../../../../firebase/firebase';
+import { registrarUsuario } from '../../../../firebase/firebaseAuthGoogle';
 
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
@@ -30,7 +31,7 @@ const SingIn = () => {
     // await registrarAdmin();
   }
   const i = () => {
-
+    
   }
   return (
     <section className='d-flex justify-content-center flex-column align-items-center col-9 m-auto mt-5 vh-100'>
