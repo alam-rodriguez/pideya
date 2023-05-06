@@ -1,5 +1,5 @@
 // Reatc
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // Context
 import { AppContext } from '../context/AppContext';
@@ -15,19 +15,18 @@ import ContactUs from './home/contact-us/ContactUs';
 import Menu from './home/menu/Menu';
 import AddSection from './home/add-section/AddSection';
 import UseCode from './home/use-code-section/UseCode';
+import CategoryMenu from './home/categories-menu/CategoryMenu';
 
 // Firebase 
-// import { auth, getCategories, obtenerInfoApp } from '../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, getCategories, obtenerInfoApp } from '../firebase/firebaseFirestore';
-// import { autoLogUser } from '../firebase/firebase';
+import { auth, getCategories, getMenuCategories, obtenerInfoApp } from '../firebase/firebaseFirestore';
 
 const Home = () => {
   const navigate = useNavigate();
 
   const { color1, viewMenu, setViewMenu, setArticleSeleted, email, setEmail, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories } = useContext(AppContext);
 
-  // const { nombre, setNombre, viewMenu, setViewMenu, } = useContext(AppContext);
+  const [categories, setCategories] = useState(null);
 
   useEffect( () => {
     // logear usuario automaticamente
@@ -58,6 +57,13 @@ const Home = () => {
         }
       }
     }
+    // obtiene categorias y articulos para renderizar
+    const getInfo = async () => {
+      const res = await getMenuCategories();
+      setCategories(res);
+      console.log(res);
+    }
+    getInfo();
   }, [] );
 
   const handleClickMain = () => {
@@ -79,6 +85,25 @@ const Home = () => {
 
         {/* Use Code Section */}
         <UseCode />
+
+
+        { (categories != null)
+            ? categories.map((category)=>(
+              <CategoryMenu key={category.id} category={category} color1={color1} />
+            ))
+          : <></>
+        }
+
+
+
+        <div style={{height: 500}}></div>
+
+
+
+
+
+
+
 
         <section className='w-100 my-5 '>
           <div className='d-flex justify-content-between w-100'>

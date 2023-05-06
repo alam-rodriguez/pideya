@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const AddSection = () => {
   const navigate = useNavigate();
 
-  const handleClickAddArtice = () => navigate('/view-articles');
+  const handleClickAddArtice = () => navigate('/admin-options');
 
   return (
     <section className='w-100 pb-5'>

@@ -15,12 +15,22 @@ import CreateArticleHeader from './sections/CreateArticleHeader';
 import ArticlesCategories from './sections/ArticlesCategories';
 import BtnCreateArticle from './sections/BtnCreateArticle';
 
-const ViewArticles = () => {
+// /admin-options
+
+const AdminOptions = () => {
+  const navigate = useNavigate();
 
   const { appCategories } = useContext(AppContext);
 
   const handleClickCrearArticulos = () => {
 
+  }
+
+  const handleClickViewCategories =() => {
+    navigate('/view-categories');
+  }
+  const handleClickViewArticles = () => {
+    navigate('/view-articles');
   }
   
   return (
@@ -29,15 +39,20 @@ const ViewArticles = () => {
       {/* Header */}
       <CreateArticleHeader path='/home' />
 
+      {/* Btn para ver las categorias */}
+      <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickViewCategories}>Ver las Categorias</button>
 
-      {/* Categories */}
-      <ArticlesCategories appCategories={appCategories} />
+      {/* Btn para ver los articulos */}
+      <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickViewArticles}>Ver los Articulos</button>
+
+
+      {/* <ArticlesCategories appCategories={appCategories} /> */}
 
       {/* create article */}
-      <BtnCreateArticle />
+      {/* <BtnCreateArticle /> */}
       
     </section>
   );
 }
 
-export default ViewArticles
+export default AdminOptions

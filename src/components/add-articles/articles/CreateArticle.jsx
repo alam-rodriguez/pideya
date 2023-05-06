@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // React-Icons
 import { MdPlaylistAddCheckCircle } from 'react-icons/md';
@@ -8,27 +8,41 @@ import { BsCloudUploadFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
-import { createArticle, createCategories } from '../../firebase/firebaseFirestore';
-import { uploadImage } from '../../firebase/firebaseStorage';
+import { createArticle, createCategories, getCategories } from '../../../firebase/firebaseFirestore';
+import { uploadImage } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
 // Header
-import CreateArticleHeader from './sections/CreateArticleHeader';
+import CreateArticleHeader from '../sections/CreateArticleHeader';
 // import CreateArticleHeader from './CreateArticleHeader';
 
 const CreateArticle = () => {
   const navigate = useNavigate();
 
+  const [categories, setCategories] = useState(null);
+
+  useEffect( () => {
+    const f = async () => {
+      const res = await getCategories();
+      setCategories(res);
+    }
+    f();
+  }, [] );
+
   const [titulo, setTitulo] = useState('');
   const [subtitulo, setSubtitulo] = useState('');
+  const [articuloCategoria, setArticuloCategoria] = useState('sin categoria');
+  const [precio, setPrecio] = useState(0);
   const [img, setImg] = useState(null);
 
   // const [nombreCategoria, setNombreCategoria] = useState('');
 
   const handleChangeTitulo = (e) => setTitulo(e.target.value);
   const handleChangeSubtitulo = (e) => setSubtitulo(e.target.value);
+  const handleChangeCategoria = (e) => setArticuloCategoria(e.target.value);
+  const handleChangePrecio = (e) => setPrecio(e.target.value);
 
   const handleClickImg = () => document.querySelector('#select-img').click();
 
@@ -41,34 +55,23 @@ const CreateArticle = () => {
       const info = {
         titulo: titulo,
         subtitulo: subtitulo,
+        categoria: articuloCategoria,
+        precio: precio,
+        disponible: true,
         img: `imagenes/${id}`,
       }
-      console.log(img)
+      // console.log(img);
       const res = await createArticle(id, info);
       const resImg = await uploadImage(id, img);
+      console.log(res)
       if(res == true && resImg == true){
-        console.log('bien');
+        navigate('/view-articles');
       }
       // console.log(info);
-
     }else {
       console.log('no')
     }
-
-    // console.log(titulo);
-    // console.log(subtitulo);
-    // console.log(img);
   }
-
-  // const handleChangeNombre = (e) => setNombreCategoria(e.target.value);
-
-  const handleClickAddArticle = async () => {
-    // if(nombreCategoria.length > 3){
-    //   await createCategories(uuidv4(), nombreCategoria);
-    // }
-  }
-
-  const handleClickAtras = () => navigate('/add-article');
 
   return (
     <main className='border-0 border-bottom border-top mx-3' >
@@ -79,11 +82,30 @@ const CreateArticle = () => {
 
         <div>
           <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
-          <input className='input-group' type="text" style={{height:35}} onChange={handleChangeTitulo}/>
+          <input className='form-control rounded border-secondary' type="text" style={{height:35}} onChange={handleChangeTitulo}/>
         </div>
         <div>
           <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
-          <input className='input-group' type="text" style={{height:50}} onChange={handleChangeSubtitulo} />
+          <textarea className='form-control border-secondary' name="" id="" style={{minHeight:35, maxHeight:200}} onChange={handleChangeSubtitulo}></textarea>
+          {/* <input className='input-group' type="text" style={{height:50}} onChange={handleChangeSubtitulo} /> */}
+        </div>
+
+        <div>
+          <p className='fs-3 fw-bold m-0 mb-2'>Categoria:</p>
+          <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeCategoria}>
+            <option value="sin categoria">Sin categoria</option>
+            { categories != null 
+              ? categories.map((category)=>(
+                <option key={category.id} value={category.id}>{category.nombre}</option>
+              ))
+              : <option value=""></option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <p className='fs-3 fw-bold m-0 mb-2'>Precio:</p>
+          <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' onChange={handleChangePrecio}/>
         </div>
 
         <div>
@@ -93,6 +115,7 @@ const CreateArticle = () => {
           </div>
           <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
         </div>
+
 
         <input className='btn btn-success fs-3 position-absolute bottom-0 start-50 w-100 translate-middle mb-4' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
 

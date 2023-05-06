@@ -17,7 +17,7 @@ const ArticlesCategories = ({appCategories}) => {
 
   const [createCategoria, setCreateCategoria] = useState(false);
 
-  const handleClickAddCategoria =() => navigate('/create-categories');
+  // const handleClickAddCategoria =() => navigate('/create-categories');
   
   // const [categorias, setCategorias] = useState(false);
 
@@ -40,7 +40,7 @@ const ArticlesCategories = ({appCategories}) => {
               }
             </select>
           </div>
-          <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddCategoria}>Crear Nueva Categoria</button>
+          {/* <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddCategoria}>Crear Nueva Categoria</button> */}
           {/* <button className='btn btn-success form-control fs-2 text-white'>Crear nueva Categoria</button> */}
         </div>
       </section>

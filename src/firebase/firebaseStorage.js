@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const storage = getStorage();
 
@@ -9,6 +9,17 @@ export const uploadImage = async (id, file) => {
     await uploadBytes(imgRef, file);
     return true;
   }catch(e){
+    return e;
+  }
+}
+
+// obtener url de imagen
+export const getUrlImage = async (path) => {
+  try{
+    const res = await getDownloadURL(ref(storage, path));
+    return res;
+  }catch(e){
+    console.log(e);
     return e;
   }
 }
