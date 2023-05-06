@@ -36,7 +36,7 @@ const ArticleCard = ({img, title, subTitle, id}) => {
   }
 
   return (
-    <div className='bg-danger me-4 rounded-5 overflow-hidden' style={{height:150, width:230}} onClick={handleClick}>
+    <div className='bg-danger me-4 rounded-5 overflow-hidden' style={{height:150, width:230, minWidth:230}} onClick={handleClick}>
         <img className='w-100 h-100 object-fit-cover' src={imgUrl} alt="" />
     </div>
   )
