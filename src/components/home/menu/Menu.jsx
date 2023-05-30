@@ -31,12 +31,12 @@ const Menu = () => {
 				/>
 
 				<MenuItem
-					link='#' 
+					link='/invite-friends' 
 					text='INVITAR AMIGOS'
 				/>
 
 				<MenuItem
-					link='#' 
+					link='/order-history' 
 					text='HISTORIAL DE ORDENES'
 				/>
 

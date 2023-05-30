@@ -19,7 +19,7 @@ import CategoryMenu from './home/categories-menu/CategoryMenu';
 
 // Firebase 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, getCategories, getMenuCategories, obtenerInfoApp } from '../firebase/firebaseFirestore';
+import { auth, getCategories, getCategoriesFilted, obtenerInfoApp } from '../firebase/firebaseFirestore';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -40,6 +40,7 @@ const Home = () => {
       }else {
         getData(user.email);
         console.log(user.email);
+        setEmail(user.email);
       }
     });
     // obtener info de la app y compruebo si es admin
@@ -59,7 +60,7 @@ const Home = () => {
     }
     // obtiene categorias y articulos para renderizar
     const getInfo = async () => {
-      const res = await getMenuCategories();
+      const res = await getCategoriesFilted('viewInHome');
       setCategories(res);
       console.log(res);
     }
@@ -72,10 +73,12 @@ const Home = () => {
 
   return(
     <div className={`container px-4 vh-100 vw-100 position-absolute  ${viewMenu ? 'd-flex overflow-hidden py-5 overflow-hidden': ''}`} style={{}}>
+      
       { (viewMenu) ? 
         // Menu 
         <Menu />
       : <></>}
+
       <main className={`${viewMenu ? 'border border-secondary shadow-lg p-3 position-absolute overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '100%' : '',}} onClick={handleClickMain}>
         {/* Header */}
         <Header />
@@ -86,7 +89,6 @@ const Home = () => {
         {/* Use Code Section */}
         <UseCode />
 
-
         { (categories != null)
             ? categories.map((category)=>(
               <CategoryMenu key={category.id} category={category} color1={color1} />
@@ -95,7 +97,7 @@ const Home = () => {
         }
 
 
-
+        {/* TODO: borrar luego */}
         <div style={{height: 500}}></div>
 
 

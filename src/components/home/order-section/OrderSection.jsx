@@ -21,6 +21,7 @@ const OrderSection = () => {
         textColor='text-white'
         bgColor={color1.bgColor}
         type='imagen'
+        link='/menu-articles'
         seletionLetf={pizzaOrdenar}
       />
       <OrderButton 
@@ -28,6 +29,7 @@ const OrderSection = () => {
         textColor='text-success'
         bgColor='bg-secondary-subtle'
         type='icono'
+        link='#'
         seletionLetf={<TfiReload className={`${color1.textColor} display-2`} />}
       />
     </section>

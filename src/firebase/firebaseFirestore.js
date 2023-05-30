@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, query, where, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 // Firebase Configuraciones
@@ -65,12 +65,14 @@ export const obtenerInfoApp = async () => {
 }
 
 // crear categorias
-export const createCategories = async (id, nombre, viewInMenu) => {
+export const createCategories = async (info) => {
   try{
-    await setDoc(doc(db, 'categorias', id), {
-      nombre: nombre,
-      id: id,
-      viewInMenu: viewInMenu,
+    await setDoc(doc(db, 'categorias', info.id), {
+      nombre: info.nombreCategoria,
+      id: info.id,
+      viewInHome: info.viewInHome,
+      viewInMenu: info.viewInMenu,
+      imgpath: info.imgpath,
     });
     return true;
   }catch(e){
@@ -100,10 +102,11 @@ export const createArticle = async (id, info) => {
       id: id,
       titulo: info.titulo, 
       subtitulo: info.subtitulo,
-      imgpath: info.img,
       categoria: info.categoria,
-      precio: info.precio,
+      imgpath: info.img,
       disponible: info.disponible,
+      complex: info.complex,
+      precios: info.precios
     });
     return true;
   }catch(e){
@@ -127,11 +130,11 @@ export const getAllArticles = async () => {
   }
 }
 
-// Obtener categorias que van al menu
-export const getMenuCategories = async () => {
+// Obtener categorias que van al home
+export const getCategoriesFilted = async (filtro) => {
   try{
     const data = [];
-    const q = query(collection(db, 'categorias'), where('viewInMenu', '==', true));
+    const q = query(collection(db, 'categorias'), where(filtro, '==', true));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach( (doc) => {
       data.push(doc.data());
@@ -156,5 +159,202 @@ export const getArticlesByCategory = async (categoriaId) => {
   }catch(e){
     console.log(e);
     return e.message;
+  }
+}
+
+// Guardar info de usuario 
+export const saveInfoUser = async (pedido) => {
+  try {
+    await setDoc(doc(db, `user-${pedido.email}`, 'info'), {
+      email: pedido.email,
+      nombre: pedido.nombre,
+      direccion: pedido.direccion,
+      telefono: pedido.telefono,
+      codeRef: pedido.codeRef,
+    });
+    return true;
+  } catch (e) {
+    console.log(e.code);
+    return false;
+  }
+}
+
+// Crear Pedido de cliente
+export const crearPedidoUser = async (pedido) => {
+  try {
+    await setDoc(doc(db, 'pedidos', `${pedido.email}-${pedido.pedidoId}`), {
+      id: pedido.pedidoId,
+      user: pedido.nombre,
+      direccion: pedido.direccion,
+      telefono: pedido.telefono,
+      comentario: pedido.comentario,
+      email: pedido.email,
+      hora: pedido.hora,
+      dia: pedido.dia,
+      pedido: pedido.pedido,
+      isDelivery: pedido.isDelivery,
+      deliveryInfo: pedido.deliveryInfo,
+      wasView: pedido.wasView,
+      isReady: pedido.isReady,
+      wasReceived: pedido.wasReceived,
+    });
+    return true;
+  } catch (e) {
+    console.log(e.code);
+    return false;
+  }
+}
+
+// Mostrar Pedidos a cliente
+export const getPedidosByClient = async (email) => {
+  try{
+    const q = query(collection(db, 'pedidos'), where('email', '==' ,email));
+    const querySnapshot = await getDocs(q);
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return data;
+  }catch(e){
+    console.log(e);
+    return [];
+  }
+}
+
+// Mostrar pedidos que no estan listos
+export const getordersNotView = async () => {
+  try{
+    const q = query(collection(db, 'pedidos'), where('wasView', '==' ,false));
+    const querySnapshot = await getDocs(q);
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return data;
+  }catch(e){
+    console.log(e);
+    return [];
+  }
+}
+
+// obtener info del cliente
+export const getInfoUser = async (email) => {
+  try {
+    const docRef = doc(db, `user-${email}`, 'info');
+    const docSnap = await getDoc(docRef);
+    if( docSnap.exists() ){
+      return docSnap.data();
+    }else {
+      return false;
+    }
+
+  } catch (e) {
+    console.log(e.message);
+    return false;
+  }
+}
+
+// Atualizar info de categoria
+export const ACtualizarCategory = async (id, newInfo) => {
+
+  try {
+    const docRef = doc(db, 'categorias', id);
+    await updateDoc(docRef, {
+      nombre: newInfo.nombreCategoria,
+      viewInHome: newInfo.viewInHome,
+      viewInMenu: newInfo.viewInMenu,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
+}
+
+// Borrar categoria
+export const deleteCategory =  async (id) => {
+  try {
+    await deleteDoc(doc(db, 'categorias', id));
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Actualizar Articulo 
+export const updateArticle = async (id, articleUpdated) => {
+  try {
+    const docRef = doc(db, 'articulos', id)
+    await updateDoc(docRef, {
+      titulo: articleUpdated.titulo,
+      subtitulo: articleUpdated.subtitulo,
+      categoria: articleUpdated.categoria,
+      precios: articleUpdated.precios,
+      disponible: articleUpdated.disponible
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Borrar categoria
+export const deleteArticle =  async (id) => {
+  try {
+    await deleteDoc(doc(db, 'articulos', id));
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Afregar code Ref de user a la base de datos
+export const saveCodeRef = async (email, nombre, codeRef) => {
+  try {
+    await setDoc(doc(db, 'codesRefs', `codeRef-${email}`), {
+      codeRef: codeRef,
+      email: email,
+      nombre: nombre,
+    });
+    return true;
+  } catch (e) {
+    console.log(e.code);
+    return false;
+  }
+}
+
+// Encontrar el codigo referido
+export const searchCodeRef = async (codeRef) => {
+
+  try {
+    const q = query(collection(db, 'codesRefs'), where('codeRef','==', codeRef));
+    const querySnapshot = await getDocs(q);
+    let res = {}
+    querySnapshot.forEach( (doc) => {
+      res = doc.data();
+      return;
+    });
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+
+}
+
+// Actualizar para agregar referidos a user
+export const addReferidoPor = async (email, infoCodeRef) => {
+  try {
+    const docRef = doc(db, `user-${email}`, 'info');
+    await updateDoc(docRef, {
+      referidoPor: infoCodeRef,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
   }
 }

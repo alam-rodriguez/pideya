@@ -3,11 +3,13 @@ import React from 'react';
 // React Icons
 import { MdOutlineNavigateNext } from 'react-icons/md';
 
-const UseCode = () => {
+// React-Router-Dom
+import { useNavigate } from 'react-router-dom';
 
-  const handleClickUseCode = () => {
-    console.log('Ejecutandolo');
-  }
+const UseCode = () => {
+  const navigate = useNavigate();
+
+  const handleClickUseCode = () => navigate('/home/search-code-ref');
 
   return (
     <section className='w-100 my-5 me-4 rounded-5 d-flex justify-content-center align-items-center' style={{height:70, minWidth:'100%', background:'black'}} onClick={handleClickUseCode}>
@@ -17,4 +19,4 @@ const UseCode = () => {
   )
 }
 
-export default UseCode
+export default UseCode;

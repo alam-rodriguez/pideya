@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 const storage = getStorage();
 
@@ -9,7 +9,8 @@ export const uploadImage = async (id, file) => {
     await uploadBytes(imgRef, file);
     return true;
   }catch(e){
-    return e;
+    console.log(e);
+    return false;
   }
 }
 
@@ -22,4 +23,16 @@ export const getUrlImage = async (path) => {
     console.log(e);
     return e;
   }
+}
+
+// Borrar Imagen
+export const deleteImage = async (id) => {
+ try {
+    const imageRef = ref(storage, `imagenes/${id}`);
+    await deleteObject(imageRef);
+    return true;
+ } catch (e) {
+    console.log(e.code);
+    return false;
+ }
 }

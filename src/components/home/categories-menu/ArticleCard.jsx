@@ -12,7 +12,7 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 const ArticleCard = ({img, title, subTitle, id}) => {
   const navigate = useNavigate();
 
-  const [imgUrl, setImgUrl] = useState('');
+  const [imgUrl, setImgUrl] = useState(null);
 
   useEffect( () => {
     const f = async () => {
@@ -36,8 +36,14 @@ const ArticleCard = ({img, title, subTitle, id}) => {
   }
 
   return (
-    <div className='bg-danger me-4 rounded-5 overflow-hidden' style={{height:150, width:230, minWidth:230}} onClick={handleClick}>
-        <img className='w-100 h-100 object-fit-cover' src={imgUrl} alt="" />
+    <div className='me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:150, width:230, minWidth:230}} onClick={handleClick}>
+      { imgUrl == null ? 
+        <div className="spinner-border text-success fs-1" style={{height:50, width:50}} role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      : <img className='w-100 h-100 object-fit-cover' src={imgUrl} alt="" />
+      } 
+       
     </div>
   )
 }

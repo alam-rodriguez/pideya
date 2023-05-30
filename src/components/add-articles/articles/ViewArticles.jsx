@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // React-Icons
 import { MdPlaylistAddCheckCircle } from 'react-icons/md';
@@ -18,11 +18,14 @@ import { useNavigate } from 'react-router-dom';
 
 // Header
 import CreateArticleHeader from '../sections/CreateArticleHeader';
-// import CreateArticleHeader from './sections/CreateArticleHeader';
-// import CreateArticleHeader from './CreateArticleHeader';
+
+// Context
+import { AppContext } from '../../../context/AppContext';
 
 const ViewArticles = () => {
   const navigate = useNavigate();
+
+  const { articleSelected, setArticleSelected } = useContext(AppContext);
 
   const [articles, setArticles] = useState(null);
 
@@ -34,13 +37,16 @@ const ViewArticles = () => {
     f();
   }, [] );
 
-  const handleClickAtras = () => navigate('/add-article');
-
   // handles
+  const handleClickArticle = (article) => {
+    setArticleSelected(article);
+    navigate('/edit-article');
+  }
+
   const handleClickCrearCategoria = () => navigate('/create-article');
 
   return (
-    <main className='border-0 border-bottom border-top mx-3' >
+    <main className='border-0 mx-3' >
       {/* Header */}
       <CreateArticleHeader path='/admin-options' />
 
@@ -48,8 +54,8 @@ const ViewArticles = () => {
 
         { articles != null 
           ? articles.map((article)=>(
-            <div key={article.id}>
-              <p>{article.titulo}</p>
+            <div className='border-bottom py-2' key={article.id} onClick={ ()=>handleClickArticle(article) } >
+              <p className='m-0 fs-1 fw-medium'>{article.titulo}</p>
             </div>
           ))
         : <></>}

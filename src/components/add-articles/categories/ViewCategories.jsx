@@ -1,31 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // React-Icons
-import { MdPlaylistAddCheckCircle } from 'react-icons/md';
-import { BsCloudUploadFill } from 'react-icons/bs';
-
-// uuid
-import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
-import { createArticle, getCategories } from '../../../firebase/firebaseFirestore';
-import { uploadImage } from '../../../firebase/firebaseStorage';
-// import { createArticle, createCategories } from '../../firebase/firebaseFirestore';
-// import { uploadImage } from '../../firebase/firebaseStorage';
+import { getCategories } from '../../../firebase/firebaseFirestore';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
 // Header
-import CreateArticleHeader from '../sections/CreateArticleHeader';
-// import CreateArticleHeader from './sections/CreateArticleHeader';
-// import CreateArticleHeader from './CreateArticleHeader';
+import Header from '../add-articles-components/Header'
+
+// Context
+import { AppContext } from '../../../context/AppContext';
 
 const ViewCategories = () => {
+  
   const navigate = useNavigate();
 
-  const [categories, setCategories] = useState(null);
-
+  // Effects
   useEffect( () => {
     const f = async () => { 
       const res = await getCategories();
@@ -34,66 +27,29 @@ const ViewCategories = () => {
     f();
   }, [] );
 
-  // const [titulo, setTitulo] = useState('');
-  // const [subtitulo, setSubtitulo] = useState('');
-  // const [img, setImg] = useState(null);
-
-  // const [nombreCategoria, setNombreCategoria] = useState('');
-
-  // const handleChangeTitulo = (e) => setTitulo(e.target.value);
-  // const handleChangeSubtitulo = (e) => setSubtitulo(e.target.value);
-
-  // const handleClickImg = () => document.querySelector('#select-img').click();
-
-  // const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
-
-  // const handleClickCrearArticulo = async () => {
-
-  //   if( titulo.length > 3 && subtitulo.length > 3 && img != null){
-  //     const id = uuidv4();
-  //     const info = {
-  //       titulo: titulo,
-  //       subtitulo: subtitulo,
-  //       img: `imagenes/${id}`,
-  //     }
-  //     console.log(img)
-  //     const res = await createArticle(id, info);
-  //     const resImg = await uploadImage(id, img);
-  //     if(res == true && resImg == true){
-  //       console.log('bien');
-  //     }
-  //     // console.log(info);
-
-  //   }else {
-  //     console.log('no')
-  //   }
-
-  // }
-
-  // const handleChangeNombre = (e) => setNombreCategoria(e.target.value);
-
-  const handleClickAddArticle = async () => {
-    // if(nombreCategoria.length > 3){
-    //   await createCategories(uuidv4(), nombreCategoria);
-    // }
-  }
-
-  const handleClickAtras = () => navigate('/add-article');
+  // States
+  const { setCategorySelected } = useContext(AppContext);
+  const [categories, setCategories] = useState(null);
 
   // handles
+  const handleClickCategory = (category) => {
+    setCategorySelected(category);
+    navigate('/edit-category');
+  }
+
   const handleClickCrearCategoria = () => navigate('/create-categories');
 
   return (
-    <main className='border-0 border-bottom border-top mx-3' >
+    <main className='border-0 mx-3' >
       {/* Header */}
-      <CreateArticleHeader path='/admin-options' />
+      <Header path='/admin-options' />
 
       <section className='d-flex flex-column gap-4'>
 
         { categories != null 
           ? categories.map((category)=>(
-            <div key={category.id}>
-              <p>{category.nombre}</p>
+            <div className='border-bottom py-2' key={category.id} onClick={()=>handleClickCategory(category)}>
+              <p className='m-0 fs-1 fw-medium'>{category.nombre}</p>
             </div>
           ))
         : <></>}

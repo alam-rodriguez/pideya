@@ -10,6 +10,7 @@ const AppContextProvider = ({children}) => {
   const [color1, setColor1] = useState({
     bgColor    : 'bg-success',
     textColor  : 'text-success',
+    btn        : 'btn-success',
     btnOutline : 'btn-outline-success',
   });
   // const [color1, setColor1] = useState('bg-success');
@@ -30,6 +31,16 @@ const AppContextProvider = ({children}) => {
 
   const [appCategories, setAppCategories] = useState([]);
 
+  const [categorySelected, setCategorySelected] = useState(null);
+
+  const [articleSelected, setArticleSelected] = useState(null);
+
+  const [precioArticleSelected, setPrecioArticleSelected] = useState(null);
+
+  const [cart, setCart] = useState([]);
+
+  const [SeletedOrder, setSeletedOrder] = useState(null);
+
   return(
     <AppContext.Provider 
       value={{
@@ -40,7 +51,12 @@ const AppContextProvider = ({children}) => {
         email, setEmail,
         appInfo, setAppInfo,
         goToHome, setGoToHome,
-        appCategories, setAppCategories
+        appCategories, setAppCategories,
+        categorySelected, setCategorySelected,
+        articleSelected, setArticleSelected,
+        precioArticleSelected, setPrecioArticleSelected,
+        cart, setCart,
+        SeletedOrder, setSeletedOrder,
       }}
     >
       {children}

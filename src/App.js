@@ -18,6 +18,14 @@ import ViewCategories from './components/add-articles/categories/ViewCategories'
 import CreateCategory from './components/add-articles/categories/CreateCategory';
 import ViewArticles from './components/add-articles/articles/ViewArticles';
 import CreateArticle from './components/add-articles/articles/CreateArticle';
+import MenuArticles from './components/menu-articles/MenuArticles';
+import OrderHistory from './components/home/menu/orders-section/OrderHistory';
+import SeeOrders from './components/see-orders-clients/SeeOrders';
+import SeeOrder from './components/see-orders-clients/SeeOrder';
+import EditCategory from './components/add-articles/categories/EditCategory';
+import EditArticle from './components/add-articles/articles/EditArticle';
+import InviteFriends from './components/home/menu/invite-fiends-section/InviteFriends';
+import SearchCodeRef from './components/home/code-ref-section/SearchCodeRef';
 
 // React Router
 import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
@@ -40,17 +48,25 @@ function App() {
         <Routes>
           <Route path='/welcome' Component={FirstEntry}></Route>
           <Route path='/home' Component={Home}></Route>
+          <Route path='/home/search-code-ref' Component={SearchCodeRef}></Route>
           <Route path='/article' Component={Article}></Route>
           <Route path='/registro' Component={SingIn}></Route>
           <Route path='/registro-like-admin' Component={SignInLikeAdmin1}></Route>
           <Route path='/registro-like-admin/details-app' Component={SignInLikeAdmin2}></Route>
-          <Route path='/ajustes' Component={Settings}></Route>/view-categories
+          <Route path='/ajustes' Component={Settings}></Route>
+          <Route path='/order-history' Component={OrderHistory}></Route>
+          <Route path='/invite-friends' Component={InviteFriends}></Route>
           <Route path='/admin-options' Component={AdminOptions}></Route>
           <Route path='/view-categories' Component={ViewCategories}></Route>
+          <Route path='/edit-category' Component={EditCategory}></Route>
           <Route path='/create-categories' Component={CreateCategory}></Route>
           <Route path='/view-articles' Component={ViewArticles}></Route>
+          <Route path='/edit-article' Component={EditArticle}></Route>
           <Route path='/create-article' Component={CreateArticle}></Route>
+          <Route path='/menu-articles' Component={MenuArticles}></Route>
           <Route path='/*' Component={ErrorPage}></Route>
+          <Route path='/see-orders' Component={SeeOrders}></Route>
+          <Route path='/see-order' Component={SeeOrder}></Route>
         </Routes>
       </BrowserRouter>
     </AppContextProvider>
