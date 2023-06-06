@@ -44,74 +44,85 @@ const MenuArticles = () => {
     f();
   }, [viewMenu] );
 
-  return (
-    <main className={`px-3 vh-100 z-0 ${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}>
-      {/* Header */}
-      <MenuHeader viewMenu={viewMenu} setViewMenu={setViewMenu}/>
-
-      { viewMenu == 0 ? 
-        <>
-          <h2 className='fs-1 fw-bold '>Menu</h2>
-
-          <div className='d-flex flex-wrap justify-content-around'>
-            { categories != null 
-              ? categories.map((category)=>(
-                <MenuViewCategories
-                  key={category.id}
-                  nombre={category.nombre}
-                  imgpath={category.imgpath}
-                  category={category}
-                  setViewMenu={setViewMenu}
-                />
-              ))
+  if(categories != null){
+    return (
+      <main className={`px-3 vh-100 z-0 ${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}>
+        {/* Header */}
+        <MenuHeader viewMenu={viewMenu} setViewMenu={setViewMenu}/>
+  
+        { viewMenu == 0 ? 
+          <>
+            <h2 className='fs-1 fw-bold '>Menu</h2>
+  
+            <div className='d-flex flex-wrap justify-content-around'>
+              { categories != null 
+                ? categories.map((category)=>(
+                  <MenuViewCategories
+                    key={category.id}
+                    nombre={category.nombre}
+                    imgpath={category.imgpath}
+                    category={category}
+                    setViewMenu={setViewMenu}
+                  />
+                ))
+                : <></>
+              }
+            </div>
+          </>
+        : viewMenu == 1 ?
+          <>
+            { viewPreviewInfoArticle
+              ? <PreviewInfoArticle setViewPreviewInfoArticle={setViewPreviewInfoArticle} setViewOrderSelectArticle={setViewOrderSelectArticle} />
+              : <></> 
+            }
+            { viewOrderSelectArticle
+              ? <OrderSelectArticle setViewOrderSelectArticle={setViewOrderSelectArticle} />
               : <></>
             }
-          </div>
-        </>
-      : viewMenu == 1 ?
-        <>
-          { viewPreviewInfoArticle
-            ? <PreviewInfoArticle setViewPreviewInfoArticle={setViewPreviewInfoArticle} setViewOrderSelectArticle={setViewOrderSelectArticle} />
-            : <></> 
-          }
-          { viewOrderSelectArticle
-            ? <OrderSelectArticle setViewOrderSelectArticle={setViewOrderSelectArticle} />
-            : <></>
-          }
-          <div >
-            <h2 className='fs-1 fw-bold '>{categorySelected.nombre}</h2>
-                
-                <div className='d-flex flex-wrap justify-content-around'>
-                  { articlesOfCategorySelected != null
-                    ? articlesOfCategorySelected.map((articulo)=>(
-                      <MenuViewArticles
-                        key={articulo.id}
-                        id={articulo.id}
-                        titulo={articulo.titulo}
-                        imgpath={articulo.imgpath}
-                        articulo={articulo}
-                        setViewPreviewInfoArticle={setViewPreviewInfoArticle}
-                      />
-                    ))
-                  : <></>
-                  }
+            <div >
+              <h2 className='fs-1 fw-bold '>{categorySelected.nombre}</h2>
+                  
+                  <div className='d-flex flex-wrap justify-content-around'>
+                    { articlesOfCategorySelected != null
+                      ? articlesOfCategorySelected.map((articulo)=>(
+                        <MenuViewArticles
+                          key={articulo.id}
+                          id={articulo.id}
+                          titulo={articulo.titulo}
+                          imgpath={articulo.imgpath}
+                          articulo={articulo}
+                          setViewPreviewInfoArticle={setViewPreviewInfoArticle}
+                        />
+                      ))
+                    : <></>
+                    }
+              </div>
             </div>
-          </div>
-        </>
-      : <></>
-      }
-
-      { ((cart.length > 0) && (!viewOrderSelectArticle) ) ?
-       <CartPreview setViewCart={setViewCart} />
-      : <></>
-      }
-
-      { viewCart 
-        ? <Cart setViewCart={setViewCart} setViewMenu={setViewMenu} />
+          </>
         : <></>
-      }
-    </main>
-  )
+        }
+  
+        { ((cart.length > 0) && (!viewOrderSelectArticle) ) ?
+         <CartPreview setViewCart={setViewCart} />
+        : <></>
+        }
+  
+        { viewCart 
+          ? <Cart setViewCart={setViewCart} setViewMenu={setViewMenu} />
+          : <></>
+        }
+      </main>
+    );
+  }else {
+    return(
+      <main className='d-flex justify-content-center align-items-center vh-100'>
+        <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
+          <span className="visually-hidden">Loading...</span>
+        </div> 
+      </main>
+    );
+  }
 }
 
 export default MenuArticles
+

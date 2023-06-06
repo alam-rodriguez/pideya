@@ -41,7 +41,7 @@ const PedidoItem = ({orden}) => {
           { (!orden.wasView && !orden.isReady)
             ? <p className='m-0 fw-medium fs-5 w-75 text-end'>Su orden fue enviada, en los proximos minutos la vamos a empezar a trabajar.</p>
             : (orden.wasView && !orden.isReady)
-            ? <p className='m-0 fw-medium fs-5 w-75 text-end'>Su orden fue enviada, en los proximos minutos la vamos a empezar a trabajar.</p>
+            ? <p className='m-0 fw-medium fs-5 w-75 text-end'>Ya estamos trabando en su pedido.</p>
             : (orden.wasView && orden.isReady)
             ? <p className='m-0 fw-medium fs-5 w-75 text-end'>Ya su pedido esta listo.</p>
             :<></>

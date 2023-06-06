@@ -8,30 +8,29 @@ import { BsCloudUploadFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
-import { createArticle, getAllArticles, getCategories } from '../../../firebase/firebaseFirestore';
-import { uploadImage } from '../../../firebase/firebaseStorage';
-// import { createArticle, createCategories } from '../../firebase/firebaseFirestore';
-// import { uploadImage } from '../../firebase/firebaseStorage';
+import { createArticle, getAllArticles, getArticlesCategoryPoints, getCategories } from '../../../../firebase/firebaseFirestore';
+import { uploadImage } from '../../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
 // Header
-import CreateArticleHeader from '../sections/CreateArticleHeader';
+import Header from '../ajustes-puntos-componentes/Header';
 
 // Context
-import { AppContext } from '../../../context/AppContext';
+import { AppContext } from '../../../../context/AppContext';
 
-const ViewArticles = () => {
+const ViewArticlesPuntos = () => {
   const navigate = useNavigate();
 
-  const { articleSelected, setArticleSelected } = useContext(AppContext);
+  const { categorySelected, articleSelected, setArticleSelected } = useContext(AppContext);
 
   const [articles, setArticles] = useState(null);
 
   useEffect( () => {
     const f = async () => { 
-      const res = await getAllArticles();
+      const res = await getArticlesCategoryPoints(categorySelected.id);
+      console.log(res)
       setArticles(res);
     }
     f();
@@ -40,28 +39,29 @@ const ViewArticles = () => {
   // handles
   const handleClickArticle = (article) => {
     setArticleSelected(article);
-    navigate('/edit-article');
+    navigate('/admin-options/ajustes-puntos/create-article');
   }
 
-  const handleClickCrearCategoria = () => navigate('/create-article');
+  const handleClickCrearArticulo = () => navigate('/admin-options/ajustes-puntos/create-article');
 
   if(articles != null){
     return (
       <main className='border-0 mx-3' >
         {/* Header */}
-        <CreateArticleHeader path='/admin-options' />
+        <Header link='/admin-options/ajustes-puntos/view-category' />
   
         <section className='d-flex flex-column gap-4'>
   
-          { articles != null 
+          { articles.length > 0 
             ? articles.map((article)=>(
-              <div className='border-bottom py-2' key={article.id} onClick={ ()=>handleClickArticle(article) } >
+              <div className='border-bottom py-3' key={article.id} onClick={ ()=>handleClickArticle(article) } >
                 <p className='m-0 fs-1 fw-medium'>{article.titulo}</p>
               </div>
             ))
-          : <></>}
+          : <p className='m-0 text-center fs-3 fw-medium mt-5'>No hay ningun articulo</p> 
+          }
   
-          <button className='btn form-control btn-success fs-3 position-absolute bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
+          <button className='btn form-control btn-success fs-3 position-absolute bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearArticulo}>Crear Articulo</button>
   
         </section>
       </main>
@@ -78,5 +78,5 @@ const ViewArticles = () => {
 }
 
 
-export default ViewArticles;
+export default ViewArticlesPuntos;
 

@@ -21,7 +21,7 @@ export const getUrlImage = async (path) => {
     return res;
   }catch(e){
     console.log(e);
-    return e;
+    return false;
   }
 }
 

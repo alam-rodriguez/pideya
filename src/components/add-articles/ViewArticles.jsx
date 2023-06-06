@@ -22,16 +22,10 @@ const AdminOptions = () => {
 
   const { appCategories } = useContext(AppContext);
 
-  const handleClickCrearArticulos = () => {
-
-  }
-
-  const handleClickViewCategories =() => {
-    navigate('/view-categories');
-  }
-  const handleClickViewArticles = () => {
-    navigate('/view-articles');
-  }
+  // Handles
+  const handleClickViewCategories = () => navigate('/view-categories') ;
+  const handleClickViewArticles = () => navigate('/view-articles');
+  const handleClickAjustesPuntos = () => navigate('/admin-options/ajustes-puntos');
   
   return (
     <section className='container'>
@@ -45,6 +39,7 @@ const AdminOptions = () => {
       {/* Btn para ver los articulos */}
       <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickViewArticles}>Ver los Articulos</button>
 
+      <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAjustesPuntos}>Ajustes de Puntos</button>
 
       {/* <ArticlesCategories appCategories={appCategories} /> */}
 

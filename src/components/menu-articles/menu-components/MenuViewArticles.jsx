@@ -17,7 +17,7 @@ const MenuViewArticles = ({id, titulo, imgpath, articulo, setViewPreviewInfoArti
   const {color1, articleSelected, setArticleSelected, cart} = useContext(AppContext);
 
   // // const [categories, setCategories] = useState(null);
-  const [img, setImg] = useState('');
+  const [img, setImg] = useState(null);
 
   const [countItem, setCountItem] = useState(0);
 
@@ -52,7 +52,12 @@ const MenuViewArticles = ({id, titulo, imgpath, articulo, setViewPreviewInfoArti
           </div>
         : <></>
       }
-      <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
+      { img != null
+        ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
+        : <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
+            <span className="visually-hidden">Loading...</span>
+          </div> 
+      }
       <p className='m-0 fs-2 fw-bold px-2' style={{height:'35%'}}>{titulo}</p>
     </div>
   );

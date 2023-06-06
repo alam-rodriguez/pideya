@@ -6,7 +6,7 @@ import { v4 as uuid4v4 } from 'uuid';
 // Firebase
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { registrarUsuario } from '../../../../firebase/firebaseAuthGoogle';
-import { crearPedidoUser, getInfoUser, saveCodeRef, saveInfoUser } from '../../../../firebase/firebaseFirestore';
+import { crearPedidoUser, getInfoUser, obtenerInfoApp, saveCodeRef, saveInfoUser } from '../../../../firebase/firebaseFirestore';
 
 // Components
 import CartHeader from './CartHeader';
@@ -62,6 +62,10 @@ const Cart = ({setViewCart, setViewMenu}) => {
         generateCodeRef(10);
       }
       console.log(res);
+
+      const resInfoApp = await obtenerInfoApp();
+      setPointsInfo(resInfoApp.infoPoints);
+
     }
     f();
   }, [] );
@@ -70,6 +74,8 @@ const Cart = ({setViewCart, setViewMenu}) => {
   const [horaQuierePedido, setHoraQuierePedido] = useState(null);
   const [metodoPago, setMetodoPago] = useState('efectivo');
   const [precioTotal, setPrecioTotal] = useState(0);
+
+  const [pointsInfo, setPointsInfo] = useState(null);
 
   // Info cliente
   const [nombre, setNombre] = useState('');
@@ -115,6 +121,8 @@ const Cart = ({setViewCart, setViewMenu}) => {
         wasView: false,
         isReady: false,
         wasReceived: false,
+        pointsInfo: pointsInfo != null ? pointsInfo : 'no genera puntos',
+        recibioPuntos: false,
         // precioTotal: ,
       }
       const res = await saveInfoUser(pedido);

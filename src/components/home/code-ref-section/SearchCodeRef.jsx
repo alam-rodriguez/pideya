@@ -21,13 +21,12 @@ const SearchCodeRef = () => {
   const [infoReferido, setInfoReferido] = useState(null);
 
   useEffect( () => {
-    // if(email == null) navigate('/home');
-    // const f = async () => {
-    //   const res = await getInfoUser(email);
-    //   if(res.referidoPor != undefined) setInfoReferido( res.referidoPor );
-    // }
-    // f();
-    console.log('useEffect')
+    if(email == null) navigate('/home');
+    const f = async () => {
+      const res = await getInfoUser(email);
+      if(res.referidoPor != undefined) setInfoReferido( res.referidoPor );
+    }
+    f();
   }, [] );
 
   const [inputValue, setInputValue] = useState('');

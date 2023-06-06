@@ -35,11 +35,10 @@ const EditCategory = () => {
       navigate('/view-categories');
       return;
     }
-    setNombreCategoria(categorySelected.nombre);
-    setImgCategory(categorySelected.imgpath);
-    setViewInHome(categorySelected.viewInHome);
-    setViewInMenu(categorySelected.viewInMenu);
-
+    // setNombreCategoria(categorySelected.nombre);
+    // setImgCategory(categorySelected.imgpath);
+    // setViewInHome(categorySelected.viewInHome);
+    // setViewInMenu(categorySelected.viewInMenu);
     getImagePath();
   }, [] );
 
@@ -49,13 +48,15 @@ const EditCategory = () => {
     setImgPath(imgpath);
   }
 
-  const [nombreCategoria, setNombreCategoria] = useState('');
-  const [imgCategory, setImgCategory] = useState(null);
-  const [viewInHome, setViewInHome] = useState(false);
-  const [viewInMenu, setViewInMenu] = useState(true);
+  const [nombreCategoria, setNombreCategoria] = useState(categorySelected.nombre);
+  const [sizeView, setSizeView] = useState(categorySelected.sizeView);
+  const [imgCategory, setImgCategory] = useState(categorySelected.imgpath);
+  const [viewInHome, setViewInHome] = useState(categorySelected.viewInHome);
+  const [viewInMenu, setViewInMenu] = useState(categorySelected.viewInMenu);
 
 
   const handleChangeNombre = (e) => setNombreCategoria(e.target.value);
+  const handleChangeSizeView = (e) => setSizeView(e.target.value);
   const handleChangeCheckedViewInHome = (e) => setViewInHome(e.target.checked);
   const handleChangeCheckedViewInMenu = (e) => setViewInMenu(e.target.checked);
 
@@ -74,13 +75,11 @@ const EditCategory = () => {
 
   const handleClickActualizarCategory = async () => {
     if(nombreCategoria.length > 3){
-      // const id = uuidv4();
       const newInfo = {
-        // id: id, 
         nombreCategoria: nombreCategoria, 
+        sizeView: sizeView,
         viewInHome: viewInHome, 
         viewInMenu:viewInMenu,
-        // imgpath: `imagenes/${id}`
       }
       const res = await ACtualizarCategory(categorySelected.id, newInfo);
       if( imgCategory != categorySelected.imgpath) {
@@ -99,7 +98,23 @@ const EditCategory = () => {
   
         <div className='my-5 mx-3'>
           <div className='row mx-auto'>
-            <input type="text" className='col-12 border-1 fs-3 p-3 border rounded-4' placeholder='Nombre de la nueva Categoria' value={nombreCategoria} onChange={handleChangeNombre} />
+
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
+              <input className='form-control rounded border-secondary' type="text" style={{height:35}} value={nombreCategoria} onChange={handleChangeNombre}/>
+            </div>
+
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Tamaño al visualizar:</p>
+              <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
+                <option selected value={sizeView}>{sizeView}</option>
+                <option value="small">Pequeño</option>
+                <option value="normal">Normal</option>
+                <option value="big">Gande</option>
+              </select>
+            </div>
+
+            {/* <input type="text" className='col-12 border-1 fs-3 p-3 border rounded-4' placeholder='Nombre de la nueva Categoria' value={nombreCategoria} onChange={handleChangeNombre} /> */}
             {/* <MdPlaylistAddCheckCircle className='col-3 display-1 text-success' onClick={handleClickAddArticle} /> */}
             <div>
               <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>

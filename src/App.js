@@ -26,6 +26,11 @@ import EditCategory from './components/add-articles/categories/EditCategory';
 import EditArticle from './components/add-articles/articles/EditArticle';
 import InviteFriends from './components/home/menu/invite-fiends-section/InviteFriends';
 import SearchCodeRef from './components/home/code-ref-section/SearchCodeRef';
+import AjustesPuntos from './components/admin-options/ajustes-puntos/AjustesPuntos';
+import ViewCategoryPuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-categoria/ViewCategoryPuntos';
+import CreateOrEditCategoriaPuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-categoria/CreateOrEditCategoriaPuntos';
+import ViewArticlesPuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-articulos/ViewArticlesPuntos';
+import CreateOrEditArticlePuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-articulos/CreateOrEditArticlePuntos';
 
 // React Router
 import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
@@ -59,6 +64,11 @@ function App() {
           <Route path='/admin-options' Component={AdminOptions}></Route>
           <Route path='/view-categories' Component={ViewCategories}></Route>
           <Route path='/edit-category' Component={EditCategory}></Route>
+          <Route path='/admin-options/ajustes-puntos' Component={AjustesPuntos}></Route>
+          <Route path='/admin-options/ajustes-puntos/view-category' Component={ViewCategoryPuntos}></Route>
+          <Route path='/admin-options/ajustes-puntos/create-category' Component={CreateOrEditCategoriaPuntos}></Route>
+          <Route path='/admin-options/ajustes-puntos/view-articles' Component={ViewArticlesPuntos}></Route>
+          <Route path='/admin-options/ajustes-puntos/create-article' Component={CreateOrEditArticlePuntos}></Route>
           <Route path='/create-categories' Component={CreateCategory}></Route>
           <Route path='/view-articles' Component={ViewArticles}></Route>
           <Route path='/edit-article' Component={EditArticle}></Route>

@@ -22,12 +22,14 @@ const CreateCategory = () => {
   const navigate = useNavigate();
 
   const [nombreCategoria, setNombreCategoria] = useState('');
+  const [sizeView, setSizeView] = useState('normal');
   const [imgCategory, setImgCategory] = useState(null);
   const [viewInHome, setViewInHome] = useState(false);
   const [viewInMenu, setViewInMenu] = useState(true);
 
 
   const handleChangeNombre = (e) => setNombreCategoria(e.target.value);
+  const handleChangeSizeView = (e) => setSizeView(e.target.value);
   const handleChangeCheckedViewInHome = (e) => setViewInHome(e.target.checked);
   const handleChangeCheckedViewInMenu = (e) => setViewInMenu(e.target.checked);
 
@@ -40,9 +42,11 @@ const CreateCategory = () => {
       const categoryInfo = {
         id: id, 
         nombreCategoria: nombreCategoria, 
+        sizeView: sizeView,
         viewInHome: viewInHome, 
         viewInMenu:viewInMenu,
-        imgpath: `imagenes/${id}`
+        imgpath: `imagenes/${id}`,
+        isCategoryOfPoints: false, 
       }
       const res = await createCategories(categoryInfo);
       const resImg = await uploadImage(id, imgCategory);
@@ -60,8 +64,24 @@ const CreateCategory = () => {
       <CreateArticleHeader path='/view-categories' />
 
       <div className='my-5 mx-3'>
-        <div className='row mx-auto'>
-          <input type="text" className='col-12 border-1 fs-3 p-3' placeholder='Nombre de la nueva Categoria' onChange={handleChangeNombre} />
+        <div className='row mx-auto d-flex flex-column gap-4'>
+
+          <div>
+            <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
+            <input className='form-control rounded border-secondary' type="text" style={{height:35}} onChange={handleChangeNombre}/>
+          </div>
+
+          {/* <input type="text" className='col-12 border-1 fs-3 p-3' placeholder='Nombre de la nueva Categoria' onChange={handleChangeNombre} /> */}
+
+          <div>
+            <p className='fs-3 fw-bold m-0 mb-2'>Tamaño al visualizar:</p>
+            <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
+              <option value="small">Pequeño</option>
+              <option selected value="normal">Normal</option>
+              <option value="big">Gande</option>
+            </select>
+          </div>
+
           {/* <MdPlaylistAddCheckCircle className='col-3 display-1 text-success' onClick={handleClickAddArticle} /> */}
           <div>
             <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
@@ -83,6 +103,7 @@ const CreateCategory = () => {
 
         </div>
         <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
+      
       </div>
     </section>
   )

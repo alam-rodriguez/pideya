@@ -68,11 +68,13 @@ export const obtenerInfoApp = async () => {
 export const createCategories = async (info) => {
   try{
     await setDoc(doc(db, 'categorias', info.id), {
-      nombre: info.nombreCategoria,
       id: info.id,
+      nombre: info.nombreCategoria,
+      sizeView: info.sizeView,
       viewInHome: info.viewInHome,
       viewInMenu: info.viewInMenu,
       imgpath: info.imgpath,
+      isCategoryOfPoints: info.isCategoryOfPoints,
     });
     return true;
   }catch(e){
@@ -197,6 +199,8 @@ export const crearPedidoUser = async (pedido) => {
       wasView: pedido.wasView,
       isReady: pedido.isReady,
       wasReceived: pedido.wasReceived,
+      pointsInfo: pedido.pointsInfo,
+      recibioPuntos: pedido.recibioPuntos
     });
     return true;
   } catch (e) {
@@ -224,7 +228,7 @@ export const getPedidosByClient = async (email) => {
 // Mostrar pedidos que no estan listos
 export const getordersNotView = async () => {
   try{
-    const q = query(collection(db, 'pedidos'), where('wasView', '==' ,false));
+    const q = query(collection(db, 'pedidos'), where('isReady', '==' ,false));
     const querySnapshot = await getDocs(q);
     let data = [];
     querySnapshot.forEach((doc) => {
@@ -261,6 +265,7 @@ export const ACtualizarCategory = async (id, newInfo) => {
     const docRef = doc(db, 'categorias', id);
     await updateDoc(docRef, {
       nombre: newInfo.nombreCategoria,
+      sizeView: newInfo.sizeView,
       viewInHome: newInfo.viewInHome,
       viewInMenu: newInfo.viewInMenu,
     });
@@ -357,4 +362,184 @@ export const addReferidoPor = async (email, infoCodeRef) => {
     console.log(e);
     return false;
   }
+}
+
+// Aptualizar si el pedido esta listo y si lo hemos visto
+export const UpdateOrderClient = async (email, idOrder, isReady) => {
+  try {
+    const orderRef = doc(db, 'pedidos', `${email}-${idOrder}`);
+    await updateDoc(orderRef, {
+      wasView: true,
+      isReady: isReady,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
+}
+
+// Agregar info de los points a la app
+export const addInfoPoints = async (email, infoPoints) => {
+  try {
+    const admin = await obtenerInfoApp();
+    if(email != admin.admin) return 'no eres admin';
+    const appInfoRef = doc(db, 'app', 'app-info');
+    await updateDoc(appInfoRef, {
+      infoPoints: infoPoints, 
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Actualizar el pedido para poner cuantos puntos genero el pedido
+export const savePuntosGeneradosForOrder = async (email, idOrder, puntosGenerados, recibioPuntos) => {
+  try {
+    const orderRef = doc(db, 'pedidos', `${email}-${idOrder}`);
+    await updateDoc(orderRef, {
+      puntosGenerados: puntosGenerados,
+      recibioPuntos: recibioPuntos
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
+}
+
+// Obtener Puntos de usuario
+export const getPointsUser = async (email) => {
+  try {
+    const docRef = doc(db, 'puntos', email);
+    const docSnap = await getDoc(docRef);
+    
+    if(docSnap.exists()){
+      return docSnap.data();
+    }else {
+      return 'usuario no encontrado';
+    }
+  } catch (e) {
+    console.log(e);
+    return 'hubo un error'
+  }
+
+}
+
+// guardar puntos generados de usuario
+export const savePointsUser = async (email, newPoints) => {
+  try {
+    await setDoc(doc(db, 'puntos', email), {
+      email: email,
+      puntos: newPoints,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+
+// crear o actualizar categoria de puntos 
+export const createCategoryPunto = async (info) => {
+  try{
+    await setDoc(doc(db, 'categorias', 'category-puntos'), {
+      id: info.id,
+      nombre: info.nombreCategoria,
+      sizeView: info.sizeView,
+      viewInHome: info.viewInHome,
+      viewInMenu: info.viewInMenu,
+      imgpath: info.imgpath,
+    });
+    return true;
+  }catch(e){
+    return e;
+  }
+}
+
+// Actualizar categoria de puntos
+export const updateCategoryPunto = async (info) => {
+  try {
+    const catRef = doc(db, 'categorias', 'category-puntos');
+    await updateDoc(catRef, {
+      nombre: info.nombreCategoria,
+      sizeView: info.sizeView,
+      viewInHome: info.viewInHome,
+      viewInMenu: info.viewInMenu,
+      isCategoryOfPoints: info.isCategoryOfPoints,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// obtener categoria de puntos
+export const getCategoryPoints = async () => {
+  const docRef = doc(db, 'categorias', 'category-puntos');
+  const docSnap = await getDoc(docRef);
+  if(docSnap.exists()){
+    return docSnap.data();
+  }else {
+    return 'no existe la categoria de puntos';
+  }
+}
+
+// Obtener los articulos de la categoria de puntos
+export const getArticlesCategoryPoints = async (categoryPointsId) => {
+  try {
+    const q = query(collection(db, 'articulos'), where('categoria', '==', categoryPointsId));
+    const querySnapshot = await getDocs(q);
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Crear articulo
+export const createArticleOfPoints = async (id, info) => {
+  try{
+    await setDoc(doc(db, 'articulos', `articulo-categoria-puntos-${id}`), {
+      id: id,
+      titulo: info.titulo, 
+      subtitulo: info.subtitulo,
+      categoria: info.categoria,
+      imgpath: info.img,
+      disponible: info.disponible,
+      complex: info.complex,
+      precios: info.precios
+    });
+    return true;
+  }catch(e){
+    console.log(e)
+    return e.message;
+  }
+}
+
+export const updateArticleOfPoints = async (article) => {
+  try {
+    const articleRef = doc(db, 'articulos', `articulo-categoria-puntos-${article.id}`);
+    await updateDoc(articleRef, {
+      disponible: true,
+      precios: article.precios,
+      subtitulo: article.subtitulo,
+      titulo: article.titulo,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
 }

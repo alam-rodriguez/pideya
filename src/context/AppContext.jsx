@@ -41,6 +41,10 @@ const AppContextProvider = ({children}) => {
 
   const [SeletedOrder, setSeletedOrder] = useState(null);
 
+  const [infoPoints, setInfoPoints] = useState(null);
+
+  const [clientOrders, setClientOrders] = useState(null);
+
   return(
     <AppContext.Provider 
       value={{
@@ -57,6 +61,8 @@ const AppContextProvider = ({children}) => {
         precioArticleSelected, setPrecioArticleSelected,
         cart, setCart,
         SeletedOrder, setSeletedOrder,
+        infoPoints, setInfoPoints,
+        clientOrders, setClientOrders
       }}
     >
       {children}

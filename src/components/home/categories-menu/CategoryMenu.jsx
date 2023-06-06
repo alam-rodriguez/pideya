@@ -12,7 +12,7 @@ const CategoryMenu = ({category, color1}) => {
   const [articlesOfThisMenu, setArticlesOfThisMenu] = useState(null);
 
   useEffect( () => {
-    // console.log(category);
+    // console.log(category.sizeView);
     const f = async () => {
       const res = await getArticlesByCategory(category.id);
       setArticlesOfThisMenu(res);
@@ -34,9 +34,12 @@ const CategoryMenu = ({category, color1}) => {
           ? articlesOfThisMenu.map((article)=>(
             <ArticleCard
               key={article.id}
-              img={article.imgpath}
               title={article.titulo} 
               subTitle={article.subtitulo} 
+              price={article.precios}
+              img={article.imgpath}
+              size={category.sizeView}
+              isCategoryOfPoints={category.isCategoryOfPoints}
               // id='345678' 
             />
           ))
