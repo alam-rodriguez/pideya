@@ -1,8 +1,7 @@
-// React
 import React, { useContext, useEffect, useState } from 'react';
 
 // React Icon
-import { FaFacebook, FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa';
 import { AiOutlineInstagram } from 'react-icons/ai';
 import { RiFacebookCircleLine } from 'react-icons/ri';
 
@@ -13,6 +12,7 @@ import ContactUsItem from './ContactUsItem';
 import { AppContext } from '../../../context/AppContext';
 
 const ContactUs = () => {
+
 	const { appInfo } = useContext(AppContext);
 
   const [facebook, setFacebook] = useState();
@@ -55,4 +55,4 @@ const ContactUs = () => {
   );
 }
 
-export default ContactUs
+export default ContactUs;

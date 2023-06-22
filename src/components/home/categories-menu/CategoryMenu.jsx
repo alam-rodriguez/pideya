@@ -36,7 +36,7 @@ const CategoryMenu = ({category, color1}) => {
               key={article.id}
               title={article.titulo} 
               subTitle={article.subtitulo} 
-              price={article.precios}
+              price={article.puntos}
               img={article.imgpath}
               size={category.sizeView}
               isCategoryOfPoints={category.isCategoryOfPoints}

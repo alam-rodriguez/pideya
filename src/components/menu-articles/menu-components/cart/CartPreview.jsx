@@ -8,7 +8,7 @@ import { AppContext } from '../../../../context/AppContext';
 
 const CartPreview = ({setViewCart}) => {
 
-  const { color1, cart } = useContext(AppContext);
+  const { color1, cart, cartOfCategoryPoints, setCartOfCategoryPoints, } = useContext(AppContext);
 
   const [total, setTotal] = useState(0);
 
@@ -26,7 +26,7 @@ const CartPreview = ({setViewCart}) => {
     <div className={`d-flex p-3 justify-content-between position-fixed bottom-0 start-0 w-100 rounded-4 rounded-bottom-0 ${color1.bgColor}`} style={{height:65}} onClick={handleClick}>
       <div className='d-flex gap-3'>
         <MdShoppingCart className='display-6 text-white' />
-        <p className='position-relative fs-4 text-white' style={{bottom:3}}>{cart.length}</p>
+        <p className='position-relative fs-4 text-white' style={{bottom:3}}>{cart.length + cartOfCategoryPoints.length}</p>
       </div>
       <p className='m-0 fs-4 text-white'>{total} RD$</p>
     </div>

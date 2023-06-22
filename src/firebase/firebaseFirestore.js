@@ -194,13 +194,15 @@ export const crearPedidoUser = async (pedido) => {
       hora: pedido.hora,
       dia: pedido.dia,
       pedido: pedido.pedido,
+      pedidoOfPoints: pedido.pedidoOfPoints,
       isDelivery: pedido.isDelivery,
       deliveryInfo: pedido.deliveryInfo,
       wasView: pedido.wasView,
       isReady: pedido.isReady,
-      wasReceived: pedido.wasReceived,
+      paid: pedido.paid,
       pointsInfo: pedido.pointsInfo,
-      recibioPuntos: pedido.recibioPuntos
+      recibioPuntos: pedido.recibioPuntos,
+      total: pedido.total,
     });
     return true;
   } catch (e) {
@@ -365,19 +367,19 @@ export const addReferidoPor = async (email, infoCodeRef) => {
 }
 
 // Aptualizar si el pedido esta listo y si lo hemos visto
-export const UpdateOrderClient = async (email, idOrder, isReady) => {
+export const UpdateOrderClient = async (email, idOrder, isReady, paid) => {
   try {
     const orderRef = doc(db, 'pedidos', `${email}-${idOrder}`);
     await updateDoc(orderRef, {
       wasView: true,
       isReady: isReady,
+      paid: paid,
     });
     return true;
   } catch (e) {
     console.log(e);
     return false;
   }
-
 }
 
 // Agregar info de los points a la app
@@ -518,7 +520,7 @@ export const createArticleOfPoints = async (id, info) => {
       imgpath: info.img,
       disponible: info.disponible,
       complex: info.complex,
-      precios: info.precios
+      puntos: info.puntos,
     });
     return true;
   }catch(e){
@@ -532,7 +534,7 @@ export const updateArticleOfPoints = async (article) => {
     const articleRef = doc(db, 'articulos', `articulo-categoria-puntos-${article.id}`);
     await updateDoc(articleRef, {
       disponible: true,
-      precios: article.precios,
+      puntos: article.puntos,
       subtitulo: article.subtitulo,
       titulo: article.titulo,
     });
@@ -542,4 +544,114 @@ export const updateArticleOfPoints = async (article) => {
     return false;
   }
 
+}
+
+// Para actualizar la informacion de estadisticas del cliente
+export const saveEstadistica = async (email, info) => {
+  try {
+    await setDoc(doc(db, `user-${email}`, `estadistica-pedido-${info.id}`), {
+      isEstadistica: true,
+      pedidoId: info.id,
+      fecha: info.fecha,
+      gastado: info.gastado,
+      puntosGenerados: info.puntosGenerados,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Borrar estadistica de la info del usuario
+export const deleteEstadistica = async (email, estadisticaId) => {
+  try {
+    await deleteDoc(doc(db, `user-${email}`, `estadistica-pedido-${estadisticaId}`));
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// create estadisticas del cliente
+export const createEstadisticas = async (email, info) => {
+  try {
+    await setDoc(doc(db, `user-${email}`, 'estadisticas'), {
+      dineroGastado: info.dineroGastado,
+      puntosGanados: info.puntosGanados,
+      puntosGastados: info.puntosGastados,
+      puntosRestantes: info.puntosRestantes,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// editar estadistica de usuario
+export const editEstadistica = async (email, info) => {
+  try {
+    const estadisticaRef = doc(db, `user-${email}`, 'estadisticas');
+    await updateDoc(estadisticaRef, {
+      dineroGastado: info.dineroGastado,
+      puntosGanados: info.puntosGanados,
+      puntosGastados: info.puntosGastados,
+      puntosRestantes: info.puntosRestantes,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Editar puntos generados y restantes de usuario
+export const editPoints = async (email, info) => {
+  try {
+    const statisticRef = doc(db, `user-${email}`, 'estadisticas');
+    await updateDoc(statisticRef, {
+      dineroGastado: info.dineroGastado,
+      puntosGanados: info.puntosGanados,
+      puntosRestantes: info.puntosRestantes,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// obtener estadisticas del cliente
+export const getEstadisticas = async (email) => {
+  try {
+    const docRef = doc(db, `user-${email}`, 'estadisticas');
+    const docSnap = await getDoc(docRef);
+
+    if( docSnap.exists()){
+      return docSnap.data();
+    }else{
+      return 'no estadisticas';
+    }
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// obtener cada estadisticas del cliente
+export const getEachStatitics = async (email) => {
+  try {
+    const q = query(collection(db, `user-${email}`), where('isEstadistica', '==', true));
+    const querySnapshot = await getDocs(q);
+    const data = [];
+    querySnapshot.forEach( (doc) => {
+      data.push(doc.data());
+    });
+    return data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 }

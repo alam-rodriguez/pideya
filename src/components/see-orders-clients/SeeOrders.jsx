@@ -48,6 +48,11 @@ const SeeOrders = () => {
                 total += Number(item.precioVariosArticles);
               });
               total += Number(orden.deliveryInfo.costo);
+
+              let puntos = 0;
+              orden.pedidoOfPoints.map( (item) => {
+                puntos += Number(item.PuntosVariosArticles);
+              });
               return(
                 <div key={orden.id} className='border m-4 shadow-lg rounded-5 border border-success' onClick={ () => handleClickOrder(orden) }>
 
@@ -63,6 +68,14 @@ const SeeOrders = () => {
                       <p className='m-0 fw-bold fs-5 w-25'>Fecha:</p>
                       <p className='m-0 fw-medium fs-5 w-75 text-end'>{orden.dia}, {orden.hora}</p>
                     </div>
+
+                    { orden.pedidoOfPoints.length > 0 ?  
+                      <div className='d-flex justify-content-between align-items-center border-bottom py-2'>
+                        <p className='m-0 fw-bold fs-5 w-25'>Puntos:</p>
+                        <p className='m-0 fw-medium fs-5 w-75 text-end'>{puntos}</p>
+                      </div>
+                      : <></>
+                    }
 
                     { orden.isDelivery ?  
                       <div className='d-flex justify-content-between align-items-center border-bottom py-2'>

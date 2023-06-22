@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, memo } from 'react';
 
 // React Icons
 import { FiMenu } from 'react-icons/fi';
@@ -8,12 +8,12 @@ import { FaPizzaSlice } from 'react-icons/fa';
 import { AppContext } from '../../context/AppContext';
 
 // Firebase
-import { savePuntosGeneradosForOrder } from '../../firebase/firebaseFirestore';
+import { getEstadisticaOfPedido, getEstadisticas, savePuntosGeneradosForOrder } from '../../firebase/firebaseFirestore';
 import { getPointsUser } from '../../firebase/firebaseFirestore';
 
 const Header = () => {
 
-	const {  infoPoints, setInfoPoints, clientOrders, setClientOrders, email } = useContext(AppContext);
+	const {  infoPoints, setInfoPoints, clientOrders, setClientOrders, email, infoPointsUser, setInfoPointsUser } = useContext(AppContext);
 
 	const [points, setPoints] = useState(0);
 
@@ -21,8 +21,13 @@ const Header = () => {
 		// Obtener puntos del usuario
 		if(email != null){
 			const f = async () => {
-				const infoUser = await getPointsUser(email);
-				if(infoUser != 'usuario no encontrado' && infoUser != 'hubo un error') setPoints( infoUser.puntos );
+				// const infoUser = await getPointsUser(email);
+				const pointsUser = await getEstadisticas(email);
+				if(pointsUser != 'no estadisticas' && pointsUser != false) {
+					setPoints( pointsUser.puntosRestantes );
+					setInfoPointsUser(pointsUser);
+				}
+				console.log(pointsUser);
 			}
 			f();
 		}
@@ -54,6 +59,61 @@ const Header = () => {
 			console.log(infoPoints)
 		}
 	}, [infoPoints, clientOrders] );
+	
+	// // Guardar estadisticas de usuario
+	// useEffect( () => {
+	// 	let data = {
+	// 		dineroGastado: 0,
+	// 		idsVisitas: [],
+  //     visitas: [],
+  //     puntosGenerados: 0,
+  //     puntosGastados: 0,
+	// 	};
+	// 	// const ids = [];
+	// 	let visitas = [];
+	// 	const f = async () => {
+	// 		clientOrders.forEach( (order) => {
+	// 			if(order.paid){
+	// 				const visita = {
+	// 					id: order.id,
+	// 					fecha: `${order.dia} ${order.hora}`,
+	// 					puntosGenerado: order.puntosGenerados,
+	// 					gastado: 0,
+	// 				}
+	// 				let gastado = 0;
+	// 				// order.pedido.forEach( (item) => {
+	// 				// 	gastado += Number(item.precioVariosArticles);
+	// 				// });
+	// 				visitas.push(visita);
+	// 				// visita.gastado = gastado;
+	// 				// data.visitas = visita;
+	// 			}
+	// 		});
+	// 		// data.visitas.forEach( (visita) => {
+	// 		// 	ids.push(visita.id);
+	// 		// });
+	// 		let dineroGastado = 0;
+	// 		let puntosGenerados = 0;
+	// 		puntosGastados
+	// 		visitas.forEach( (visita) => {
+	// 			if(data.visitas.includes())
+	// 			dineroGastado += Number(visita.precioVariosArticles);
+	// 		});
+	// 		// const res = await getEstadisticasUser(email);
+	// 		// if(res == 'no estadisticas')
+	// 		// console.log(res);
+
+	// 		if(data.length > 0){
+
+	// 		}
+	// 	}
+	// 	f();
+	// }, []);
+
+	useEffect( () => {
+
+	}, [] );
+	
 
 	const { color1, viewMenu, setViewMenu, appInfo } = useContext(AppContext);
 
@@ -74,6 +134,6 @@ const Header = () => {
 			</div>
     </header>
   );
-}
+};
 
 export default Header

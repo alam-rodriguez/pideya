@@ -30,7 +30,7 @@ const CreateOrEditArticlePuntos = () => {
       console.log(articleSelected);
       setTitulo(articleSelected.titulo);
       setSubtitulo(articleSelected.subtitulo);
-      setPrecio(articleSelected.precios);
+      setPuntos(articleSelected.puntos);
       const f = async () => {
         const imgLink = await getUrlImage(articleSelected.imgpath);
         if(imgLink != false) setImgLink(imgLink);
@@ -42,13 +42,14 @@ const CreateOrEditArticlePuntos = () => {
   const [titulo, setTitulo] = useState('');
   const [subtitulo, setSubtitulo] = useState('');
   const [precio, setPrecio] = useState(0);
+  const [puntos, setPuntos] = useState(0);
   const [img, setImg] = useState(null);
 
   const [imgLink, setImgLink] = useState(null);
 
   const handleChangeTitulo = (e) => setTitulo(e.target.value);
   const handleChangeSubtitulo = (e) => setSubtitulo(e.target.value);
-  const handleChangePrecio = (e) => setPrecio(e.target.value);
+  const handleChangePuntos = (e) => setPuntos(e.target.value);
 
   const handleClickImg = () => document.querySelector('#select-img').click();
 
@@ -65,7 +66,7 @@ const CreateOrEditArticlePuntos = () => {
         img: `imagenes/${id}`,
         disponible: true,
         complex: false,
-        precios: precio,
+        puntos: puntos,
       }
       console.log(info)
       const res = await createArticleOfPoints(id, info);      
@@ -88,7 +89,7 @@ const CreateOrEditArticlePuntos = () => {
         titulo: titulo,
         subtitulo: subtitulo,        
         disponible: true,
-        precios: precio,
+        puntos: puntos,
       }
       console.log(info)
       const res = await updateArticleOfPoints(info);
@@ -125,7 +126,7 @@ const CreateOrEditArticlePuntos = () => {
   
           <div>
             <p className='fs-3 fw-bold m-0 mb-2'>Puntos:</p>
-            <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={precio} onChange={handleChangePrecio}/>
+            <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={puntos} onChange={handleChangePuntos}/>
           </div>
   
           <div>
@@ -160,7 +161,7 @@ const CreateOrEditArticlePuntos = () => {
   
           <div>
             <p className='fs-3 fw-bold m-0 mb-2'>Puntos:</p>
-            <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={precio} onChange={handleChangePrecio}/>
+            <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={puntos} onChange={handleChangePuntos}/>
           </div>
   
           <div>

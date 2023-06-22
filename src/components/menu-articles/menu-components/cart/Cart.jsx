@@ -19,21 +19,26 @@ import { AppContext } from '../../../../context/AppContext';
 import CartInfoDeal from './CartInfoDeal';
 import CartInfoClient from './CartInfoClient';
 import CartTotal from './CartTotal';
+import { useNavigate } from 'react-router-dom';
 
-const Cart = ({setViewCart, setViewMenu}) => {
+const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
-  const { color1, cart, email, setEmail, categorySelected } = useContext(AppContext);
+  const navigate = useNavigate();
 
-  useEffect( () => { 
-    console.log(categorySelected.nombre);
-    if(email == null){
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user)  => {
-        if(user != null) setEmail(user.email);
-        // console.log(user);
-      });
-    }
-  }, [] );
+  const { color1, cart, setCart, email, setEmail, categorySelected, cartOfCategoryPoints, setCartOfCategoryPoints } = useContext(AppContext);
+
+  const [total, setTotal] = useState(0);
+
+  // useEffect( () => { 
+  //   console.log(categorySelected.nombre);
+  //   if(email == null){
+  //     const auth = getAuth();
+  //     onAuthStateChanged(auth, (user)  => {
+  //       if(user != null) setEmail(user.email);
+  //       // console.log(user);
+  //     });
+  //   }
+  // }, [] );
 
   useEffect( () => {
     const f = async () => {
@@ -43,6 +48,22 @@ const Cart = ({setViewCart, setViewMenu}) => {
         setDireccion(res.direccion);
         setTelefono(res.telefono);
         setCodeRef(res.codeRef);
+        // Crear Id del pedido
+        const generateIdPedido = (i) => {
+          const idPedido = Math.floor(Math.random() * 100000);
+          if(i == 0){
+            setPedidoId(idPedido);
+            return;
+          }
+          if(idPedido.toString().length == 5){  
+            console.log(idPedido);
+            setPedidoId(idPedido);
+            return;
+          } else {
+            generateIdPedido(i - 1);
+          }
+        }
+        generateIdPedido(10);
       }else {
         // Crear codigo para referir amigos
         const generateCodeRef = (i) => {
@@ -78,15 +99,17 @@ const Cart = ({setViewCart, setViewMenu}) => {
   const [pointsInfo, setPointsInfo] = useState(null);
 
   // Info cliente
+  const [pedidoId, setPedidoId] = useState(null);
   const [nombre, setNombre] = useState('');
   const [direccion, setDireccion] = useState('');
   const [telefono, setTelefono] = useState('');
   const [codeRef, setCodeRef] = useState(0);
   const [entrega, setEntrega] = useState('');
-  const [lugarDelivery, setLugarDelivery] = useState({lugar: 'guerra', costo: 0});
+  const [lugarDelivery, setLugarDelivery] = useState({lugar: 'guerra', costo: 50});
   const [comentario, setComentario] = useState('');
 
   const handleClickOrdenar = async () => {
+
     if( nombre.length < 2 ) alert('El nombre debe de tener po lo menos 3 caracteres');
     else if( telefono.length < 9 ) alert('El telefono debe de ser un telefono valido');
     else if( entrega == '' ) alert('Debes de invitar si vas a pasar a recoger el pedido o si quieres un delivery');
@@ -100,7 +123,7 @@ const Cart = ({setViewCart, setViewMenu}) => {
       const hora = fecha.getHours() + ':' + fecha.getMinutes();
       const dia = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`; 
       
-      const pedidoId = uuid4v4();
+      // const pedidoId = uuid4v4();
       const pedido = {
         horaQuierePedido: horaQuierePedido == null ? 'ahora mismo' : horaQuierePedido,
         metodoPago: metodoPago,
@@ -109,6 +132,7 @@ const Cart = ({setViewCart, setViewMenu}) => {
         telefono,
         comentario,
         pedido: cart,
+        pedidoOfPoints: cartOfCategoryPoints,
         codeRef: codeRef,
         // precio: cart.precio,
         // categoriaNombre: categorySelected.nombre,
@@ -116,22 +140,31 @@ const Cart = ({setViewCart, setViewMenu}) => {
         dia: dia,
         email: userEmail,
         isDelivery: entrega == 'quiero delivery' ? true : false,
-        deliveryInfo: lugarDelivery,
+        deliveryInfo: entrega == 'quiero delivery' ? lugarDelivery : null,
         pedidoId: pedidoId,
         wasView: false,
         isReady: false,
-        wasReceived: false,
+        paid: false,
         pointsInfo: pointsInfo != null ? pointsInfo : 'no genera puntos',
         recibioPuntos: false,
-        // precioTotal: ,
+        total: total,
       }
+      console.log(pedido)
       const res = await saveInfoUser(pedido);
       const resCode = await saveCodeRef(email, nombre, codeRef);
+
+      // if(){
+        
+      // }
       
       if( res == true){
         const res2 = await crearPedidoUser(pedido);
         if( res2 ) {
           alert('Pedido hecho exitosamente');
+          setCart(null);
+          setCartOfCategoryPoints(null);
+          navigate('/home');
+          resetCart();
         }else{
           alert('Error al hacer pedido');
         }
@@ -169,7 +202,7 @@ const Cart = ({setViewCart, setViewMenu}) => {
         <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
 
         {/* Totales */}
-        <CartTotal isDelivery={entrega} precioDelivey={lugarDelivery.costo} lugarDelivery={lugarDelivery} setPrecioTotal={setPrecioTotal} />
+        <CartTotal isDelivery={entrega} precioDelivey={lugarDelivery.costo} lugarDelivery={lugarDelivery} setPrecioTotal={setPrecioTotal} total={total} setTotal={setTotal} />
 
       </section>
 

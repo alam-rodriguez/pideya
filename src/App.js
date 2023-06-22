@@ -39,7 +39,6 @@ import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
-
 function App() {
 
   // const navigate = useNavigate();

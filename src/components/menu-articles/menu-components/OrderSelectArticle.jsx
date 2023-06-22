@@ -13,7 +13,7 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 
 const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
 
-  const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart} = useContext(AppContext);
+  const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart,  cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser} = useContext(AppContext);
 
   
   const [img, setImg] = useState(null);
@@ -21,17 +21,20 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
   // pedido
   const [valorArticulo, setValorArticulo] = useState(0);
   const [valorVariosArticulos, setValorVariosArticulos] = useState(0);
+  const [valorPuntosArticulo, setValorPuntosArticulo] = useState(0);
+  const [valorPuntosVariosArticulos, setValorPuntosVariosArticulos] = useState(0);
   const [ingredientes, setIngredientes] = useState([]);
   const [ingredienteMitad, setIngredienteMitad] = useState('');
   const [cantidadArticulo, setCantidadArticulo] = useState(1);
 
 
   useEffect( () => {
+    // Obtiene img del articulo
     const f = async () => {
       const res = await getUrlImage(articleSelected.imgpath);
       setImg(res);
-      console.log(precioArticleSelected);
-      console.log(articleSelected);
+      // console.log(precioArticleSelected);
+      // console.log(articleSelected);
       
       if( articleSelected.complex ) setValorArticulo(precioArticleSelected.sizeArticlePrice);
       else setValorArticulo(articleSelected.precios);;
@@ -39,6 +42,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
     f();
   }, [] );
 
+  // Para establecer precio o puntos
   useEffect( () => {
     if(articleSelected.complex){
       let valor = 0;
@@ -51,11 +55,18 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
       setValorArticulo(valor);
       valor *= cantidadArticulo;
       setValorVariosArticulos(valor);
-    }else {
+    }else if(categorySelected.isCategoryOfPoints == false) {
+      console.log(articleSelected.precios);
       let valor = articleSelected.precios;
       setValorArticulo(valor);
       valor *= cantidadArticulo;
       setValorVariosArticulos(valor);
+    }else if(categorySelected.isCategoryOfPoints == true) {
+      // console.log(categorySelected.isCategoryOfPoints);
+      let valor = articleSelected.puntos;
+      setValorPuntosArticulo(valor);
+      valor *= cantidadArticulo;
+      setValorPuntosVariosArticulos(valor);
     }
   }, [ingredientes, cantidadArticulo] );
 
@@ -79,23 +90,52 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
 
   const handleClickAgregar = () => {
 
-    const pedido = {
-      ingredientePrincipal: articleSelected.titulo,
-      ingredientesAdicionales: ingredientes,
-      cantidad: cantidadArticulo,
-      mitad: articleSelected.complex ? ingredienteMitad : '',
-      precio: valorArticulo,
-      precioVariosArticles: valorVariosArticulos,
-      size: articleSelected.complex ? precioArticleSelected.sizeArticle : '',
-      imgArticlePath: img,
-      id: articleSelected.id,
-      categoria: categorySelected,
-      complex: articleSelected.complex,
+    if(!categorySelected.isCategoryOfPoints){
+      const pedido = {
+        ingredientePrincipal: articleSelected.titulo,
+        ingredientesAdicionales: ingredientes,
+        cantidad: cantidadArticulo,
+        mitad: articleSelected.complex ? ingredienteMitad : '',
+        precio: valorArticulo,
+        precioVariosArticles: valorVariosArticulos,
+        size: articleSelected.complex ? precioArticleSelected.sizeArticle : '',
+        imgArticlePath: img,
+        id: articleSelected.id,
+        categoria: categorySelected,
+        complex: articleSelected.complex,
+      }
+      setCart(state => ([...state, pedido]));
+      handleClickBack();
+      console.log(pedido);
+    }else if(categorySelected.isCategoryOfPoints){
+      console.log(infoPointsUser)
+      const pointsUser = infoPointsUser.puntosRestantes;
+      let pointsMakeOrder = Number(valorPuntosVariosArticulos);
+      cartOfCategoryPoints.forEach((element) => {
+        pointsMakeOrder += element.PuntosVariosArticles;
+      });
+      if(pointsUser < pointsMakeOrder){
+        alert('No puedes seleccionar este articulo porque no tienen sufientes puntos');
+        return;
+      }
+      const pedido = {
+        ingredientePrincipal: articleSelected.titulo,
+        ingredientesAdicionales: ingredientes,
+        cantidad: cantidadArticulo,
+        mitad: articleSelected.complex ? ingredienteMitad : '',
+        puntos: valorPuntosArticulo,
+        PuntosVariosArticles: valorPuntosVariosArticulos,
+        size: articleSelected.complex ? precioArticleSelected.sizeArticle : '',
+        imgArticlePath: img,
+        id: articleSelected.id,
+        categoria: categorySelected,
+        complex: articleSelected.complex,
+      }
+      setCartOfCategoryPoints(state => ([...state, pedido]));
+      handleClickBack();
+      console.log(pedido);
     }
-    setCart(state => ([...state, pedido]));
-    handleClickBack();
 
-    console.log(pedido);
   }
 
   const handleClickBack = () => {
@@ -190,7 +230,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
           </div>
           <button className={`btn ${color1.btn} d-flex justify-content-between align-items-center col-7`} onClick={handleClickAgregar}>
             <p className='m-0 fs-3'>Agregar</p>
-            <p className='m-0 fs-3'>{valorVariosArticulos} RD$</p>
+            <p className='m-0 fs-3'>{!categorySelected.isCategoryOfPoints ? `${valorVariosArticulos} RD$` : `${valorPuntosVariosArticulos} puntos` } </p>
           </button>
         </footer>
 

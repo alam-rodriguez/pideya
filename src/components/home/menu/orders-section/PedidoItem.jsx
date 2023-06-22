@@ -7,7 +7,7 @@ const PedidoItem = ({orden}) => {
   const [total, setTotal] = useState(0);
 
   useEffect( () => {
-    console.log( orden );
+    console.log( orden.pedido );
     console.log('----------------');
     let total = 0;
     orden.pedido.map( (item) => {
@@ -49,32 +49,67 @@ const PedidoItem = ({orden}) => {
         </div>
               
         <div className='py-2'>
-          <p className='m-0 fw-bold fs-4 text-center'>Articulos:</p>
-          { 
-            orden.pedido.map( (article, i) => (
-              <div key={i} className='border-bottom py-2'>
-                <p className='m-0 fw-medium fs-5 text-center text-secondary'>Categoria: <span className='fw-bold text-black fst-italic'>{article.categoria.nombre}</span></p>
-                <p className='m-0 fw-medium fs-5 text-center text-secondary'>Cantidad: <span className='fw-bold text-black fst-italic'>{article.cantidad}</span></p>
-                <p className='m-0 fw-medium fs-5 text-center text-secondary'>Articulo: <span className='fw-bold text-black fst-italic'>{(article.size != '') ? `${article.size}-${article.ingredientePrincipal}` : article.ingredientePrincipal}</span></p>
-                
-                { 
-                  (article.ingredientesAdicionales.length > 0)
-                  ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Adicional: {article.ingredientesAdicionales.map((adicional)=>(
-                      <span className='fw-bold text-black fst-italic'>{adicional.adicional},</span>
-                    ))}</p>
-                  : <></>
-                }
-                
-                { 
-                  (article.mitad != '')
-                  ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Mitad: <span className='fw-bold text-black fst-italic'>{article.mitad}</span></p>
-                  : <></>
-                }
+          { orden.pedido.length > 0 ? 
+            <>
+              <p className='m-0 fw-bold fs-4 text-center'>Articulos:</p>
+              { orden.pedido.map( (article, i) => (
+                <div key={i} className='border-bottom py-2'>
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Categoria: <span className='fw-bold text-black fst-italic'>{article.categoria.nombre}</span></p>
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Cantidad: <span className='fw-bold text-black fst-italic'>{article.cantidad}</span></p>
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Articulo: <span className='fw-bold text-black fst-italic'>{(article.size != '') ? `${article.size}-${article.ingredientePrincipal}` : article.ingredientePrincipal}</span></p>
+                  
+                  { 
+                    (article.ingredientesAdicionales.length > 0)
+                    ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Adicional: {article.ingredientesAdicionales.map((adicional)=>(
+                        <span className='fw-bold text-black fst-italic'>{adicional.adicional},</span>
+                      ))}</p>
+                    : <></>
+                  }
+                  
+                  { 
+                    (article.mitad != '')
+                    ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Mitad: <span className='fw-bold text-black fst-italic'>{article.mitad}</span></p>
+                    : <></>
+                  }
 
-                <p className='m-0 fw-medium fs-5 text-center text-secondary'>Precio: <span className='fw-bold text-black fst-italic'>{article.precioVariosArticles}</span></p>
-              </div>
-            ))
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Precio: <span className='fw-bold text-black fst-italic'>{article.precioVariosArticles}</span></p>
+                </div>
+              ))}
+            </>
+            : <></>
           }
+
+          { (orden.pedidoOfPoints.length > 0) ?
+            <>
+              <p className='m-0 fw-bold fs-4 text-center'>Articulos de Puntos:</p>
+
+              { orden.pedidoOfPoints.map( (article, i) => (
+                <div key={i} className='border-bottom py-2'>
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Categoria: <span className='fw-bold text-black fst-italic'>{article.categoria.nombre}</span></p>
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Cantidad: <span className='fw-bold text-black fst-italic'>{article.cantidad}</span></p>
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Articulo: <span className='fw-bold text-black fst-italic'>{(article.size != '') ? `${article.size}-${article.ingredientePrincipal}` : article.ingredientePrincipal}</span></p>
+                  
+                  { 
+                    (article.ingredientesAdicionales.length > 0)
+                    ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Adicional: {article.ingredientesAdicionales.map((adicional)=>(
+                        <span className='fw-bold text-black fst-italic'>{adicional.adicional},</span>
+                      ))}</p>
+                    : <></>
+                  }
+                  
+                  { 
+                    (article.mitad != '')
+                    ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Mitad: <span className='fw-bold text-black fst-italic'>{article.mitad}</span></p>
+                    : <></>
+                  }
+
+                  <p className='m-0 fw-medium fs-5 text-center text-secondary'>Precio: <span className='fw-bold text-black fst-italic'>{article.PuntosVariosArticles}</span></p>
+                </div>
+              ))}
+            </>
+          : <></>
+          }
+          
           {
             orden.deliveryInfo.costo > 0
               ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Delivery: <span className='fw-bold text-black fst-italic'>{orden.deliveryInfo.costo}</span></p>

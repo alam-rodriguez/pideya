@@ -7,7 +7,7 @@ import Header from '../components/Header'
 import { AppContext } from '../../../context/AppContext';
 
 // Firebase
-import { addReferidoPor, getInfoUser, searchCodeRef } from '../../../firebase/firebaseFirestore';
+import { addReferidoPor, editEstadistica, getEstadisticas, getInfoUser, obtenerInfoApp, searchCodeRef } from '../../../firebase/firebaseFirestore';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -20,11 +20,20 @@ const SearchCodeRef = () => {
 
   const [infoReferido, setInfoReferido] = useState(null);
 
+  const [infoPointsApp, setInfoPointsApp] = useState(null);
+
   useEffect( () => {
     if(email == null) navigate('/home');
     const f = async () => {
+
+      const infoApp = await obtenerInfoApp();
+      console.log(infoApp.infoPoints);
+      setInfoPointsApp(infoApp.infoPoints);
+
       const res = await getInfoUser(email);
-      if(res.referidoPor != undefined) setInfoReferido( res.referidoPor );
+      if(res.referidoPor != undefined) {
+        setInfoReferido( res.referidoPor );
+      }
     }
     f();
   }, [] );
@@ -36,8 +45,29 @@ const SearchCodeRef = () => {
   const handleClick = async () => {
     const res = await searchCodeRef( Number(inputValue) );
     if(res.email != undefined){
+      const referidoInfo = {
+        codeRef: res.codeRef,
+        email: res.email,
+        nombre: res.nombre,
+        givePointsForSpendMoney: false,
+      }
+      setInfoReferido( res );
       console.log( res );
-      const resRef = await addReferidoPor(email, res);
+      setInfoReferido(res);
+      const resRef = await addReferidoPor(email, referidoInfo);
+
+      const estadisticasAmigo = await getEstadisticas(res.email);
+      const newEstadistcas = {
+        dineroGastado: estadisticasAmigo.dineroGastado, 
+        puntosGanados: estadisticasAmigo.puntosGanados + Number(infoPointsApp.refFriendGenerate),
+        puntosGastados: estadisticasAmigo.puntosGastados,
+        puntosRestantes: estadisticasAmigo.puntosRestantes + Number(infoPointsApp.refFriendGenerate),
+      }
+      const res3 = await editEstadistica(res.email, newEstadistcas);
+      console.log(res3);
+
+
+
     }else {
       alert('no se ha escontrado este codigo');
     }

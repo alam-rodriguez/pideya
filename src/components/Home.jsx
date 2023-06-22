@@ -123,7 +123,7 @@ const Home = () => {
           <UseCode />
   
           { (categories != null)
-              ? categories.map((category)=>(
+              ? categories.map( (category) => (
                 <CategoryMenu key={category.id} category={category} color1={color1} />
               ))
             : <></>

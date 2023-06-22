@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // Componentes
 import Header from './ajustes-puntos-componentes/Header';
+import AjustesPuntosCodigoRef from './AjustesPuntosCodigoRef';
 
 // Firebase
 import { addInfoPoints, obtenerInfoApp } from '../../../firebase/firebaseFirestore';
@@ -17,41 +18,55 @@ const AjustesPuntos = () => {
 
   const { email } = useContext(AppContext);
 
+  const [configCodeRef, setConfigCodeRef] = useState({
+    refFriendGenerate: 10,
+    minForSpend: 2500,
+    pointsForMinSpend: 50,
+  });
+
   useEffect( () => {
-    
     const f = async () => {
       const res = await obtenerInfoApp();
-      console.log(res.infoPoints);
-      setWantPoints(res.infoPoints.wantPoints);
-      setEachPointValue(res.infoPoints.eachPointValue);
-      setEachMoneyGenerateOnePoint(res.infoPoints.eachMoneyGenerateOnePoint)
+      console.log(res.infoPoints.activatePoints);
+      if(res.infoPoints.activatePoints != undefined){
+        setActivatePoints(res.infoPoints.activatePoints);
+        setEachPointValue(res.infoPoints.eachPointValue);
+        setEachMoneyGenerateOnePoint(res.infoPoints.eachMoneyGenerateOnePoint);
+        setConfigCodeRef({
+          refFriendGenerate: res.infoPoints.refFriendGenerate,
+          minForSpend: res.infoPoints.minForSpend,
+          pointsForMinSpend: res.infoPoints.pointsForMinSpend,
+        });
+      }
     }
     f();
-
   }, [] );
 
-  const [wantPoints, setWantPoints] = useState(false);
-  const [eachPointValue, setEachPointValue] = useState(1);
+  const [activatePoints, setActivatePoints] = useState(false);
+  const [eachPointValue, setEachPointValue] = useState(25);
   const [eachMoneyGenerateOnePoint, setEachMoneyGenerateOnePoint] = useState(1);
 
   // Handles
-  const handleChangeWantPoints = (e) => setWantPoints(e.target.checked);
+  const handleChangeWantPoints = (e) => setActivatePoints(e.target.checked);
   const handleChangeEachPointValue = (e) => (e.target.value > 0) ? setEachPointValue(Number(e.target.value)) : null;
   const handleChangeEachMoneyGenerateOnePoin = (e) => (e.target.value > 0) ? setEachMoneyGenerateOnePoint(Number(e.target.value)) : null;
 
   const handleClickGuardar = async () => {
     const infoPoints = {
-      wantPoints,
+      activatePoints,
       eachPointValue,
       eachMoneyGenerateOnePoint,
+      refFriendGenerate: configCodeRef.refFriendGenerate,
+      minForSpend: configCodeRef.minForSpend,
+      pointsForMinSpend: configCodeRef.pointsForMinSpend,
     }
-    await addInfoPoints(email, infoPoints);
-    console.log(infoPoints);
+    const res = await addInfoPoints(email, infoPoints);
+
+    if( res ) alert('Ajustes guardados correctamente');
+    else if( !res ) alert('Ha ocurrido un error al guardar los ajustes, intentelo de nuevo');
   }
 
-  const handleClickCategoryPoints = () => {
-    navigate('/admin-options/ajustes-puntos/view-category');
-  }
+  const handleClickCategoryPoints = () => navigate('/admin-options/ajustes-puntos/view-category');
 
   return (
     <main>
@@ -59,35 +74,38 @@ const AjustesPuntos = () => {
       <Header />
 
       <section className='mx-4'>
-        <p className='m-0 fs-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolor fugiat atque explicabo, odit, assumenda dolores quos doloremque totam ut fuga reprehenderit incidunt reiciendis ratione quam culpa alias nam et?</p>
+        <p className='m-0 fs-5'>Los puntos son recompensas que los usuarios obtienen al hacer compras, y estas recompensas o puntos los pueden utilizar para hacer compras gratuitas de articulos.</p>
 
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={wantPoints} onChange={handleChangeWantPoints} />
-          <label class="form-check-label" for="flexSwitchCheckChecked">Deseas eliminar la opcion de los puntos ? si eliminas esta funcion los clientes no generaran puntos ni podran usar los que ya tienen</label>
+
+        <div className="form-check form-switch my-4">
+          <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={activatePoints} onChange={handleChangeWantPoints} />
+          <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Deseas activar la opcion de los puntos ? si desactivas esta funcion los clientes no generaran puntos ni podran usar los que ya tienen</label>
         </div>
 
-        <div>
+        <div className='my-4'>
           <p className='m-0 fw-bold fs-2 text-center'>Reglas de los puntos</p>
           
-          <div class="row g-3 align-items-center">
-            <div class="col-auto">
-              <label for="inputPassword6" class="col-form-label">cada {eachPointValue} pesos genera 1 punto</label>
+          <div className="row g-3 align-items-center">
+            <div className="col-auto">
+              <label htmlFor="inputPassword6" className="col-form-label">cada {eachPointValue} pesos genera 1 punto</label>
             </div>
-            <div class="col-auto">
-              <input type="number" class="form-control" placeholder='pesos' value={eachPointValue} onChange={handleChangeEachPointValue} />
+            <div className="col-auto">
+              <input type="number" className="form-control" placeholder='pesos' value={eachPointValue} onChange={handleChangeEachPointValue} />
             </div>
           </div>
 
-          <div class="row g-3 align-items-center">
-            <div class="col-auto">
-              <label for="inputPassword6" class="col-form-label">Cada punto vale {eachMoneyGenerateOnePoint} pesos</label>
+          <div className="row g-3 align-items-center">
+            <div className="col-auto">
+              <label htmlFor="inputPassword6" className="col-form-label">Cada punto vale {eachMoneyGenerateOnePoint} pesos</label>
             </div>
-            <div class="col-auto">
-              <input type="number" class="form-control" placeholder='pesos' value={eachMoneyGenerateOnePoint} onChange={handleChangeEachMoneyGenerateOnePoin} />
+            <div className="col-auto">
+              <input type="number" className="form-control" placeholder='pesos' value={eachMoneyGenerateOnePoint} onChange={handleChangeEachMoneyGenerateOnePoin} />
             </div>
           </div>
 
         </div>
+
+        <AjustesPuntosCodigoRef configCodeRef={configCodeRef} setConfigCodeRef={setConfigCodeRef} />
 
         <button className='btn btn-success form-control fs-3 p-3' style={{marginTop:100}} onClick={handleClickCategoryPoints}>Categoria de puntos</button>
 

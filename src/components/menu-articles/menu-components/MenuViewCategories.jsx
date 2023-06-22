@@ -9,6 +9,7 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 import { AppContext } from '../../../context/AppContext';
 
 const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
+
   const {categorySelected, setCategorySelected, cart, color1} = useContext(AppContext);
 
   // const [categorySelect, setCategorySelect] = useState(null);

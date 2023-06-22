@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 
 // Firebase
-import { getArticlesByCategory } from '../../../firebase/firebaseFirestore';
+import { getArticlesByCategory, getEstadisticas } from '../../../firebase/firebaseFirestore';
 import { getUrlImage } from '../../../firebase/firebaseStorage';
 
 // Context
@@ -14,12 +14,30 @@ import { useNavigate } from 'react-router-dom';
 const MenuViewArticles = ({id, titulo, imgpath, articulo, setViewPreviewInfoArticle }) => {
   const navigate = useNavigate();
 
-  const {color1, articleSelected, setArticleSelected, cart} = useContext(AppContext);
+  const { email, color1, articleSelected, setArticleSelected, cart, infoPointsUser, setInfoPointsUser} = useContext(AppContext);
 
   // // const [categories, setCategories] = useState(null);
   const [img, setImg] = useState(null);
 
   const [countItem, setCountItem] = useState(0);
+
+  // Obtener puntos del usuario
+  useEffect( () => {
+		if(infoPointsUser == null){
+			const f = async () => {
+				const pointsUser = await getEstadisticas(email);
+				if(pointsUser != 'no estadisticas' && pointsUser != false) setInfoPointsUser(pointsUser);
+        else if(pointsUser != 'no estadisticas') setInfoPointsUser({
+          dineroGastado: 0,
+          puntosGanados: 0,
+          puntosGastados: 0,
+          puntosRestantes: 0,
+        });
+				console.log(pointsUser);
+			}
+			f();
+		}
+	}, [] );
 
   const handleClick = () => {
     setArticleSelected(articulo);

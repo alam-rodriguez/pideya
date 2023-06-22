@@ -39,11 +39,15 @@ const AppContextProvider = ({children}) => {
 
   const [cart, setCart] = useState([]);
 
+  const [cartOfCategoryPoints, setCartOfCategoryPoints] = useState([]);
+
   const [SeletedOrder, setSeletedOrder] = useState(null);
 
   const [infoPoints, setInfoPoints] = useState(null);
 
   const [clientOrders, setClientOrders] = useState(null);
+
+  const [infoPointsUser, setInfoPointsUser] = useState(null);
 
   return(
     <AppContext.Provider 
@@ -60,9 +64,11 @@ const AppContextProvider = ({children}) => {
         articleSelected, setArticleSelected,
         precioArticleSelected, setPrecioArticleSelected,
         cart, setCart,
+        cartOfCategoryPoints, setCartOfCategoryPoints,
         SeletedOrder, setSeletedOrder,
         infoPoints, setInfoPoints,
-        clientOrders, setClientOrders
+        clientOrders, setClientOrders,
+        infoPointsUser, setInfoPointsUser
       }}
     >
       {children}
