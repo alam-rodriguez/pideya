@@ -47,7 +47,7 @@ const SeeOrders = () => {
               orden.pedido.map( (item) => {
                 total += Number(item.precioVariosArticles);
               });
-              total += Number(orden.deliveryInfo.costo);
+              if(orden.deliveryInfo != null) total += Number(orden.deliveryInfo.costo);
 
               let puntos = 0;
               orden.pedidoOfPoints.map( (item) => {

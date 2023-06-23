@@ -69,7 +69,7 @@ const SeeOrder = () => {
     seletedOrder.pedido.map( (item) => {
       total += Number(item.precioVariosArticles);
     });
-    total += Number(seletedOrder.deliveryInfo.costo);
+    if(seletedOrder.deliveryInfo != null)total += Number(seletedOrder.deliveryInfo.costo);
     setTotal(total);
     let puntos = 0;
     console.log( seletedOrder );
@@ -321,16 +321,17 @@ const handleClickGuardar = async () => {
 }
 
 const givePointsToFriend = async (statistics) => {
-  // console.log( infoUserRef.givePointsForSpendMoney );
-  console.log( infoUserRef );
+  console.log( infoUserRef.givePointsForSpendMoney );
+  // console.log( infoUserRef );
   // console.log( statistics.dineroGastado );
   // console.log( seletedOrder.pointsInfo.minForSpend );
 
-  console.log(infoPoints.pointsForMinSpend);
+  // console.log(infoPoints.pointsForMinSpend);
 
   
   
   if( !infoUserRef.givePointsForSpendMoney && statistics.dineroGastado > seletedOrder.pointsInfo.minForSpend ) {
+    console.log('si');
     // Edito el referido por
     const NewinfoUserRef = {...infoUserRef};
     NewinfoUserRef.givePointsForSpendMoney = true;
@@ -380,12 +381,14 @@ const givePointsToFriend = async (statistics) => {
                 valor={seletedOrder.telefono}
               />  
 
-              { (seletedOrder.deliveryInfo.costo > 0) ? 
+              { seletedOrder.deliveryInfo != null ?
+               (seletedOrder.deliveryInfo.costo > 0) ? 
                 <ItemList 
                   clave='Ubicacion:' 
                   valor={`${seletedOrder.deliveryInfo.lugar}: ${seletedOrder.direccion}`}
-                />      
-              : <></>
+                />     
+                : <></> 
+                : <></>
               }        
   
               <div className='py-2'>
@@ -482,14 +485,18 @@ const givePointsToFriend = async (statistics) => {
                 }
               </div>
 
-              { (seletedOrder.deliveryInfo.costo > 0) ? 
-                <ItemList 
-                  clave='Delivery:' 
-                  valor={seletedOrder.deliveryInfo.costo}
-                />        
-              : <div className='d-flex justify-content-center align-items-center border-bottom py-2'>
-                  <p className='m-0 fw-medium fs-5 fw-bold'>La viene a buscar</p>
-                </div>
+              { seletedOrder.deliveryInfo != null ?
+                (seletedOrder.deliveryInfo.costo > 0) ? 
+                  <ItemList 
+                    clave='Delivery:' 
+                    valor={seletedOrder.deliveryInfo.costo}
+                  />        
+                : <div className='d-flex justify-content-center align-items-center border-bottom py-2'>
+                    <p className='m-0 fw-medium fs-5 fw-bold'>La viene a buscar</p>
+                  </div>
+                : <div className='d-flex justify-content-center align-items-center border-bottom py-2'>
+                    <p className='m-0 fw-medium fs-5 fw-bold'>La viene a buscar</p>
+                  </div>
               }
 
               { puntosGastados > 0 ?
