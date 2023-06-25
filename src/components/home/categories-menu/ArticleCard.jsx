@@ -42,7 +42,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id 
   if(size == 'small'){
     if(isCategoryOfPoints){
       return (
-        <div className='me-4 rounded-5 overflow-hidden d-flex flex-column' style={{height:190, width:160, minWidth:160}}>
+        <div className='animate__animated animate__fadeInLeft me-4 rounded-5 overflow-hidden d-flex flex-column' style={{height:190, width:160, minWidth:160}}>
           <div className='d-flex justify-content-center align-items-center position-relative' style={{height:'65%'}}  onClick={handleClick}>
             { imgUrl == null ? 
               <div className="spinner-border text-success fs-1" style={{height:50, width:50}} role="status">
@@ -50,9 +50,9 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id 
               </div>
             : <img className='w-100 h-100 object-fit-cover' src={imgUrl} alt="" />
             } 
-            <div className='d-flex align-items-center gap-1 py-1 px-3 rounded-end-5 position-absolute bottom-0 start-0 z-2 bg-success'>
-              <p className='m-0 text-white fs-3'>{price}</p>
-              <FaPizzaSlice className='fs-4 text-white' />
+            <div className='d-flex align-items-center gap-1 py-1 px-2 rounded-end-5 position-absolute bottom-0 start-0 z-2 bg-success'>
+              <p className='m-0 text-white fs-6'>{price}</p>
+              <FaPizzaSlice className='fs-6 text-white' />
             </div>
           </div>
           <div className='mx-3' style={{height:'35%'}}>
@@ -62,7 +62,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id 
       );
     }else{
       return (
-        <div className='me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:190, width:160, minWidth:160}} onClick={handleClick}>
+        <div className='animate__animated animate__fadeInLeft me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:190, width:160, minWidth:160}} onClick={handleClick}>
         { imgUrl == null ? 
           <div className="spinner-border text-success fs-1" style={{height:50, width:50}} role="status">
             <span className="visually-hidden">Loading...</span>
@@ -74,9 +74,9 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id 
     }
   }else if(size == 'normal'){
     return (
-      <div className='me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:170, width:250, minWidth:250}} onClick={handleClick}>
+      <div className='animate__animated animate__fadeInLeft me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:160, width:240, minWidth:240}} onClick={handleClick}>
         { imgUrl == null ? 
-          <div className="spinner-border text-success fs-1" style={{height:50, width:50}} role="status">
+          <div className="spinner-border text-success fs-1 border" style={{height:50, width:50}} role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         : <img className='w-100 h-100 object-fit-cover' src={imgUrl} alt="" />
@@ -85,7 +85,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id 
     );
   }else if(size == 'big'){
     return (
-      <div className='me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:150, width:230, minWidth:230}} onClick={handleClick}>
+      <div className='animate__animated animate__fadeInLeft me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:150, width:230, minWidth:230}} onClick={handleClick}>
         { imgUrl == null ? 
           <div className="spinner-border text-success fs-1" style={{height:50, width:50}} role="status">
             <span className="visually-hidden">Loading...</span>

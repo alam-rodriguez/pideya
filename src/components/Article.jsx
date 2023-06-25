@@ -16,7 +16,7 @@ const Article = () => {
     const { color1, articleSeleted, setArticleSeleted } = useContext(AppContext);
 
     useEffect(()=>{
-      if(articleSeleted == null) navigate('/home');
+      // if(articleSeleted == null) navigate('/home');
     }, [] );
 
     const handleClickBack = () => {
@@ -26,7 +26,7 @@ const Article = () => {
 
   if(articleSeleted != null){
     return (
-      <main className='vh-100 position-relative'>
+      <main className='animate__animated animate__fadeInRight container-fluid vh-100 vw-100 start-0 bg-danger'>
         <ImCancelCircle className='position-absolute text-white display-3' style={{top:20, left:20}} onClick={handleClickBack} />
         <img className='w-100 object-fit-cover'  src={articleSeleted.imgUrl} style={{height:'78%'}} />
         <div className='d-flex flex-column justify-content-between h-25 bg-white rounded-5 position-absolute bottom-0 w-100 p-4 pt-0 shadow-lg'>

@@ -12,7 +12,7 @@ import { addReferidoPor, editEstadistica, getEstadisticas, getInfoUser, obtenerI
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
-const SearchCodeRef = () => {
+const SearchCodeRef = ({viewSearchCode, setViewSearchCode}) => {
 
   const navigate = useNavigate();
 
@@ -44,6 +44,7 @@ const SearchCodeRef = () => {
 
   const handleClick = async () => {
     const res = await searchCodeRef( Number(inputValue) );
+    console.log(res.email);
     if(res.email != undefined){
       const referidoInfo = {
         codeRef: res.codeRef,
@@ -74,23 +75,23 @@ const SearchCodeRef = () => {
   }
 
   return (
-    <div>
-      <Header title='Entra el codigo de promo' />
+    <div className={`animate__animated ${viewSearchCode ? 'animate__fadeInRight' : 'animate__fadeOutRight'} container-fluid vh-100 vw-100 position-absolute bg-white top-0 start-0 z-3`}>
+      <Header title='Entra el codigo de promo' setViewSearchCode={setViewSearchCode} />
 
       <section className='mx-4 d-flex flex-column justify-content-evenly' style={{height:'90vh'}}>
         <div>
-          <p className='m-0 fs-4 text-center fw-normal'>Si fuiste invita por un amigo introduce su codigo de promocion aqui</p>
+          <p className='m-0 fs-5 text-center fw-normal'>Si fuiste invita por un amigo introduce su codigo de promocion aqui</p>
           { (infoReferido != null) ? 
             <>
               <input className='form-control border-0 border-bottom text-center fs-2 fw-bold'  type="text" value={infoReferido.codeRef} readOnly />  
-                <div className='d-flex justify-content-between mt-5'>
-                  <p className='m-0 fs-3 fw-medium'>Nombre:</p>
-                  <p className='m-0 fs-3 fw-bold'>{infoReferido.nombre}</p>
-                </div>
-                <div className='d-flex justify-content-between mt-5'>
-                  <p className='m-0 fs-3 fw-medium'>Nombre:</p>
-                  <p className='m-0 fs-3 fw-bold'>{infoReferido.email}</p>
-                </div>
+              <div className='d-flex justify-content-between mt-5'>
+                <p className='m-0 fs-3 fw-medium'>Nombre:</p>
+                <p className='m-0 fs-3 fw-bold'>{infoReferido.nombre}</p>
+              </div>
+              <div className='d-flex justify-content-between mt-5'>
+                <p className='m-0 fs-3 fw-medium'>Nombre:</p>
+                <p className='m-0 fs-3 fw-bold'>{infoReferido.email}</p>
+              </div>
             </>
             : <input className='form-control border-0 border-bottom text-center fs-2 fw-bold'  type="text" onChange={handleChangeInputValue} />
           }

@@ -39,6 +39,9 @@ import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
+// Animaciones
+import 'animate.css';
+
 function App() {
 
   // const navigate = useNavigate();

@@ -125,10 +125,10 @@ const Header = () => {
 	const handleClickMenu = () => setViewMenu(!viewMenu);
 
   return (
-    <header className='d-flex justify-content-between align-items-center py-3 bg-white position-sticky top-0 start-0 w-100 z-1' onClick={handleClickMenu}>
-			<FiMenu className={`ms-4 fs-3 ${color1.textColor}`} />
-			<h2>{appName}</h2>
-			<div className='d-flex me-4 align-items-center gap-2'>
+    <header className='d-flex justify-content-between py-3 bg-white position-sticky top-0 start-0 w-100 z-1 m-0' onClick={handleClickMenu}>
+			<FiMenu className={`fs-3 ${color1.textColor}`}/>
+			<h2 className='position-absolute start-50 translate-middle-x'>{appName}</h2>
+			<div className='d-flex align-items-center gap-2'>
 				<p className={`m-0 fs-4 ${color1.textColor}`}>{points}</p>
 				<FaPizzaSlice className={`fs-5 ${color1.textColor}`} />
 			</div>

@@ -25,8 +25,8 @@ const CategoryMenu = ({category, color1}) => {
     <section className='w-100 my-5 '>
 
       <div className='d-flex justify-content-between w-100'>
-        <h3 className='fw-bold'>{category.nombre}</h3>
-          <p className={`p-0 fw-bold ${color1.textColor}`}>TODO</p>
+        <h3 className='fw-bold fs-4'>{category.nombre}</h3>
+          <p className={`p-0 fs-6 fw-normal ${color1.textColor}`}>TODO</p>
         </div>
         <div className='d-flex flex-nowrap overflow-x-scroll'>
 

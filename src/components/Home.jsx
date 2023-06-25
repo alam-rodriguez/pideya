@@ -34,46 +34,48 @@ const Home = () => {
   // const [clientOrders, setClientOrders] = useState(null);
 
   useEffect( () => {
-    // logear usuario automaticamente
-    onAuthStateChanged(auth, (user) => {
-      if(user == null && goToHome == true) {
-        navigate('/welcome'); 
-        setGoToHome(false);
-        getData(''); 
-      }else if(user == null && goToHome == false){
-        getData(''); 
-      }else {
-        getData(user.email);
-        console.log(user.email);
-        setEmail(user.email);
-      }
-    });
-    // obtener info de la app y compruebo si es admin
-    const getData = async (emailUser) => {
-      const appInfo = await obtenerInfoApp();
-      if(appInfo == 'no hay datos de esta app'){
-        navigate('/registro-like-admin');
-      }else {
-        console.log(appInfo);
-        setInfoPoints(appInfo.infoPoints);
-        const pedidosClient = await getPedidosByClient( emailUser );
-        setClientOrders(pedidosClient);
-        if(appInfo.nombre == undefined){
-          navigate('/registro-like-admin/details-app');
-        } else {
-          setAppInfo(appInfo);
-          if(appInfo.admin == emailUser) setIsAdmin(true);
-          setAppCategories(await getCategories());
+    if(categories == null){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null && goToHome == true) {
+          navigate('/welcome'); 
+          setGoToHome(false);
+          getData(''); 
+        }else if(user == null && goToHome == false){
+          getData(''); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/registro-like-admin');
+        }else {
+          console.log(appInfo);
+          setInfoPoints(appInfo.infoPoints);
+          const pedidosClient = await getPedidosByClient( emailUser );
+          setClientOrders(pedidosClient);
+          if(appInfo.nombre == undefined){
+            navigate('/registro-like-admin/details-app');
+          } else {
+            setAppInfo(appInfo);
+            if(appInfo.admin == emailUser) setIsAdmin(true);
+            setAppCategories(await getCategories());
+          }
         }
       }
+      // obtiene categorias y articulos para renderizar
+      const getInfo = async () => {
+        const res = await getCategoriesFilted('viewInHome');
+        setCategories(res);
+        console.log(res);
+      }
+      getInfo();
     }
-    // obtiene categorias y articulos para renderizar
-    const getInfo = async () => {
-      const res = await getCategoriesFilted('viewInHome');
-      setCategories(res);
-      console.log(res);
-    }
-    getInfo();
   }, [] );
 
   const handleClickMain = () => {
@@ -103,9 +105,11 @@ const Home = () => {
     //   console.log(res);
     // }, [] );
 
+  const [viewSearchCode, setViewSearchCode] = useState(false);
+
   if(categories != null){
     return(
-      <div className={`container px-4 vh-100 vw-100 position-absolute  ${viewMenu ? 'd-flex overflow-hidden py-5 overflow-hidden': ''}`} style={{}}>
+      <div className={`${viewSearchCode ? 'overflow-hidden' : ''} animate__animated animate__fadeIn container overflow-x-hidden px-4 vh-100 vw-100 position-absolute  ${viewMenu ? 'd-flex overflow-hidden py-5 overflow-hidden': ''}`} style={{}}>
         
         { (viewMenu) ? 
           // Menu 
@@ -120,7 +124,7 @@ const Home = () => {
           <OrderSection />
   
           {/* Use Code Section */}
-          <UseCode />
+          <UseCode viewSearchCode={viewSearchCode} setViewSearchCode={setViewSearchCode} />
   
           { (categories != null)
               ? categories.map( (category) => (
