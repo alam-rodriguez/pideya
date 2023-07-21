@@ -25,27 +25,28 @@ const ContactUs = () => {
       setInstagram(appInfo.instagram);
       setWhatsapp(appInfo.whatsapp);
     }
-  });
+    console.log(<RiFacebookCircleLine className='display-4 me-1' />)
+  }, [] );
 
   return (
     <section className='d-flex justify-content-around gap-2 pb-5'>
 
       <ContactUsItem
-        icon={<RiFacebookCircleLine className='display-5 me-1' />} 
+        icon={<RiFacebookCircleLine className='display-2 me-1' />} 
         title='Visitanos en' 
         appName='FACEBOOK' 
         link={facebook}
       />
 
       <ContactUsItem
-        icon={<AiOutlineInstagram className='display-5 me-1' />} 
+        icon={<AiOutlineInstagram className='display-2 me-1' />} 
         title='Visitanos en' 
         appName='INSTAGRAM' 
         link={instagram}
       />
 
       <ContactUsItem
-        icon={<FaWhatsapp className='display-5 me-1' />} 
+        icon={<FaWhatsapp className='display-2 me-1' />} 
         title='Visitanos en' 
         appName='WHATSAPP' 
         link={whatsapp}

@@ -7,8 +7,8 @@ import { BsCloudUploadFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
-import { createArticleOfPoints, updateArticleOfPoints } from '../../../../firebase/firebaseFirestore';
-import { uploadImage } from '../../../../firebase/firebaseStorage';
+import { createArticleOfPoints, deleteArticle, deleteArticleOfPoints, updateArticleOfPoints } from '../../../../firebase/firebaseFirestore';
+import { deleteImage, uploadImage } from '../../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -19,8 +19,14 @@ import Header from '../ajustes-puntos-componentes/Header';
 // Context
 import { AppContext } from '../../../../context/AppContext';
 import { getUrlImage } from '../../../../firebase/firebaseStorage';
+import { MdDeleteForever } from 'react-icons/md';
+import { ToastContainer, toast } from 'react-toastify';
+
+// Notificaciones Swal
+import Swal from 'sweetalert2';
 
 const CreateOrEditArticlePuntos = () => {
+  
   const navigate = useNavigate();
 
   const { categorySelected, articleSelected, setArticleSelected } = useContext(AppContext);
@@ -55,9 +61,24 @@ const CreateOrEditArticlePuntos = () => {
 
   const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
 
+  const [showBottonToBack, setShowBottonToBack] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
+
   const handleClickCrearArticulo = async () => {
 
-    if( titulo.length > 2 && subtitulo.length > 3 && img != null){
+    if(titulo.length < 3) Swal.fire({
+      title: 'Advertencia',
+      text:'El titulo debe de tener por lo menos 3 caracteres', 
+    });
+    else if(subtitulo.length < 3) Swal.fire({
+      title: 'Advertencia',
+      text:'El subtitulo debe de tener por lo menos 3 caracteres', 
+    });  
+    else if(img == null) Swal.fire({
+      title: 'Advertencia',
+      text:'Debe de ingresar una imagen para el articulo', 
+    });   
+    else {
       const id = uuidv4();
       const info = {
         titulo: titulo,
@@ -68,22 +89,58 @@ const CreateOrEditArticlePuntos = () => {
         complex: false,
         puntos: puntos,
       }
-      console.log(info)
-      const res = await createArticleOfPoints(id, info);      
-      const resImg = await uploadImage(id, img);
-      if(res == true && resImg == true) navigate('/admin-options/ajustes-puntos/view-articles');
-      
-      console.log(res);
-    }else if(titulo.length < 2) {
-      alert('El titulo debe de tener por lo menos 3 caracteres');
-    }else if(img == null){
-      alert('Debe de ingresar una imagen para el articulo');
+
+      const createArticlePromise = new Promise( async (resolve, reject) => {
+        
+        console.log(info)
+        const res = await createArticleOfPoints(id, info);      
+        const resImg = await uploadImage(id, img);
+        if(res && resImg) {
+          resolve();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/admin-options/ajustes-puntos/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        }else {
+          reject();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/admin-options/ajustes-puntos/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        }
+        
+        console.log(res);
+
+      });
+
+      toast.promise( createArticlePromise, {
+        pending: 'Promise is pending',
+        success: 'Promise resolved 👌',
+        error: 'Promise rejected 🤯'
+      });
+
     }
+    // else if(titulo.length < 2) {
+    //   alert('El titulo debe de tener por lo menos 3 caracteres');
+    // }else if(img == null){
+    //   alert('Debe de ingresar una imagen para el articulo');
+    // }
 
   }
 
   const handleClickAptualizarArticulo = async () => {
-    if( titulo.length > 2 && subtitulo.length > 3){
+
+    if(titulo.length < 3) Swal.fire({
+      title: 'Advertencia',
+      text:'El titulo debe de tener por lo menos 3 caracteres', 
+    });
+    else if(subtitulo.length < 3) Swal.fire({
+      title: 'Advertencia',
+      text:'El subtitulo debe de tener por lo menos 3 caracteres', 
+    });
+    else {
       const info = {
         id: articleSelected.id,
         titulo: titulo,
@@ -100,18 +157,71 @@ const CreateOrEditArticlePuntos = () => {
       if(res == true) navigate('/admin-options/ajustes-puntos/view-articles');
       console.log(res);
 
-    }else if(titulo.length < 2) {
-      alert('El titulo debe de tener por lo menos 3 caracteres');
-    }else if(img == null){
-      alert('Debe de ingresar una imagen para el articulo');
+    }
+    
+    // else if(titulo.length < 2) {
+    //   alert('El titulo debe de tener por lo menos 3 caracteres');
+    // }else if(img == null){
+    //   alert('Debe de ingresar una imagen para el articulo');
+    // }
+  }
+
+  const handleClickDeleteArticle = async () => {
+
+    const res = await Swal.fire({
+      title: 'Estas seguro?',
+      text: "Quieres eliminar este articulo, si lo eliminas no podras recuperarlo.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar'
+    });
+    console.log(res.isConfirmed);
+    if(res.isConfirmed){
+
+      const deleteArticlePromise = new Promise( async (resolve, reject) => {
+      
+        const resArticle = await deleteArticleOfPoints(articleSelected.id);
+        const resImg = await deleteImage(articleSelected.id);
+        if(resArticle && resImg){
+          resolve();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/admin-options/ajustes-puntos/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        }else{
+          reject();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/admin-options/ajustes-puntos/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        }
+  
+      });
+
+      toast.promise( deleteArticlePromise, {
+        pending: 'Borrando Articulo',
+        success: 'Articulo borrado',
+        error: 'Error al borrar articulo'
+      });
+
     }
   }
+
+  const handleClickAtras = () => {
+    setArticleSelected(null);
+    clearTimeout(timeoutId);
+    navigate('/admin-options/ajustes-puntos/view-articles');
+  };
 
   if(articleSelected == null){
     return (
       <main className='border-0 border-bottom border-top mx-3 col-11 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
         {/* Header */}
-        <Header link='/admin-options/ajustes-puntos/view-articles' />
+        <Header handleClickAtras={handleClickAtras} />
   
         <section className='d-flex flex-column gap-4'>
   
@@ -137,16 +247,21 @@ const CreateOrEditArticlePuntos = () => {
             <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
           </div>
   
-          <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
+          {/* <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/> */}
+          { !showBottonToBack
+            ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
+            : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
+          }
   
         </section>
+        <ToastContainer />
       </main>
     );
   }else {
     return (
       <main className='border-0 border-bottom border-top mx-3 col-11 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
         {/* Header */}
-        <Header link='/admin-options/ajustes-puntos/view-articles' />
+        <Header handleClickAtras={handleClickAtras} />
   
         <section className='d-flex flex-column gap-4'>
   
@@ -176,10 +291,17 @@ const CreateOrEditArticlePuntos = () => {
             </div>
             <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
           </div>
+
+          <MdDeleteForever className='text-danger mt-0' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />
   
-          <input className='btn btn-success fs-3 rounded-0' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/>
+          {/* <input className='btn btn-success fs-3 rounded-0' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/> */}
+          { !showBottonToBack
+            ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/>
+            : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
+          }
   
         </section>
+        <ToastContainer />
       </main>
     );
   }

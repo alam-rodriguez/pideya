@@ -8,19 +8,33 @@ import { GrSubtractCircle } from 'react-icons/gr'
 import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
-import { createArticle, createCategories, getCategories } from '../../../firebase/firebaseFirestore';
+import { createArticle, getCategories } from '../../../firebase/firebaseFirestore';
 import { uploadImage } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
 // Header
+import Header from './components/Header';
 import CreateArticleHeader from '../sections/CreateArticleHeader';
 
+// Toaster
+import { ToastContainer, toast } from 'react-toastify';
+
+// Swal-Alerts
+import Swal from 'sweetalert2';
+
 const CreateArticle = () => {
+
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState(null);
+
+  // Para indicar si sera mitad
+  const [isMiddle, setIsMiddle] = useState(false);
+  const handleChangeIsMiddle = (e) => {
+    setIsMiddle(e.target.checked);
+  }
 
   // Para poner si sera un articulo complejo o no
   const [complejo, setComplejo] = useState(false);
@@ -56,7 +70,32 @@ const CreateArticle = () => {
   
   const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
 
+  const [showBottonToBack, setShowBottonToBack] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
+
   const handleClickCrearArticulo = async () => {
+
+    if(titulo.length < 3){
+      Swal.fire({
+        title: 'Advertencia',
+        text:'El nombre del articulo debe de tener por lo menos 3 caracteres', 
+      });
+      return;
+    }
+    if(subtitulo.length < 3){
+      Swal.fire({
+        title: 'Advertencia',
+        text:'La descripcion del articulo debe de tener por lo menos 3 caracteres', 
+      });
+      return;
+    }
+    if(img == null){
+      Swal.fire({
+        title: 'Advertencia',
+        text:'Debes de seleccionar una imagen', 
+      });
+      return;
+    }
 
     let infoArticleComplex = [];
 
@@ -148,20 +187,47 @@ const CreateArticle = () => {
         disponible: true,
         complex: complejo,
         precios: complejo ? infoArticleComplex : precio,
-      }
-      console.log(info)
-      const res = await createArticle(id, info);
-      const resImg = await uploadImage(id, img);
-      console.log(res)
-      if(res == true && resImg == true){
-        navigate('/view-articles');
+        isMiddle: !complejo ? false : isMiddle,
       }
 
+      const createArticlePromise = new Promise( async (resolve, reject) => {
+        console.log(info);
+        const res = await createArticle(id, info);
+        const resImg = await uploadImage(id, img);
+        if(res && resImg){
+          resolve();
+          setShowBottonToBack(true);
+          const timeoutId = setTimeout(() => {
+            navigate('/view-articles');
+          }, 5000);
+          setTimeoutId(timeoutId);
+        }else {
+          reject();
+          setShowBottonToBack(true);
+          const timeoutId = setTimeout(() => {
+            navigate('/view-articles');
+          }, 5000);
+          setTimeoutId(timeoutId);
+        }
+
+      })
+
+      toast.promise( createArticlePromise, {
+        pending: 'Creando Articulo',
+        success: 'Articulo Creado',
+        error: 'Error al crear articulo'
+      });
+    
     } else {
       console.log('no')
     }
 
   }
+
+  const handleClickAtras = () => {
+    clearTimeout(timeoutId);
+    navigate('/view-articles');
+  };
 
   const handleChangeChecked = (e) => {
     // console.log(e.target.checked);
@@ -189,10 +255,16 @@ const CreateArticle = () => {
     setAdicionalesYPrecios(nuevoArray);
   }
 
+  const handleChange = (e, i) => {
+    const title = document.querySelector(`.accordion-button-${i}`);
+    title.innerText = e.target.value;
+  }
+
   return (
     <main className='border-0 border-bottom border-top mx-3 col-11 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
       {/* Header */}
-      <CreateArticleHeader path='/view-articles' />
+      <Header handleClickAtras={handleClickAtras} />
+      {/* <CreateArticleHeader path='/view-articles' /> */}
 
       <section className='d-flex flex-column gap-4'>
 
@@ -249,16 +321,16 @@ const CreateArticle = () => {
             <div key={i} className="accordion" id='accordionExample'>
               <div className="accordion-item">
                 <h2  className="accordion-header">
-                  <button  className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="true" aria-controls="collapseOne">
-                    Accordion Item #1
+                  <button  className={`accordion-button accordion-button-${i}`} type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="true" aria-controls="collapseOne">
+                    
                   </button>
                 </h2>
                 <div id={`collapse${i}`}  className="accordion-collapse collapse show" data-bs-parent='#accordionExample'>
                   <p className='m-0'>Tamaño del articulo:</p>
                   <div  className="accordion-body">
                     <div className='row'>
-                      <input className={`col-6 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamano...' />
-                      <input className={`col-6 variante-nombre variante-precio-${i}`} type="text" placeholder='Precio...' />
+                      <input className={`col-8 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamaño...' onChange={(e)=>handleChange(e,i)} />
+                      <input className={`col-4 variante-nombre variante-precio-${i}`} type="text" placeholder='Precio...' />
                     </div>
 
                     {/* Nombre y precio de ingredientes segun el size */}
@@ -281,11 +353,12 @@ const CreateArticle = () => {
                     <div id={`variante-nombre-${i}`}>
                       {adicionalesYPrecios.map((variantePrecio, i)=>(
                         <div key={i} className='row my-2'>
-                          <input className='col-6 adicional-nombre'  type="text" placeholder='Nombre...' />
-                          <input className='col-4 adicional-precio' type="text" placeholder='Precio...' />
+                          <input className='col-7 adicional-nombre'  type="text" placeholder='Adicional...' />
+                          <input className='col-3 adicional-precio' type="number" placeholder='Precio...' />
                           <div className="form-check form-switch col-1 d-flex justify-content-center align-items-center">
                             <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  defaultChecked/>
                           </div>
+                          {/* <input className='col-2 adicional-precio' type="text" placeholder='Precio...' /> */}
                         </div>
                       ))}
                     </div>
@@ -316,18 +389,30 @@ const CreateArticle = () => {
           : <></>
         }
 
+        {/* Indicar si deseas que este articulo se use para una mitad de otro */}
+        { complejo ? 
+          <div className="form-check form-switch">
+            <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" onChange={handleChangeIsMiddle} />
+            <label className="form-check-label" htmlFor="handleChangeChecked">Deseas que este articulo se use para una mitad de otro articulo ?</label>
+          </div>
+          : <></>
+        }
+
         {/* Cambiar complejidad */}
         <div className="form-check form-switch">
           <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" onChange={handleChangeChecked} />
-          <label className="form-check-label" htmlFor="handleChangeChecked">Deseas que esta categoria se muestre en el menu de la app ?</label>
+          <label className="form-check-label" htmlFor="handleChangeChecked">Deseas que este articulo sea un articulo complejo ?</label>
         </div>
 
 
         {/* <input className='btn btn-success fs-3 position-absolute bottom-0 start-50 w-100 translate-middle mb-4 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/> */}
-        <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
-
+        { !showBottonToBack
+          ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
+          : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
+        }
 
       </section>
+      <ToastContainer />
     </main>
   )
 }

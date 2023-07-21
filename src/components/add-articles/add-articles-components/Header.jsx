@@ -9,11 +9,16 @@ import { AppContext } from '../../../context/AppContext';
 // React Icon
 import { IoIosArrowBack } from 'react-icons/io';
 
-const Header = ({path}) => {
-  const navigate = useNavigate();
-  const { appInfo } = useContext(AppContext);
-  const handleClickBack = () => navigate(path);
+const Header = ({handleClickAtras, path, whatReset}) => {
+  const { appInfo, setCategorySelected } = useContext(AppContext);
 
+  const navigate = useNavigate();
+
+  const handleClickBack = () => {
+    // navigate(path);
+    // if(whatReset == 'categorySelect') setCategorySelected(null);
+    handleClickAtras();
+  };
   
   return (
     <header className='d-flex justify-content-between align-items-center my-4 mx-2'>

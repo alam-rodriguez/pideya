@@ -50,11 +50,13 @@ const ViewCategoryPuntos = () => {
     navigate('/admin-options/ajustes-puntos/view-articles');
   };
 
+  const handleClickAtras = () => navigate('/admin-options/ajustes-puntos');
+
   if(categoryPuntos != null){
     return (
       <main className='border-0 mx-3' >
         {/* Header */}
-        <Header link='/admin-options/ajustes-puntos' />
+        <Header handleClickAtras={handleClickAtras} />
   
         <section className='d-flex flex-column gap-4'>
           <div className='border-bottom py-4' key={categoryPuntos.id} onClick={handleClickCategoryPoints}>

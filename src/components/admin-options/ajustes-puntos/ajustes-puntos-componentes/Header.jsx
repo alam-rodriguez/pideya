@@ -3,14 +3,9 @@ import React from 'react';
 // React Icons
 import { IoIosArrowBack } from 'react-icons/io';
 
-// React Router Dom
-import { useNavigate } from 'react-router-dom';
+const Header = ({handleClickAtras, title = 'Ajustes de Puntos'}) => {
 
-const Header = ({link = '/admin-options', title = 'Ajustes de Puntos'}) => {
-
-  const navigate = useNavigate();
-
-  const handleClickBack = () =>  navigate(link);
+  const handleClickBack = () =>  handleClickAtras();
 
   return (
     <header className='row border-bottom py-3'>
@@ -21,4 +16,4 @@ const Header = ({link = '/admin-options', title = 'Ajustes de Puntos'}) => {
   );
 }
 
-export default Header
+export default Header;

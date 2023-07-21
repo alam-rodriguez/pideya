@@ -19,6 +19,10 @@ import Header from '../ajustes-puntos-componentes/Header';
 
 // Context
 import { AppContext } from '../../../../context/AppContext';
+import { ToastContainer, toast } from 'react-toastify';
+
+// Swal-Notifications
+import Swal from 'sweetalert2';
 
 const CreateCategory = () => {
 
@@ -63,8 +67,21 @@ const CreateCategory = () => {
   const handleClickImg = () => document.querySelector('#select-img').click();
   const handleChangeSelectImg = (e) => setImgCategory(e.target.files[0]);
 
+  const [showBottonToBack, setShowBottonToBack] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
+
   const handleClickAddArticle = async () => {
-    if(nombreCategoria.length > 2 && imgCategory != null){
+
+    if(nombreCategoria.length < 3) Swal.fire({
+      title: 'Advertencia',
+      text:'El nombre de la categoria debe de tener por lo menos 3 caracteres', 
+    });
+    else if(imgCategory == null) Swal.fire({
+        title: 'Advertencia',
+        text:'Debe seleccionar una imagen obligatoriamente', 
+      });
+    else {
+
       const id = uuidv4();
       const categoryInfo = {
         id: id, 
@@ -76,39 +93,101 @@ const CreateCategory = () => {
         isCategoryOfPoints: true,
       }
       console.log( categoryInfo );
-      const res = await createCategoryPunto(categoryInfo);
-      const resImg = await uploadImage(id, imgCategory);
-      if(res === true && resImg === true) navigate('/admin-options/ajustes-puntos/view-category');
-    }else if(nombreCategoria.length < 2){
-      alert('El nombre de la categoria debe de tener por lo menos 3 caracteres');
-    }else if(imgCategory == null){
-      alert('Debe seleccionar una imagen obligatoriamente');
+  
+      const createArticlePromise = new Promise( async (resolve, reject) => {
+
+        const res = await createCategoryPunto(categoryInfo);
+        const resImg = await uploadImage(id, imgCategory);
+        if(res && resImg){
+          resolve();
+          setShowBottonToBack(true);
+          const timeout = setTimeout( () => {
+            navigate('/admin-options/ajustes-puntos/view-category');
+          }, 5000);
+          setTimeoutId(timeout);
+        } else {
+          reject();
+          setShowBottonToBack(true);
+          const timeout = setTimeout( () => {
+            navigate('/admin-options/ajustes-puntos/view-category');
+          }, 5000);
+          setTimeoutId(timeout);
+        }
+
+      });
+
+      toast.promise( createArticlePromise,{
+        pending: 'Creando Categoria',
+        success: 'Categoria Creada',
+        error: 'Error al crear categoria'
+      });
+
     }
+    // if(nombreCategoria.length > 2 && imgCategory != null){
+    //   } else if(nombreCategoria.length < 2){
+    //     alert('El nombre de la categoria debe de tener por lo menos 3 caracteres');
+    //   } else if(imgCategory == null)  {
+    //     alert('Debe seleccionar una imagen obligatoriamente');
+    //   }
   }
 
-  const handleClickUpdateArticle = async () => {
-      if(nombreCategoria.length > 2){
-        const categoryInfo = {
-          id: categorySelected.id, 
-          nombreCategoria: nombreCategoria, 
-          sizeView: sizeView,
-          viewInHome: viewInHome, 
-          viewInMenu: viewInMenu,
-          imgpath: categorySelected.imgpath,
-        }
-        const res = await updateCategoryPunto(categoryInfo);
-        if(imgCategory != null){
-          const resImg = await uploadImage(categorySelected.id, imgCategory);
-          if(res === true && resImg === true) navigate('/admin-options/ajustes-puntos/view-category');
-        }
-        if(res === true) navigate('/admin-options/ajustes-puntos/view-category');
-      } else {
-        alert('El nuevo nombre de la categoria debe de tener minimo 3 caracteres');
+  const handleClickUpdateCategory = async () => {
+
+    if(nombreCategoria.length < 3) Swal.fire({
+      title: 'Advertencia',
+      text:'El nuevo nombre de la categoria debe de tener minimo 3 caracteres', 
+    });
+    else{
+      const categoryInfo = {
+        id: categorySelected.id, 
+        nombreCategoria: nombreCategoria, 
+        sizeView: sizeView,
+        viewInHome: viewInHome, 
+        viewInMenu: viewInMenu,
+        imgpath: categorySelected.imgpath,
+        isCategoryOfPoints: true,
       }
+      const updateCategoryPromise = new Promise( async (resolve, reject) => {
+        
+        const res = await updateCategoryPunto(categoryInfo);
+        let resImg = true;
+        if(imgCategory != null) resImg = await uploadImage(categorySelected.id, imgCategory);
+        if(res && resImg) {
+          resolve();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/admin-options/ajustes-puntos/view-category');
+          }, 5000);
+          setTimeoutId(timeout);
+        }else {
+          reject();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/admin-options/ajustes-puntos/view-category');
+          }, 5000);
+          setTimeoutId(timeout);
+        }
+
+      });
+
+      toast.promise( updateCategoryPromise, {
+        pending: 'Actualizando categoria',
+        success: 'Categoria actualizada',
+        error: 'Error al actualizar categoria'
+      });
+      
     }
+  }
   
 
-  const handleClickAtras = () => navigate('/view-categories');
+  // const handleClickAtras = () => navigate('/view-categories');
+
+  const handleClickAtras = () => {
+    
+    setCategorySelected(null);
+    clearTimeout(timeoutId);
+    navigate('/admin-options/ajustes-puntos/view-category');
+  };
 
   // const handleClickAddCategoria = () => navigate('CreateCategory');
 
@@ -116,7 +195,7 @@ const CreateCategory = () => {
     return (
       <section className='border-0 border-bottom border-top' >
         {/* Header */}
-        <Header link='/admin-options/ajustes-puntos/view-category' />
+        <Header handleClickAtras={handleClickAtras} />
   
         <div className='my-5 mx-3'>
           <div className='row mx-auto d-flex flex-column gap-4'>
@@ -128,8 +207,8 @@ const CreateCategory = () => {
 
             <div>
               <p className='fs-3 fw-bold m-0 mb-2'>Tamaño al visualizar:</p>
-              <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
-                <option selected value={sizeView}>{sizeView}</option>
+              <select defaultValue={sizeView} className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
+                <option value={sizeView}>{sizeView}</option>
                 <option value="small">Pequeño</option>
                 <option value="normal">Normal</option>
                 <option value="big">Grande</option>
@@ -160,15 +239,20 @@ const CreateCategory = () => {
             </div>
   
           </div>
-          <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickUpdateArticle}>Actualizar Categoria</button>
+          {/* <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickUpdateCategory}>Actualizar Categoria</button> */}
+          { !showBottonToBack 
+            ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickUpdateCategory}>Actualizar Categoria</button>
+            : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
+          }
         </div>
+        <ToastContainer />
       </section>
     );
-  }else {
+  } else {
     return (
       <section className='border-0 border-bottom border-top' >
         {/* Header */}
-        <Header link='/admin-options/ajustes-puntos' />
+        <Header handleClickAtras={handleClickAtras} />
   
         <div className='my-5 mx-3'>
           <div className='row mx-auto d-flex flex-column gap-4'>
@@ -180,8 +264,8 @@ const CreateCategory = () => {
 
             <div>
               <p className='fs-3 fw-bold m-0 mb-2'>Tamaño al visualizar:</p>
-              <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
-                <option selected value="small">Pequeño</option>
+              <select value={sizeView} className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
+                <option value="small">Pequeño</option>
                 <option value="normal">Normal</option>
                 <option value="big">Grande</option>
               </select>
@@ -208,8 +292,13 @@ const CreateCategory = () => {
             </div>
   
           </div>
-          <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
+          {/* <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button> */}
+          { !showBottonToBack 
+            ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
+            : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
+          }
         </div>
+        <ToastContainer />
       </section>
     );
   }

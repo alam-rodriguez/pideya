@@ -44,11 +44,13 @@ const ViewArticlesPuntos = () => {
 
   const handleClickCrearArticulo = () => navigate('/admin-options/ajustes-puntos/create-article');
 
+  const handleClickAtras = () => navigate('/admin-options/ajustes-puntos/view-category');
+
   if(articles != null){
     return (
       <main className='border-0 mx-3' >
         {/* Header */}
-        <Header link='/admin-options/ajustes-puntos/view-category' />
+        <Header handleClickAtras={handleClickAtras} />
   
         <section className='d-flex flex-column gap-4'>
   

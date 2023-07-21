@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // React Icons
 import { GrFacebookOption } from 'react-icons/gr';
@@ -28,7 +28,18 @@ const SignInLikeAdmin1 = () => {
 
   const handleClickBack = () => navigate('/home');
 
+  const [viewInfo, setViewInfo] = useState(false);
+  useEffect( () => {
+    const password = prompt('Contraseña');
+    if(password != '123456789'){
+      navigate('/home');
+    }else {
+      setViewInfo(true);
+    }
+  }, [] );
+
   const logUserAdmin = async () => {
+    
     const res = await existAdmin();
     if( res == false){
       await registrarAdmin();
@@ -38,25 +49,27 @@ const SignInLikeAdmin1 = () => {
     }
   }
 
-  return (
-    <section className='d-flex justify-content-center flex-column align-items-center col-9 m-auto mt-5 vh-100'>
-      
-      {/* <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} /> */}
-
-      <h2 className='display-1 text-danger fw-bold mb-5'>Pedido ya</h2>
-      <p className='text-start fw-bold fs-3'>Por favor inicia sesion con tu email.</p>
-      <p>Ut nisi ad commodo veniam mollit ullamco. In Lorem cillum anim cillum et aliqua. Dolore anim cillum id veniam elit esse excepteur.</p>
-
-      <SingInButton 
-        icon={<RiAdminFill className='fs-1 text-white' />} 
-        bgColor='bg-success'
-        text='iniciar sesion como admin' 
-        handleClick={logUserAdmin}
-      />
+  if(viewInfo){
+    return (
+      <section className='d-flex justify-content-center flex-column align-items-center col-9 m-auto mt-5 vh-100'>
         
-      <p className='position-absolute bottom-0 w-75 text-center'>Nostrud adipisicing labore laboris amet non sint laboris aute nulla cillum est voluptate.</p>
-    </section>
-  )
+        {/* <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} /> */}
+  
+        <h2 className='display-1 text-danger fw-bold mb-5'>Pedido ya</h2>
+        <p className='text-start fw-bold fs-3'>Por favor inicia sesion con tu email.</p>
+        <p>Ut nisi ad commodo veniam mollit ullamco. In Lorem cillum anim cillum et aliqua. Dolore anim cillum id veniam elit esse excepteur.</p>
+  
+        <SingInButton 
+          icon={<RiAdminFill className='fs-1 text-white' />} 
+          bgColor='bg-success'
+          text='iniciar sesion admin' 
+          handleClick={logUserAdmin}
+        />
+          
+        <p className='position-absolute bottom-0 w-75 text-center'>Nostrud adipisicing labore laboris amet non sint laboris aute nulla cillum est voluptate.</p>
+      </section>
+    );
+  }
 }
 
 export default SignInLikeAdmin1

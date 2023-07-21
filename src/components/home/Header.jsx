@@ -13,18 +13,18 @@ import { getPointsUser } from '../../firebase/firebaseFirestore';
 
 const Header = () => {
 
-	const {  infoPoints, setInfoPoints, clientOrders, setClientOrders, email, infoPointsUser, setInfoPointsUser } = useContext(AppContext);
+	const {  infoPoints, setInfoPoints, clientOrders, setClientOrders, email, infoPointsUser, setInfoPointsUser, amountPoints, setAmountPoints } = useContext(AppContext);
 
 	const [points, setPoints] = useState(0);
 
 	useEffect( () => {
 		// Obtener puntos del usuario
-		if(email != null){
+		if(email != null && infoPointsUser == null){
 			const f = async () => {
 				// const infoUser = await getPointsUser(email);
 				const pointsUser = await getEstadisticas(email);
 				if(pointsUser != 'no estadisticas' && pointsUser != false) {
-					setPoints( pointsUser.puntosRestantes );
+					setAmountPoints( Math.round(pointsUser.puntosRestantes) );
 					setInfoPointsUser(pointsUser);
 				}
 				console.log(pointsUser);
@@ -60,7 +60,38 @@ const Header = () => {
 		}
 	}, [infoPoints, clientOrders] );
 	
-	// // Guardar estadisticas de usuario
+	const { color1, viewMenu, setViewMenu, appInfo } = useContext(AppContext);
+
+	const [appName, setAppName] = useState();
+	useEffect(()=>{
+		if(appInfo != null)setAppName(appInfo.nombre);
+	});
+
+	const handleClickMenu = () => setViewMenu(!viewMenu);
+
+  return (
+    <header className='d-flex justify-content-between py-4 bg-white position-sticky top-0 start-0 w-100 z-1 m-0' onClick={handleClickMenu}>
+			<FiMenu className={`fs-3 ${color1.textColor}`} />
+			<h2 className='position-absolute start-50 translate-middle-x fs-1'>{appName}</h2>
+			<div className='d-flex align-items-center gap-2'>
+				<p className={`m-0 fs-4 ${color1.textColor}`}>{amountPoints}</p>
+				<FaPizzaSlice className={`fs-5 ${color1.textColor}`} />
+			</div>
+    </header>
+  );
+};
+
+export default Header;
+
+
+
+
+
+
+
+
+
+// // Guardar estadisticas de usuario
 	// useEffect( () => {
 	// 	let data = {
 	// 		dineroGastado: 0,
@@ -109,31 +140,3 @@ const Header = () => {
 	// 	}
 	// 	f();
 	// }, []);
-
-	useEffect( () => {
-
-	}, [] );
-	
-
-	const { color1, viewMenu, setViewMenu, appInfo } = useContext(AppContext);
-
-	const [appName, setAppName] = useState();
-	useEffect(()=>{
-		if(appInfo != null)setAppName(appInfo.nombre);
-	});
-
-	const handleClickMenu = () => setViewMenu(!viewMenu);
-
-  return (
-    <header className='d-flex justify-content-between py-3 bg-white position-sticky top-0 start-0 w-100 z-1 m-0' onClick={handleClickMenu}>
-			<FiMenu className={`fs-3 ${color1.textColor}`}/>
-			<h2 className='position-absolute start-50 translate-middle-x'>{appName}</h2>
-			<div className='d-flex align-items-center gap-2'>
-				<p className={`m-0 fs-4 ${color1.textColor}`}>{points}</p>
-				<FaPizzaSlice className={`fs-5 ${color1.textColor}`} />
-			</div>
-    </header>
-  );
-};
-
-export default Header

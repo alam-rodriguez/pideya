@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // Firebase
-import { UpdateOrderClient, addReferidoPor, createEstadisticas, deleteEstadistica, editEstadistica, editPoints, getEachStatitics, getEstadisticaOfPedido, getEstadisticas, getInfoUser, getPointsUser, getordersNotView, obtenerInfoApp, saveEstadistacaUser, saveEstadistacasUser, saveEstadistica, savePointsUser, savePuntosGeneradosForOrder } from '../../firebase/firebaseFirestore';
+import { UpdateOrderClient, addReferidoPor, createEstadisticas, deleteEstadistica, editEstadistica, editPoints, getEachStatitics, getEstadisticaOfPedido, getEstadisticas, getInfoUser, getPointsUser, getordersNotView, givePointForRefFriend, givePointForRefGoodFriend, obtenerInfoApp, saveEstadistacaUser, saveEstadistacasUser, saveEstadistica, savePointsUser, savePuntosGeneradosForOrder } from '../../firebase/firebaseFirestore';
 
 // Components
 import Header from './see-orders-clients-components/Header';
@@ -12,6 +12,8 @@ import { AppContext } from '../../context/AppContext';
 
 // React-Rounter-Dom
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { ToastContainer, toast } from 'react-toastify';
 
 const SeeOrder = () => {
 
@@ -30,15 +32,25 @@ const SeeOrder = () => {
   const [infoUserRef, setInfoUserRef] = useState(null);
 
   const [infoPoints, setInfoPoints] = useState(null);
+
+  const swalAlert = (text, icon = 'success') => Swal.fire({
+    icon: icon,
+    title: 'Estado del pedido',
+    text: text,
+  });
   
   // Crea y obtiene estadisticas de usuarios
   useEffect( () => {
     const f = async () => {
       const estadisticas = await getEstadisticas(seletedOrder.email);
+      console.log(estadisticas);
       if(estadisticas.dineroGastado != undefined){
+        console.log(estadisticas);
         setEstadisticasUser(estadisticas);
       }else if(estadisticas == 'no estadisticas'){
         const firstEstadisticas = {
+          nombre: seletedOrder.user,
+          pointsForInviteFriend: 0,
           dineroGastado: 0,
           puntosGanados: 0,
           puntosGastados: 0,
@@ -57,7 +69,7 @@ const SeeOrder = () => {
     }
     f();
     console.log( seletedOrder );
-  }, [] )
+  }, [] );
 
 
   useEffect( () => {
@@ -91,19 +103,19 @@ const SeeOrder = () => {
   }, [] );
   
   const [isReady, setIsReady] = useState(seletedOrder.isReady);
+  const [guardar, setGuardar] = useState(seletedOrder.guardar);
   const [paid, setPaid] = useState(seletedOrder.paid);
   const [givePoints, setgivePoints] = useState(seletedOrder.recibioPuntos);
   
+  // change wasView t true
   useEffect( () => {
     if(seletedOrder != null){
       const f = async () => {
-        if(seletedOrder.isReady != isReady || seletedOrder.wasView == false){
-          const res = await UpdateOrderClient(seletedOrder.email, seletedOrder.id, isReady, paid);
-          if(res){
-            alert('Pedido Actualizado');
-          }else {
-            alert('Error al actualizar pedido');
-          }
+        // if(seletedOrder.wasView == false || seletedOrder.isReady != isReady || seletedOrder.paid != paid || seletedOrder.guardar != guardar);
+        if(seletedOrder.wasView == false){
+          const res = await UpdateOrderClient(seletedOrder.email, seletedOrder.id, isReady, paid, guardar);
+          if(res) swalAlert('Pedido Actualizado');
+          else swalAlert('Error al actualizar pedido', 'error');
         }
       }
       f();
@@ -149,6 +161,10 @@ const SeeOrder = () => {
   //       // console.log(infoPoints)
   //       // }
   //     }, [givePoints] );
+
+  const handleChangeGuardar = (e) => {
+    setGuardar(e.target.checked);
+  }
       
   const handleChangeIsReady = (e) => {
     setIsReady(e.target.checked);
@@ -168,12 +184,30 @@ const SeeOrder = () => {
 
 const handleClickGuardar = async () => {
 
+  if(!(seletedOrder.guardar != guardar || seletedOrder.isReady != isReady || seletedOrder.paid != paid || seletedOrder.recibioPuntos != givePoints)){
+    swalAlert('No es necesario actualizar el pedido', 'info');
+    return;
+  }
+
+  const resSwal = await Swal.fire({
+    title: 'Estas seguro?',
+    text: "Quieres realmente hacer este pedido ?",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ordenar'
+  });
+  if(!resSwal.isConfirmed) return;
+
+
+  const saveOrderPromise = new Promise( async (resolve, reject) => {
+    
   let workChangeIsReady = true;
   let workAddPuntos = true;
 
-
-  if(isReady != seletedOrder.isReady || paid != seletedOrder.paid){
-    workChangeIsReady = await UpdateOrderClient(seletedOrder.email, seletedOrder.id, isReady, paid);
+  if(isReady != seletedOrder.isReady || paid != seletedOrder.paid || guardar != seletedOrder.guardar || seletedOrder.recibioPuntos == givePoints){
+    workChangeIsReady = await UpdateOrderClient(seletedOrder.email, seletedOrder.id, isReady, paid, guardar);
   }
 
   if(seletedOrder.pointsInfo.activatePoints){
@@ -197,8 +231,6 @@ const handleClickGuardar = async () => {
       
     const res3 = await savePointsUser(seletedOrder.email, newPoints);
 
-
-
     if(res || oldPoints || res3){
       workAddPuntos = true;
     }else{
@@ -207,9 +239,9 @@ const handleClickGuardar = async () => {
   }
 
   if( workChangeIsReady && workAddPuntos ){
-    alert('Pedido actualizado con exito');
+    resolve('Pedido actualizado con exito');
   }else {
-    alert('Ha ocurrido un error al actualizar el pedido');
+    reject('Ha ocurrido un error al actualizar el pedido');
   }
 
   
@@ -226,13 +258,15 @@ const handleClickGuardar = async () => {
   // const ids = [];
 
 
+  // EDITAR ETADISTICAS
+
   // let estadistacasUser = await getEstadisticasUser(seletedOrder.email); 
-  
     if(paid){
       const visita = {
         id: seletedOrder.id,
         fecha: `${seletedOrder.dia} ${seletedOrder.hora}`,
         gastado: seletedOrder.total,
+        puntosGastados: seletedOrder.puntosGastados,
         puntosGenerados: givePoints ? puntos : 0,
       }
       const guardarEstadisca = await saveEstadistica(seletedOrder.email, visita);
@@ -240,29 +274,39 @@ const handleClickGuardar = async () => {
         console.log('Estadistica guardada');
       }
     }else if(!paid){
+      if(seletedOrder.puntosGenerados > estadisticasUser.puntosRestantes) {
+        console.log(estadisticasUser);
+        alert('No puedes quitarles estos puntos porque el usuario ya los uso');
+        return;
+      }
       const res = await deleteEstadistica(seletedOrder.email, seletedOrder.id);
       if(res){
         console.log('Estadistica borrada')
       }
-      if(estadisticasUser.puntosRestantes > seletedOrder.puntosGenerados) {
-        alert('No puedes quitarles estos puntos porque el usuario ya los uso');
-      }
+      
     }
 
     const statistics = await getEachStatitics(seletedOrder.email);
     // if(statistics.length > 0){
       let dineroGastado = 0;
       let puntosGanados = 0;
+      let puntosGastados = 0;
       statistics.forEach((statistic)=>{
         dineroGastado += statistic.gastado;
         puntosGanados += statistic.puntosGenerados;
+        puntosGastados += statistic.puntosGastados;
       })
       console.log(estadisticasUser)
       const newStatistics = {
+        nombre: seletedOrder.user,
         dineroGastado: dineroGastado,
         puntosGanados: puntosGanados,
-        puntosGastados: estadisticasUser.puntosGastados,
-        puntosRestantes: puntosGanados - estadisticasUser.puntosGastados,
+        pointsForInviteFriend: estadisticasUser.pointsForInviteFriend,
+        puntosGastados: puntosGastados,
+        // puntosGastados: paid ? estadisticasUser.puntosGastados + puntos : estadisticasUser.puntosGastados - puntos,
+
+        // puntosRestantes: puntosGanados - estadisticasUser.puntosGastados,
+        // puntosGastados: estadisticasUser.puntosGastados + puntos,
       }
 
       // if( !infoUserRef.givePointsForSpendMoney && newStatistics.dineroGastado > seletedOrder.pointsInfo.minForSpend ) {
@@ -270,11 +314,39 @@ const handleClickGuardar = async () => {
       // }
 
       // if( !infoUser.givePointsForSpendMoney && dineroGastado > seletedOrder.pointsInfo.minForSpend ) {
-        givePointsToFriend(newStatistics);
         // TODO:
-      // }
-
-      const res = await editEstadistica(seletedOrder.email, newStatistics);
+        // }
+        
+        // //! Aqui
+        // if(seletedOrder.puntosGastados > 0){
+      //   if(paid){
+      //     const newStatistics = {
+      //       dineroGastado: dineroGastado,
+      //       puntosGanados: puntosGanados,
+      //       puntosGastados: estadisticasUser.puntosGastados + puntos,
+      //       // puntosRestantes: puntosGanados - estadisticasUser.puntosGastados,
+      //     }
+      //     const resEstadisticas = await editEstadistica(seletedOrder.email, newStatistics);
+      //     if(resEstadisticas){
+      //       console.log('Estadisticas actualizadas')
+      //     }
+      //   }else {
+        //     const newStatistics = {
+          //       dineroGastado: dineroGastado,
+          //       puntosGanados: puntosGanados,
+          //       puntosGastados: estadisticasUser.puntosGastados - puntos,
+          //       // puntosRestantes: puntosGanados - estadisticasUser.puntosGastados,
+          //     }
+          //     const resEstadisticas = await editEstadistica(seletedOrder.email, newStatistics);
+          //     if(resEstadisticas){
+            //       console.log('Estadisticas actualizadas')
+            //     }
+            //   }
+            // }
+            // //!
+            
+            const res = await editEstadistica(seletedOrder.email, newStatistics);
+            givePointsToFriend(newStatistics);
       if(res){
         console.log('Estadisticas actualizadas')
       }
@@ -317,41 +389,164 @@ const handleClickGuardar = async () => {
     // const res = await getEstadisticasUser(email);
     // if(res == 'no estadisticas')
     // console.log(res);
+  });
+
+  toast.promise(
+    saveOrderPromise,
+    {
+      pending: 'Promise is pending',
+      success: 'Promise resolved 👌',
+      error: 'Promise rejected 🤯'
+    }
+)
 
 }
 
 const givePointsToFriend = async (statistics) => {
-  console.log( infoUserRef.givePointsForSpendMoney );
-  // console.log( infoUserRef );
-  // console.log( statistics.dineroGastado );
-  // console.log( seletedOrder.pointsInfo.minForSpend );
+  // const givePointsToFriendWhoInviteMe = async () => {
+    
+    const infoUser = await getInfoUser(seletedOrder.email);
+    const referidoInfo = infoUser.referidoPor;
+    if(referidoInfo != undefined){
 
-  // console.log(infoPoints.pointsForMinSpend);
+      console.log(infoUser);
 
-  
-  
-  if( !infoUserRef.givePointsForSpendMoney && statistics.dineroGastado > seletedOrder.pointsInfo.minForSpend ) {
-    console.log('si');
-    // Edito el referido por
-    const NewinfoUserRef = {...infoUserRef};
-    NewinfoUserRef.givePointsForSpendMoney = true;
-    const updateReferidoPor = await addReferidoPor(seletedOrder.email, NewinfoUserRef);
+      console.log(infoPoints);
 
-    // Edito estadisticas de amigo
-    const estadisticasAmigo = await getEstadisticas(infoUserRef.email);
-    const newEstadistcas = {
-      dineroGastado: estadisticasAmigo.dineroGastado, 
-      puntosGanados: estadisticasAmigo.puntosGanados + Number(infoPoints.pointsForMinSpend),
-      puntosGastados: estadisticasAmigo.puntosGastados,
-      puntosRestantes: estadisticasAmigo.puntosRestantes + Number(infoPoints.pointsForMinSpend),
-    }
-    const res3 = await editEstadistica(infoUserRef.email, newEstadistcas);
-    console.log(res3);
+      console.log(referidoInfo);
 
+      // console.log(pointsInfo);
+      
+      if(!referidoInfo.givePointsForInviteFriend){
+        const estadisticas = await getEstadisticas(seletedOrder.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        console.log(estadisticas.dineroGastado > 500);
+        if(estadisticas.dineroGastado > 500){
+          console.log('-----------------------------');
+          const newStatistics = {
+            nombre: estadisticasAmigo.nombre,
+            dineroGastado: estadisticasAmigo.dineroGastado,
+            puntosGanados: estadisticasAmigo.puntosGanados,
+            pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend + infoPoints.refFriendGenerate,
+            puntosGastados: estadisticasAmigo.puntosGastados,
+          }
+          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const info = {
+            codeRef: referidoInfo.codeRef,
+            email: referidoInfo.email,
+            givePointsForInviteFriend: true,
+            givePointsForSpendMoney: referidoInfo.givePointsForSpendMoney,
+            nombre: referidoInfo.nombre,
+          }
+          const res = await givePointForRefFriend(seletedOrder.email, info);
+          // TODO: editar info de user
+        }
+      }else if(statistics.dineroGastado < 500){
+        const estadisticas = await getEstadisticas(seletedOrder.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        
+        // if(estadisticas.dineroGastado > 500){
+          // console.log('-----------------------------');
+          const newStatistics = {
+            nombre: estadisticasAmigo.nombre,
+            dineroGastado: estadisticasAmigo.dineroGastado,
+            puntosGanados: estadisticasAmigo.puntosGanados,
+            pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend - infoPoints.refFriendGenerate,
+            puntosGastados: estadisticasAmigo.puntosGastados,
+          }
+          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const info = {
+            codeRef: referidoInfo.codeRef,
+            email: referidoInfo.email,
+            givePointsForInviteFriend: false,
+            givePointsForSpendMoney: referidoInfo.givePointsForSpendMoney,
+            nombre: referidoInfo.nombre,
+          }
+          const res = await givePointForRefFriend(seletedOrder.email, info);
+          // TODO: editar info de user
+      }
+      if(!referidoInfo.givePointsForSpendMoney){
+        const estadisticas = await getEstadisticas(seletedOrder.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        if(estadisticas.dineroGastado > infoPoints.minForSpend){
+          const newStatistics = {
+            nombre: estadisticasAmigo.nombre,
+            dineroGastado: estadisticasAmigo.dineroGastado,
+            puntosGanados: estadisticasAmigo.puntosGanados,
+            pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend + infoPoints.pointsForMinSpend,
+            puntosGastados: estadisticasAmigo.puntosGastados,
+          }
+          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const info = {
+            codeRef: referidoInfo.codeRef,
+            email: referidoInfo.email,
+            givePointsForInviteFriend: referidoInfo.givePointsForInviteFriend,
+            givePointsForSpendMoney: true,
+            nombre: referidoInfo.nombre,
+          }
+          const res = await givePointForRefGoodFriend(seletedOrder.email, info);
+          // TODO: editar info de user
+        }
+      }else if(statistics.dineroGastado < infoPoints.minForSpend) {
+        console.log('----------------------')
+        const estadisticas = await getEstadisticas(seletedOrder.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        // if(estadisticas.dineroGastado > infoPoints.minForSpend){
+          const newStatistics = {
+            nombre: estadisticasAmigo.nombre,
+            dineroGastado: estadisticasAmigo.dineroGastado,
+            puntosGanados: estadisticasAmigo.puntosGanados,
+            pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend - infoPoints.pointsForMinSpend,
+            puntosGastados: estadisticasAmigo.puntosGastados,
+          }
+          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const info = {
+            codeRef: referidoInfo.codeRef,
+            email: referidoInfo.email,
+            givePointsForInviteFriend: referidoInfo.givePointsForInviteFriend,
+            givePointsForSpendMoney: false,
+            nombre: referidoInfo.nombre,
+          }
+          const res = await givePointForRefGoodFriend(seletedOrder.email, info);
+          // TODO: editar info de user
+        // }
+      }
+    // }
 
-
-    console.log( infoUserRef.givePointsForSpendMoney );
   }
+  // if(infoUserRef != null && infoUserRef != undefined){
+  //   console.log( infoUserRef );
+  //   // console.log( infoUserRef );
+  //   // console.log( statistics.dineroGastado );
+  //   // console.log( seletedOrder.pointsInfo.minForSpend );
+  
+  //   // console.log(infoPoints.pointsForMinSpend);
+  
+    
+    
+  //   if( !infoUserRef.givePointsForSpendMoney && statistics.dineroGastado > seletedOrder.pointsInfo.minForSpend ) {
+  //     console.log('si');
+  //     // Edito el referido por
+  //     const NewinfoUserRef = {...infoUserRef};
+  //     NewinfoUserRef.givePointsForSpendMoney = true;
+  //     const updateReferidoPor = await addReferidoPor(seletedOrder.email, NewinfoUserRef);
+  
+  //     // Edito estadisticas de amigo
+  //     const estadisticasAmigo = await getEstadisticas(infoUserRef.email);
+  //     const newEstadistcas = {
+  //       dineroGastado: estadisticasAmigo.dineroGastado, 
+  //       puntosGanados: estadisticasAmigo.puntosGanados + Number(infoPoints.pointsForMinSpend),
+  //       puntosGastados: estadisticasAmigo.puntosGastados,
+  //       puntosRestantes: estadisticasAmigo.puntosRestantes + Number(infoPoints.pointsForMinSpend),
+  //     }
+  //     const res3 = await editEstadistica(infoUserRef.email, newEstadistcas);
+  //     console.log(res3);
+  
+  
+  
+  //     console.log( infoUserRef.givePointsForSpendMoney );
+  //   }
+  // }
 }
 
   if(seletedOrder != null){
@@ -549,6 +744,11 @@ const givePointsToFriend = async (statistics) => {
               <label className="form-check-label" htmlFor="flexSwitchCheckChecked">ya hemos visto el pedido</label>
             </div> */}
             <div className="form-check form-switch">
+              <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={guardar} onChange={handleChangeGuardar} />
+              <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Deseas guardar el pedido ?</label>
+            </div>
+
+            <div className="form-check form-switch">
               <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={isReady} onChange={handleChangeIsReady} />
               <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Ya esta listo el pedido ?</label>
             </div>
@@ -571,6 +771,7 @@ const givePointsToFriend = async (statistics) => {
           </div>
   
         </section>
+        <ToastContainer />
       </main>
     );
   }

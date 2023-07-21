@@ -15,7 +15,7 @@ import { AppContext } from '../../../context/AppContext';
 const OrderSection = () => {
   const { color1 } = useContext(AppContext);
   return (
-    <section className='d-flex gap-3' style={{}}>
+    <section className='d-flex gap-3 mb-4' style={{}}>
       <OrderButton 
         text='ORDENAR AHORA'
         textColor='text-white'

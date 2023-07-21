@@ -47,15 +47,23 @@ const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
   }, [cart] );
 
   return (
-    <div className='d-flex flex-column border rounded-4 overflow-hidden position-relative' style={{height:190, width:170}} onClick={handleClick}>
+    <div className='animate__animated animate__fadeInLeft d-flex flex-column border rounded-4 overflow-hidden position-relative m-2' style={{height:190, width:160}} onClick={handleClick}>
       { countItem > 0 
         ? <div className={`${color1.bgColor} rounded-circle position-absolute top-0 end-0 m-3 shadow  d-flex justify-content-center align-content-center `} style={{height:30, width:30}}>
             <p className='fs-3 text-white' >{countItem}</p>
           </div>
         : <></>
       }
-      <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
-      <p className='m-0 fs-2 fw-bold px-2' style={{height:'35%'}}>{nombre}</p>
+      { img != null 
+        ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
+        : <div className='d-flex justify-content-center' style={{height:'65%'}}>
+            <div className="spinner-border text-success fs-2 align-self-center" role="status" style={{height:50, width:50}}>
+              <span className="visually-hidden">Loading...</span>
+            </div> 
+          </div>
+      }
+
+      <p className='m-0 fs-3 fw-bold px-2' style={{height:'35%'}}>{nombre}</p>
     </div>
   );
 }

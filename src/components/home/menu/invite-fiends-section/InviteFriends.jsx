@@ -18,19 +18,20 @@ import { AppContext } from '../../../../context/AppContext';
 import MenuHeader from '../MenuHeader';
 
 const InviteFriends = () => {
+
   const navigate = useNavigate();
 
-  const { email } = useContext(AppContext);
-
-  const [codeRef, setCodeRef] = useState(null);
+  const { email, codeUser, setCodeUser } = useContext(AppContext);
 
   useEffect( () => {
     if(email == null) navigate('/home');
-    const f = async () => {
-      const res = await getInfoUser(email);
-      if(res) setCodeRef(res.codeRef);
+    if(codeUser == null){
+      const f = async () => {
+        const res = await getInfoUser(email);
+        if(res) setCodeUser(res.codeRef);
+      }
+      f();
     }
-    f();
   }, [] );
 
   const { color1 } = useContext(AppContext); 
@@ -50,8 +51,8 @@ const InviteFriends = () => {
           <div className='border rounded-4 py-4'>
             <p className='m-0 text-center fs-3'>Comparte tu codigo de referido</p>
             <div className='d-flex justify-content-center align-items-center mt-3 gap-2'>
-              { codeRef != null 
-                ? <p className='m-0 fw-bold display-3'>{codeRef}</p>
+              { codeUser != null 
+                ? <p className='m-0 fw-bold display-3'>{codeUser}</p>
                 : <p className='m-0 fw-bold display-3'>00000</p>
               }
               <TbCopy className='display-3 text-secondary' />

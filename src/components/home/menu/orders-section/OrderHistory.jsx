@@ -21,18 +21,27 @@ import ListPedidos from './ListPedidos';
 const OrderHistory = () => {
   const navigate = useNavigate();
 
-  const { email } = useContext(AppContext);
+  const { email, clientOrders, setClientOrders } = useContext(AppContext);
 
   const [ordenes, setOrdenes] = useState([]);
 
   useEffect( () => {
-    if( email == null ) navigate('/home');
-    const f = async () => {
-      const res = await getPedidosByClient(email);
-      setOrdenes(res);
+    if( email == null ) {
+      navigate('/home');
+      return;
     }
-    f();
-  }, [] );
+    if(clientOrders == null){
+      const f = async () => {
+        const res = await getPedidosByClient(email);
+        setClientOrders(res);
+        setOrdenes(res);
+      }
+      f();
+    }else {
+      setOrdenes(clientOrders);
+    }
+  }, [clientOrders] );
+
 
   const { color1 } = useContext(AppContext); 
 
@@ -40,7 +49,7 @@ const OrderHistory = () => {
 
   if(ordenes.length == 0){
     return (
-      <main className='container-fluid p-0 overflow-hidden'>
+      <main className='animate__animated animate__fadeIn container-fluid p-0 overflow-hidden'>
   
         <MenuHeader text='Historial de Ordenes' />
   
@@ -64,7 +73,7 @@ const OrderHistory = () => {
     );
   } else {
     return (
-      <main className='container-fluid p-0 overflow-hidden'>
+      <main className='animate__animated animate__fadeIn container-fluid p-0 overflow-hidden'>
     
         <MenuHeader text='Historial de Ordenes' />
     

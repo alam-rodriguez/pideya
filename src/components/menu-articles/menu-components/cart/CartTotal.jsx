@@ -3,13 +3,13 @@ import React, { useContext, useEffect, useState } from 'react'
 // Context
 import { AppContext } from '../../../../context/AppContext';
 
-const CartTotal = ({isDelivery,precioDelivey, lugarDelivery, setPrecioTotal, total, setTotal}) => {
+const CartTotal = ({isDelivery,precioDelivey, lugarDelivery, setPrecioTotal, total, setTotal, puntos, setPuntos}) => {
 
   const { cart, setCart, cartOfCategoryPoints } = useContext(AppContext);
 
   // const [total, setTotal] = useState(0);
 
-  const [puntos, setPuntos] = useState(0);
+  // const [puntos, setPuntos] = useState(0);
 
   useEffect( () => {
     let total = 0;
@@ -30,31 +30,39 @@ const CartTotal = ({isDelivery,precioDelivey, lugarDelivery, setPrecioTotal, tot
   return (
     <div className='my-5'>
 
-      <div className='d-flex justify-content-between my-3'>
-        <p className='m-0 fs-3 fw-bold'>Subtotal</p>
-        <p className='m-0 fs-3'>RD$ {total}</p>
-      </div>
+      <CartTotalItem
+        keyItem='Subtotal'
+        value={`RD$ ${total}`}
+      />
 
-      { puntos > 0 ? 
-        <div className='d-flex justify-content-between my-3'>
-          <p className='m-0 fs-3 fw-bold'>Total de puntos</p>
-          <p className='m-0 fs-3'>{puntos} Puntos</p>
-        </div>
-      : <div className='d-flex justify-content-between my-3'>
-          <p className='m-0 fs-3 fw-bold'>tarifa de servicio</p>
-          <p className='m-0 fs-3'>RD$ 00.00</p>
-        </div>
+      { puntos > 0 
+        ? <CartTotalItem
+            keyItem='Total de puntos'
+            value={`${puntos} Puntos`}
+          />
+        : <CartTotalItem
+            keyItem='Tarifa de servicio'
+            value='RD$ 00.00'
+          />
       }
-
-      
-
-      <div className='d-flex justify-content-between my-3'>
-        <p className='m-0 fs-3 fw-bold'>Total</p>
-        <p className='m-0 fs-3'>RD$ {total}</p>
-      </div>
+  
+      <CartTotalItem
+        keyItem='Total'
+        value={`RD$ ${total}`}
+      />
 
     </div>
   );
 }
 
-export default CartTotal
+export default CartTotal;
+
+const CartTotalItem = ({keyItem, value}) => {
+  return (
+    <div className='d-flex justify-content-between my-3'>
+      <p className='m-0 fs-4 fw-bold'>{keyItem}</p>
+      <p className='m-0 fs-4'>{value}</p>
+    </div>
+  );
+}
+

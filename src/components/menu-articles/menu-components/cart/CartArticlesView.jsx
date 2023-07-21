@@ -6,13 +6,13 @@ import { AppContext } from '../../../../context/AppContext';
 // Componente
 import CartArticleView from './CartArticleView';
 
-const CartArticlesView = ({handleClickAddMoreArticles}) => {
+const CartArticlesView = ({handleClickBack}) => {
 
   const { cart, cartOfCategoryPoints, setCartOfCategoryPoints, } = useContext(AppContext);
 
   useEffect( () => {
     console.log(cart);
-    if(cart.length == 0 && cartOfCategoryPoints.length == 0) handleClickAddMoreArticles();
+    if(cart.length == 0 && cartOfCategoryPoints.length == 0) handleClickBack();
     // console.log(cart);
   }, [cart, cartOfCategoryPoints] );
 

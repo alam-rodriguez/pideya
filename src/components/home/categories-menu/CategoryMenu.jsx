@@ -7,7 +7,7 @@ import ArticleCard from './ArticleCard';
 // Firebase
 import { getArticlesByCategory } from '../../../firebase/firebaseFirestore';
 
-const CategoryMenu = ({category, color1}) => {
+const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
 
   const [articlesOfThisMenu, setArticlesOfThisMenu] = useState(null);
 
@@ -22,7 +22,7 @@ const CategoryMenu = ({category, color1}) => {
   }, [] );
 
   return (
-    <section className='w-100 my-5 '>
+    <section className='w-100 my-4 '>
 
       <div className='d-flex justify-content-between w-100'>
         <h3 className='fw-bold fs-4'>{category.nombre}</h3>
@@ -40,6 +40,7 @@ const CategoryMenu = ({category, color1}) => {
               img={article.imgpath}
               size={category.sizeView}
               isCategoryOfPoints={category.isCategoryOfPoints}
+              setViewArticleSelected={setViewArticleSelected}
               // id='345678' 
             />
           ))

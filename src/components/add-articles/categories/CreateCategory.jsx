@@ -1,32 +1,41 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // React-Icons
 import { BsCloudUploadFill } from 'react-icons/bs';
-
 
 // uuid
 import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
 import { createCategories } from '../../../firebase/firebaseFirestore';
+import { uploadImage } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
 // Header
-import CreateArticleHeader from '../sections/CreateArticleHeader';
-import { uploadImage } from '../../../firebase/firebaseStorage';
-// import CreateArticleHeader from './CreateArticleHeader';
+import Header from './components/Header';
+
+// React-Toaster
+import { ToastContainer, toast } from 'react-toastify';
+
+// Context
+import { AppContext } from '../../../context/AppContext';
+import Swal from 'sweetalert2';
 
 const CreateCategory = () => {
+
   const navigate = useNavigate();
 
+  const { setCategorySelected } = useContext(AppContext);
+  
   const [nombreCategoria, setNombreCategoria] = useState('');
   const [sizeView, setSizeView] = useState('normal');
   const [imgCategory, setImgCategory] = useState(null);
   const [viewInHome, setViewInHome] = useState(false);
   const [viewInMenu, setViewInMenu] = useState(true);
-
+  
+  const [showBottonToBack, setShowBottonToBack] = useState(false);
 
   const handleChangeNombre = (e) => setNombreCategoria(e.target.value);
   const handleChangeSizeView = (e) => setSizeView(e.target.value);
@@ -36,32 +45,73 @@ const CreateCategory = () => {
   const handleClickImg = () => document.querySelector('#select-img').click();
   const handleChangeSelectImg = (e) => setImgCategory(e.target.files[0]);
 
+  const [timeoutId, setTimeoutId] = useState(null);
+
   const handleClickAddArticle = async () => {
-    if(nombreCategoria.length > 3 && imgCategory != null){
-      const id = uuidv4();
-      const categoryInfo = {
-        id: id, 
-        nombreCategoria: nombreCategoria, 
-        sizeView: sizeView,
-        viewInHome: viewInHome, 
-        viewInMenu:viewInMenu,
-        imgpath: `imagenes/${id}`,
-        isCategoryOfPoints: false, 
-      }
+    if(nombreCategoria.length < 3) {
+      Swal.fire({
+        title: 'Advertencia',
+        text:'El nombre de la categoria debe de tener por lo menos 3 caracteres', 
+      });
+      return;
+    } else if(imgCategory == null) {
+      Swal.fire({
+        title: 'Advertencia',
+        text:'Debes de seleccionar una imagen', 
+      });
+      return;
+    }
+  
+    const id = uuidv4();
+    const categoryInfo = {
+      id: id, 
+      nombreCategoria: nombreCategoria, 
+      sizeView: sizeView,
+      viewInHome: viewInHome, 
+      viewInMenu:viewInMenu,
+      imgpath: `imagenes/${id}`,
+      isCategoryOfPoints: false, 
+    }
+
+    const createCategoryPromise = new Promise( async (resolve, reject) => {
+      console.log('-----');
       const res = await createCategories(categoryInfo);
       const resImg = await uploadImage(id, imgCategory);
-      if(res === true && resImg === true) navigate('/view-categories');
-    }
+      if(res == true && resImg == true) {
+        resolve('bien');
+        setShowBottonToBack(true);
+        const timeoutId = setTimeout( () => {
+          navigate('/view-categories');
+        }, 5000);
+        setTimeoutId(timeoutId);
+      }else {
+        reject('mal');
+        setShowBottonToBack(true);
+        const timeoutId = setTimeout( () => {
+        navigate('/view-categories');
+        }, 5000);
+        setTimeoutId(timeoutId);
+      }
+    })
+
+    toast.promise( createCategoryPromise, {
+      pending: 'Creando Categoria',
+      success: 'Categoria Creada',
+      error: 'Ha ocurrido un error al crear la categoria'
+    });
+
   }
 
-  const handleClickAtras = () => navigate('/view-categories');
-
-  // const handleClickAddCategoria = () => navigate('CreateCategory');
+  const handleClickAtras = () => {
+    setCategorySelected(null);
+    clearTimeout(timeoutId);
+    navigate('/view-categories');
+  }
 
   return (
     <section className='border-0 border-bottom border-top' >
       {/* Header */}
-      <CreateArticleHeader path='/view-categories' />
+      <Header handleClickAtras={handleClickAtras} />
 
       <div className='my-5 mx-3'>
         <div className='row mx-auto d-flex flex-column gap-4'>
@@ -75,9 +125,9 @@ const CreateCategory = () => {
 
           <div>
             <p className='fs-3 fw-bold m-0 mb-2'>Tamaño al visualizar:</p>
-            <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
+            <select defaultValue='normal' className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
               <option value="small">Pequeño</option>
-              <option selected value="normal">Normal</option>
+              <option  value="normal">Normal</option>
               <option value="big">Gande</option>
             </select>
           </div>
@@ -102,9 +152,15 @@ const CreateCategory = () => {
           </div>
 
         </div>
-        <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
+
+        { !showBottonToBack 
+          ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
+          : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
+        }
+
       
       </div>
+      <ToastContainer />
     </section>
   )
 }

@@ -10,12 +10,13 @@ import { useNavigate } from 'react-router-dom';
 // Context
 import { AppContext } from '../../../context/AppContext';
 
-const MenuHeader = ({viewMenu, setViewMenu}) => {
+const MenuHeader = ({viewMenu, setViewMenu, setArticlesOfCategorySelected}) => {
   const navigate = useNavigate();
 
-  const {setCategorySelected} = useContext(AppContext);
+  const {setCategorySelected, setArticleSelected, amountPoints, setAmountPoints} = useContext(AppContext);
 
   const handleClickBack = () => {
+    setArticlesOfCategorySelected(null);
     if( viewMenu == 0){
       navigate('/home');
     }else if(viewMenu == 1){
@@ -28,7 +29,7 @@ const MenuHeader = ({viewMenu, setViewMenu}) => {
     <header className='d-flex justify-content-between py-4'>
       <IoIosArrowBack className='display-4 ' onClick={handleClickBack} /> 
       <div className='d-flex me-4 align-items-center gap-2'>
-        <p className='m-0 fs-4'>0</p>
+        <p className='m-0 fs-4'>{amountPoints}</p>
         <FaPizzaSlice className='fs-5' />
       </div>
     </header>

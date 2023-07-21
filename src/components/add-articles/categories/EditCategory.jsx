@@ -4,24 +4,23 @@ import React, { useContext, useEffect, useState } from 'react';
 import { BsCloudUploadFill } from 'react-icons/bs';
 import { MdDeleteForever } from 'react-icons/md';
 
+// Alerts
+import Swal from 'sweetalert2';
 
-// uuid
-import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
-import { ACtualizarCategory, createCategories, deleteCategory } from '../../../firebase/firebaseFirestore';
+import { ACtualizarCategory, deleteCategory } from '../../../firebase/firebaseFirestore';
 import { deleteImage, getUrlImage, uploadImage } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
 // Header
-import CreateArticleHeader from '../sections/CreateArticleHeader';
-import Header from '../add-articles-components/Header';
-// import CreateArticleHeader from './CreateArticleHeader';
+import Header from './components/Header';
 
 // Context
 import { AppContext } from '../../../context/AppContext';
+import { ToastContainer, toast } from 'react-toastify';
 
 const EditCategory = () => {
   const navigate = useNavigate();
@@ -34,12 +33,12 @@ const EditCategory = () => {
     if(categorySelected == null){
       navigate('/view-categories');
       return;
-    }
+    }else getImagePath();
+  
     // setNombreCategoria(categorySelected.nombre);
     // setImgCategory(categorySelected.imgpath);
     // setViewInHome(categorySelected.viewInHome);
     // setViewInMenu(categorySelected.viewInMenu);
-    getImagePath();
   }, [] );
 
   // Para obtener path de la imagen
@@ -48,12 +47,11 @@ const EditCategory = () => {
     setImgPath(imgpath);
   }
 
-  const [nombreCategoria, setNombreCategoria] = useState(categorySelected.nombre);
-  const [sizeView, setSizeView] = useState(categorySelected.sizeView);
-  const [imgCategory, setImgCategory] = useState(categorySelected.imgpath);
-  const [viewInHome, setViewInHome] = useState(categorySelected.viewInHome);
-  const [viewInMenu, setViewInMenu] = useState(categorySelected.viewInMenu);
-
+  const [nombreCategoria, setNombreCategoria] = useState(categorySelected != null ? categorySelected.nombre : '');
+  const [sizeView, setSizeView] = useState(categorySelected != null ? categorySelected.sizeView : '');
+  const [imgCategory, setImgCategory] = useState(categorySelected != null ? categorySelected.imgpath : '');
+  const [viewInHome, setViewInHome] = useState(categorySelected != null ? categorySelected.viewInHome : '');
+  const [viewInMenu, setViewInMenu] = useState(categorySelected != null ? categorySelected.viewInMenu : '');
 
   const handleChangeNombre = (e) => setNombreCategoria(e.target.value);
   const handleChangeSizeView = (e) => setSizeView(e.target.value);
@@ -62,39 +60,111 @@ const EditCategory = () => {
 
   const handleClickImg = () => document.querySelector('#select-img').click();
   const handleChangeSelectImg = (e) => setImgCategory(e.target.files[0]);
+  
+  const [showBottonToBack, setShowBottonToBack] = useState(false);
+
+  const [timeoutId, setTimeoutId] = useState(null);
 
   const handleClickDeleteCategory = async () => {
-    const res1 = await deleteCategory(categorySelected.id);
-    const res2 = await deleteImage(categorySelected.id);
-    if(res1 && res2){
-      navigate('/view-categories');
-    }else {
-      alert('ha ocurrido un error al eliminar la imagen');
+    const res = await Swal.fire({
+      title: 'Estas seguro?',
+      text: "Quieres eliminar esta categoria, si la eliminas no podras recuperarla.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar'
+    });
+    if(res.isConfirmed){
+      const DeleteCategoryPromise = new Promise( async (resolve, reject) => {
+
+        const res1 = await deleteCategory(categorySelected.id);
+        const res2 = await deleteImage(categorySelected.id);
+        if(res1 && res2){
+          resolve();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/view-categories')
+          }, 5000);
+          setTimeoutId(timeout);
+        }else {
+          reject();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/view-categories')
+          }, 5000);
+          setTimeoutId(timeout);
+        }
+        
+      });
+
+      toast.promise( DeleteCategoryPromise, {
+        pending: 'Eliminando Categoria',
+        success: 'Categoria Eliminada',
+        error: 'Error al eliminar categoria'
+      });    
+
     }
   }
+
 
   const handleClickActualizarCategory = async () => {
-    if(nombreCategoria.length > 3){
-      const newInfo = {
-        nombreCategoria: nombreCategoria, 
-        sizeView: sizeView,
-        viewInHome: viewInHome, 
-        viewInMenu:viewInMenu,
-      }
-      const res = await ACtualizarCategory(categorySelected.id, newInfo);
-      if( imgCategory != categorySelected.imgpath) {
-        const resImg = await uploadImage(categorySelected.id, imgCategory);
-        if(!resImg) alert('Ha ocurrido un error al cambiar la imagen')
-      }
-      if(res === true ) navigate('/view-categories');
+    if(nombreCategoria.length < 3){
+      Swal.fire({
+        title: 'Advertencia',
+        text:'El nombre de la categoria debe de tener por lo menos 3 caracteres', 
+      });
+      return;
     }
+    
+    const newInfo = {
+      nombreCategoria: nombreCategoria, 
+      sizeView: sizeView,
+      viewInHome: viewInHome, 
+      viewInMenu:viewInMenu,
+    }
+
+    const editCategoryPromise = new Promise( async (resolve, reject) => {
+      const res = await ACtualizarCategory(categorySelected.id, newInfo);
+      let resImg = true;
+      if(imgCategory != categorySelected.imgpath) resImg = await uploadImage(categorySelected.id, imgCategory);  
+      if(res && resImg) {
+        resolve();
+        setShowBottonToBack(true);
+        const timeout = setTimeout(() => {
+          navigate('/view-categories')
+        }, 5000);
+        setTimeoutId(timeout);
+      }else {
+        reject();
+        setShowBottonToBack(true);
+        const timeout = setTimeout(() => {
+          navigate('/view-categories')
+        }, 5000);
+        setTimeoutId(timeout);
+      }
+    });
+
+    toast.promise( editCategoryPromise, {
+      pending: 'Actualizando Categoria',
+      success: 'Categoria Actualizada',
+      error: 'Error al actualizar categoria'
+    });
+
   }
 
-  if( categorySelected != null){
+  const handleClickAtras = () => {
+    setCategorySelected(null);
+    navigate('/view-categories');
+    clearTimeout(timeoutId);
+  };
+
+  if(categorySelected != null){
     return (
       <section className='border-0 border-bottom border-top' >
         {/* Header */}
-        <Header path='/view-categories' />
+        <Header handleClickAtras={handleClickAtras} />
+        {/* <Header path='/view-categories' whatReset='categorySelect' /> */}
   
         <div className='my-5 mx-3'>
           <div className='row mx-auto'>
@@ -107,7 +177,7 @@ const EditCategory = () => {
             <div>
               <p className='fs-3 fw-bold m-0 mb-2'>Tamaño al visualizar:</p>
               <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeSizeView}>
-                <option selected value={sizeView}>{sizeView}</option>
+                <option defaultValue={sizeView} value={sizeView}>{sizeView}</option>
                 <option value="small">Pequeño</option>
                 <option value="normal">Normal</option>
                 <option value="big">Gande</option>
@@ -144,8 +214,14 @@ const EditCategory = () => {
             <MdDeleteForever className='text-danger mt-4' style={{fontSize: 80}} onClick={handleClickDeleteCategory} />
   
           </div>
-          <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickActualizarCategory}>Actualizar Categoria</button>
+
+          { !showBottonToBack 
+            ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickActualizarCategory}>Actualizar Categoria</button>
+            : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
+          }
+          
         </div>
+        <ToastContainer />
       </section>
     );
   }else {
@@ -154,4 +230,4 @@ const EditCategory = () => {
 }
 
 
-export default EditCategory
+export default EditCategory;

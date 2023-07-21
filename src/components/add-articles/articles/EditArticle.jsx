@@ -13,10 +13,14 @@ import { deleteImage, getUrlImage, uploadImage } from '../../../firebase/firebas
 import { useNavigate } from 'react-router-dom';
 
 // Header
-import Header from '../add-articles-components/Header'
+import Header from './components/Header';
 
 // Context
 import { AppContext } from '../../../context/AppContext';
+import { ToastContainer, toast } from 'react-toastify';
+
+// Swal-Alert
+import Swal from 'sweetalert2';
 
 const EditArticle = () => {
   const navigate = useNavigate();
@@ -24,6 +28,13 @@ const EditArticle = () => {
   const { articleSelected, setArticleSelected } = useContext(AppContext);
 
   const [imgPath, setImgPath] = useState(null);
+
+  // Para indicar si sera mitad
+  const [isMiddle, setIsMiddle] = useState(false);
+  const handleChangeIsMiddle = (e) => {
+    console.log(e.target.checked);
+    setIsMiddle(e.target.checked);
+  }
 
   useEffect( () => {
     // Si ningun articulo esta seleccionado voy atras
@@ -59,9 +70,11 @@ const EditArticle = () => {
     setSubtitulo(articleSelected.subtitulo);
     setPrecio(Number(articleSelected.precios));
     // setPrecio(articleSelected);
+    // console.log(articleSelected.isMiddle);
+    setIsMiddle(articleSelected.isMiddle);
     setComplejo(articleSelected.complex);
 
-    console.log(articleSelected.precios.length);
+    // console.log(articleSelected.precios.length);
     if( articleSelected.complex ){
       const array = [];
       articleSelected.precios.map( () => {
@@ -71,7 +84,7 @@ const EditArticle = () => {
       SetVariantes(array);
     }
 
-    console.log(articleSelected.precios);
+    // console.log(articleSelected.precios);
     // setPreciosArticle();
     // SetVariantes
   }
@@ -83,41 +96,40 @@ const EditArticle = () => {
   const [adicionalesYPrecios, setAdicionalesYPrecios] = useState([0]);
 
   useEffect( () => {
-
-    if( articleSelected.complex ){
-      let array = [];
-      console.log(articleSelected.precios[0]);
-      Object.entries(articleSelected.precios[0].adicionales).map(()=>{
-        array.push(0);
-      })
-      setAdicionalesYPrecios(array);
-
-      articleSelected?.precios.map((item, index1)=>{
-        const size = document.querySelector(`.variante-nombre-${index1}`);
-        const sizePrice = document.querySelector(`.variante-precio-${index1}`);
-        if(size == null || sizePrice == null) return;
-        console.log(size);
-        size.value = item.sizeArticle;
-        sizePrice.value = item.sizeArticlePrice;
-
-        let index2 = 0
-        for(let[key, value] of Object.entries(item.adicionales)){
-          console.log(key, value);
-          console.log(index1, index2);
-          const nombreAdicional = document.querySelector(`#variante-nombre-${index1} .adicional-nombre-${index2}`);
-          const precioAdicional = document.querySelector(`#variante-nombre-${index1} .adicional-precio-${index2}`);
-          const adicionalIsMiddle = document.querySelector(`#variante-nombre-${index1} .adicional-isMiddle-${index2}`);
-          if(nombreAdicional == null || precioAdicional == null || adicionalIsMiddle == null) return;
-          nombreAdicional.value = key;
-          precioAdicional.value = value.precio; 
-          adicionalIsMiddle.checked = value.isMiddle;
-          index2++;
-        }
-      });
-      
-    }
-
-      
+    if(articleSelected != null){
+      if( articleSelected.complex ){
+        let array = [];
+        console.log(articleSelected.precios[0]);
+        Object.entries(articleSelected.precios[0].adicionales).map(()=>{
+          array.push(0);
+        })
+        setAdicionalesYPrecios(array);
+  
+        articleSelected?.precios.map((item, index1)=>{
+          const size = document.querySelector(`.variante-nombre-${index1}`);
+          const sizePrice = document.querySelector(`.variante-precio-${index1}`);
+          if(size == null || sizePrice == null) return;
+          console.log(size);
+          size.value = item.sizeArticle;
+          sizePrice.value = item.sizeArticlePrice;
+  
+          let index2 = 0
+          for(let[key, value] of Object.entries(item.adicionales)){
+            console.log(key, value);
+            console.log(index1, index2);
+            const nombreAdicional = document.querySelector(`#variante-nombre-${index1} .adicional-nombre-${index2}`);
+            const precioAdicional = document.querySelector(`#variante-nombre-${index1} .adicional-precio-${index2}`);
+            const adicionalIsMiddle = document.querySelector(`#variante-nombre-${index1} .adicional-isMiddle-${index2}`);
+            if(nombreAdicional == null || precioAdicional == null || adicionalIsMiddle == null) return;
+            nombreAdicional.value = key;
+            precioAdicional.value = value.precio; 
+            adicionalIsMiddle.checked = value.isMiddle;
+            index2++;
+          }
+        });
+        
+      }
+    } 
   }, [variantes] );
 
   const [categoryArticle, setCategoryArticle] = useState(null);
@@ -127,13 +139,11 @@ const EditArticle = () => {
   // Para poner si sera un articulo complejo o no
   const [complejo, setComplejo] = useState(false);
 
-
-
   const [titulo, setTitulo] = useState('');
   const [subtitulo, setSubtitulo] = useState('');
-  const [articuloCategoria, setArticuloCategoria] = useState(articleSelected.categoria);
+  const [articuloCategoria, setArticuloCategoria] = useState(articleSelected != null ? articleSelected.categoria : '');
   const [precio, setPrecio] = useState(0);
-  const [img, setImg] = useState(articleSelected.imgpath);
+  const [img, setImg] = useState(articleSelected != null ? articleSelected.imgpath : '');
   const [infoArticleComplex, setInfoArticleComplex] = useState([]);
 
   const handleChangeTitulo = (e) => setTitulo(e.target.value);
@@ -146,8 +156,26 @@ const EditArticle = () => {
   
   const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
 
+  const [showBottonToBack, setShowBottonToBack] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
+
   // Proceso de actualizar articulo
   const handleClickActualizarArticulo = async () => {
+
+    if(titulo.length < 3){
+      Swal.fire({
+        title: 'Advertencia',
+        text:'El nombre del articulo debe de tener por lo menos 3 caracteres', 
+      });
+      return;
+    }
+    if(subtitulo.length < 3){
+      Swal.fire({
+        title: 'Advertencia',
+        text:'La descripcion del articulo debe de tener por lo menos 3 caracteres', 
+      });
+      return;
+    }
 
     let infoArticleComplex = [];
 
@@ -220,20 +248,41 @@ const EditArticle = () => {
         // img: `imageneys/${id}`,
         disponible: true,
         // complex: complejo,
+        isMiddle: isMiddle,
         precios: articleSelected.complex ? infoArticleComplex : precio,
       }
-      // console.log(articleSelected.complex);
-      // console.log(infoArticleComplex);
-      const res = await updateArticle(articleSelected.id, articleUpdated);
-      console.log(articleUpdated);
-      if(img != articleSelected.imgpath){
-        const resImg = await uploadImage(articleSelected.id, img);
-        if(res && resImg) navigate('/view-articles');
-      }
-      console.log(res)
-      if(res == true){
-        navigate('/view-articles');
-      }
+
+      const updateArticlePromise = new Promise ( async (resolve, reject) => {
+        
+        const res = await updateArticle(articleSelected.id, articleUpdated);
+        let resImg = true;
+        if(img != articleSelected.imgpath){
+          resImg = await uploadImage(articleSelected.id, img);
+        }
+        if(res && resImg) {
+          resolve();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        } else {
+          reject();
+          setShowBottonToBack(true);
+          const timeout = setTimeout(() => {
+            navigate('/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        }
+        
+      });
+
+      toast.promise( updateArticlePromise, {
+        pending: 'Promise is pending',
+        success: 'Promise resolved 👌',
+        error: 'Promise rejected 🤯'
+      });
+
 
     } else {
       console.log('no')
@@ -261,21 +310,60 @@ const EditArticle = () => {
   }
 
   const handleClickDeleteArticle = async () => {
-    const resArticle = await deleteArticle(articleSelected.id);
-    const resImg = await deleteImage(articleSelected.id);
-    if(resArticle && resImg){
-      navigate('/view-articles');
-    }else{
-      alert('Ha ocurrido un error al intentar borrar la imagen');
-      navigate('/view-articles');
+
+    const res = await Swal.fire({
+      title: 'Estas seguro?',
+      text: "Quieres eliminar este articulo, si lo eliminas no podras recuperarlo.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar'
+    });
+    if(res.isConfirmed){
+      
+      const deleteArticlePromise = new Promise( async (resolve, reject) => {
+  
+        const resArticle = await deleteArticle(articleSelected.id);
+        const resImg = await deleteImage(articleSelected.id);
+        if(resArticle && resImg){
+          resolve();
+          setShowBottonToBack(true);
+          const timeout = setTimeout( () => {
+            navigate('/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        }else{
+          reject();
+          setShowBottonToBack(true);
+          const timeout = setTimeout( () => {
+            navigate('/view-articles');
+          }, 5000);
+          setTimeoutId(timeout);
+        }
+      
+      });
+  
+      toast.promise( deleteArticlePromise, {
+        pending: 'Borrando Articulo',
+        success: 'Articulo Borrado',
+        error: 'Hubo un error al borrar articulo'
+      });
     }
+
   }
+
+  const handleClickAtras = () => {
+    setArticleSelected(null);
+    clearTimeout(timeoutId);
+    navigate('/view-articles');
+  };
 
   if( articleSelected != null ){
     return (
       <main className='border-0 border-bottom border-top mx-3 col-11 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
         {/* Header */}
-        <Header path='/view-articles' />
+        <Header handleClickAtras={handleClickAtras} path='/view-articles' />
   
         <section className='d-flex flex-column gap-4'>
   
@@ -336,8 +424,8 @@ const EditArticle = () => {
                     <p className='m-0'>Tamaño del articulo:</p>
                     <div  className="accordion-body">
                       <div className='row'>
-                        <input className={`col-6 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamano...' />
-                        <input className={`col-6 variante-nombre variante-precio-${i}`} type="text" placeholder='Precio...' />
+                        <input className={`col-8 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamaño...' />
+                        <input className={`col-0 variante-nombre variante-precio-${i}`} type="text" placeholder='Precio...' />
                       </div>
                           
                       {/* Ingrediente adicional y precio segun el size */}
@@ -373,6 +461,15 @@ const EditArticle = () => {
               </div> 
             : <></>
           }
+
+          {/* Indicar si deseas que este articulo se use para una mitad de otro */}
+          { complejo
+            ? <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked1" checked={isMiddle} onChange={handleChangeIsMiddle} />
+                <label className="form-check-label" htmlFor="handleChangeChecked1">Deseas que este articulo se use para una mitad de otro articulo ?</label>
+              </div>
+          : <></>
+          }
   
           {/* Cambiar complejidad */}
           <div className="form-check form-switch">
@@ -380,11 +477,16 @@ const EditArticle = () => {
             <label className="form-check-label" htmlFor="handleChangeChecked">No se puede cambiar la complejidad de un articulo.</label>
           </div>
   
-          <MdDeleteForever className='text-danger mt-4' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />
+          <MdDeleteForever className='text-danger mt-0' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />
   
-          <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickActualizarArticulo}/>
+          
+          { !showBottonToBack
+            ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Actualizar Articulo' onClick={handleClickActualizarArticulo}/>
+            : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
+          }
   
         </section>
+        <ToastContainer />
       </main>
     )
   }else {

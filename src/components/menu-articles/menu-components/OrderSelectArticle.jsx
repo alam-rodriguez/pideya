@@ -11,11 +11,14 @@ import { AppContext } from '../../../context/AppContext';
 // Firebase
 import { getUrlImage } from '../../../firebase/firebaseStorage';
 
-const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
+// Toaster
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+
+const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelected}) => {
 
   const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart,  cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser} = useContext(AppContext);
 
-  
   const [img, setImg] = useState(null);
   
   // pedido
@@ -24,11 +27,46 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
   const [valorPuntosArticulo, setValorPuntosArticulo] = useState(0);
   const [valorPuntosVariosArticulos, setValorPuntosVariosArticulos] = useState(0);
   const [ingredientes, setIngredientes] = useState([]);
-  const [ingredienteMitad, setIngredienteMitad] = useState('');
+  const [ingredienteMitad, setIngredienteMitad] = useState(null);
   const [cantidadArticulo, setCantidadArticulo] = useState(1);
 
+  // Establecer mitades de articulo
+  const [mitades, setMitades] = useState(null);
+  useEffect( () => {
+    // console.log(isMiddle);
+    let articles = [];
+    articlesOfCategorySelected.forEach( (article) => {
+      
+      console.log(article);
+      console.log(article.id);
+      console.log(articleSelected.id);
+      if(article.id == articleSelected.id || !article.isMiddle){
+        return;
+      }
+      
+      article.precios.forEach( (articleSize) => {
+        if(articleSize.sizeArticle == precioArticleSelected.sizeArticle){
+          const articleMitad = {
+            id: article.id,
+            ingredienteNombre: article.titulo,
+            sizeArticlePrice: articleSize.sizeArticlePrice,
+          }
+          articles.push(articleMitad);
+          console.log(articleMitad);
+        }
+      })
+    });
+    if(articles.length > 0){
+      console.log(articles);
+      setMitades(articles);
+    }
+    // console.log(precioArticleSelected);
+  }, [] );
 
   useEffect( () => {
+
+    console.log(articlesOfCategorySelected);
+
     // Obtiene img del articulo
     const f = async () => {
       const res = await getUrlImage(articleSelected.imgpath);
@@ -44,10 +82,13 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
 
   // Para establecer precio o puntos
   useEffect( () => {
+    
     if(articleSelected.complex){
+      console.log('-----------')
       let valor = 0;
 
       valor += Number(precioArticleSelected.sizeArticlePrice);
+      if(ingredienteMitad != null && Number(ingredienteMitad.sizeArticlePrice > Number(precioArticleSelected.sizeArticlePrice))) valor = Number(ingredienteMitad.sizeArticlePrice);
       ingredientes.map((ingrediente) => {
         console.log(ingrediente.precio.precio);
         valor += Number(ingrediente.precio.precio); 
@@ -68,7 +109,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
       valor *= cantidadArticulo;
       setValorPuntosVariosArticulos(valor);
     }
-  }, [ingredientes, cantidadArticulo] );
+  }, [ingredienteMitad, ingredientes, cantidadArticulo] );
 
   const handleClickAdicional = (e, adicional, precio) => {
     const checked = e.target.checked;
@@ -79,8 +120,10 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
       setIngredientes(arrayModificado);
     }
   }
-  
-  const handleClickMitad = (ingrediente) => setIngredienteMitad(ingrediente);
+  const handleClickMitad = (mitad) => {
+    setIngredienteMitad(mitad);
+    // setValorArticulo(mitad.sizeArticlePrice);
+  }
 
   const handleClickAddCantidadArticulo = () => setCantidadArticulo(cantidadArticulo + 1);
   const handleClickReduceCantidadArticulo = () => {
@@ -115,7 +158,21 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
         pointsMakeOrder += element.PuntosVariosArticles;
       });
       if(pointsUser < pointsMakeOrder){
-        alert('No puedes seleccionar este articulo porque no tienen sufientes puntos');
+        Swal.fire({
+          icon: 'warning',
+          title: 'No puedes',
+          text: 'No puedes seleccionar este articulo porque no tienes sufientes puntos',
+        });
+        // toast.warn('No puedes seleccionar este articulo porque no tienes sufientes puntos', {
+        //   position: "bottom-center",
+        //   autoClose: 5000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
         return;
       }
       const pedido = {
@@ -139,18 +196,30 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
   }
 
   const handleClickBack = () => {
-    setArticleSelected(null);
-    setPrecioArticleSelected(null);
-    setViewOrderSelectArticle(false);
+    setClose(true);
+    setTimeout(() => {
+      setArticleSelected(null);
+      setPrecioArticleSelected(null);
+      setViewOrderSelectArticle(false);
+    }, 500);
   }
 
+  const [close, setClose] = useState(false);
+  
   return (
-    <div className='position-absolute top-0 start-0 w-100 bg-danger vh-100 overflow-hidden z-1'>
-      <section className='z-0 overflow-hidden' style={{height:'25%'}}>
-        <ImCancelCircle className='position-absolute text-white display-3' style={{top:20, left:20}} onClick={handleClickBack} />
-        <img src={img} className='w-100 object-fit-cover ' style={{height:'100%'}} />
+    <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-absolute top-0 start-0 w-100 bg-white vh-100 overflow-hidden z-1`}>
+      <section className='z-0 overflow-hidden d-flex justify-content-center align-items-center' style={{height:'25%'}}>
+        <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
+          <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
+        </div>
+        { img != null
+          ? <img src={img} className='w-100 object-fit-cover ' style={{height:'100%'}} />
+          : <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
+              <span className="visually-hidden">Loading...</span>
+            </div> 
+        }
       </section>
-      <section className='bg-white rounded-5 shadow-lg rounded-bottom-0 w-100 position-relative p-4 d-flex flex-column justify-content-between' style={{height:'77.3%', bottom:19}}>
+      <section className='bg-white rounded-5 shadow-lg rounded-bottom-0 w-100 position-relative p-4 d-flex flex-column justify-content-between overflow-scroll' style={{height:'77.3%', bottom:19}}>
 
         <div>
           { articleSelected.complex 
@@ -195,7 +264,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
             : <></>
           }
 
-          { articleSelected.complex ? 
+          { articleSelected.complex && mitades != null? 
             // SI ES MITAD Y MITAD
             <div className="accordion my-4" id="accordionExample">
               <div className="accordion-item">
@@ -208,9 +277,18 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
                 <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                   <div className="accordion-body">
                     
-                  { Object.keys(precioArticleSelected.adicionales).map((adicional, i)=>( 
+                  {/* { Object.keys(precioArticleSelected.adicionales).map((adicional, i)=>( 
                     <AdicionalesList key={i} adicional={adicional} isMiddle={precioArticleSelected.adicionales[adicional].isMiddle} i={i} handleClickMitad={handleClickMitad} />
                   ))
+                  } */}
+                  { (mitades != null)
+                    ? (mitades.length > 0) 
+                      ? mitades.map( (mitad, i) => ( 
+                        <AdicionalesList mitad={mitad} articlesOfCategorySelected={articlesOfCategorySelected} key={mitad.id} i={i} handleClickMitad={handleClickMitad} />
+                        // <AdicionalesList mitad={mitad} articlesOfCategorySelected={articlesOfCategorySelected} key={i} adicional={adicional} isMiddle={precioArticleSelected.adicionales[adicional].isMiddle} i={i} handleClickMitad={handleClickMitad} />
+                      ))
+                      : <></>
+                    : <></>
                   }
 
                   </div>
@@ -222,13 +300,13 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
 
         </div>
 
-        <footer className='row gap-3' style={{height:50}}>
-          <div className='d-flex align-items-center row col-5'>
-            <GrSubtractCircle className='display-4 col-4' onClick={handleClickReduceCantidadArticulo} />
-            <p className='mb-2 display-3 fw-bold col-4 text-center'>{cantidadArticulo}</p>
-            <BsPlusCircle className='display-4 col-4' onClick={handleClickAddCantidadArticulo} />
+        <footer className='row h-auto' style={{}}>
+          <div className='d-flex gap-3 align-items-center col-5'>
+            <GrSubtractCircle className='display-6' onClick={handleClickReduceCantidadArticulo} />
+            <p className='mb-2 display-4 fw-medium text-center'>{cantidadArticulo}</p>
+            <BsPlusCircle className='display-6' onClick={handleClickAddCantidadArticulo} />
           </div>
-          <button className={`btn ${color1.btn} d-flex justify-content-between align-items-center col-7`} onClick={handleClickAgregar}>
+          <button className={`${!categorySelected.isCategoryOfPoints ? 'py-3' : 'py-0'}  btn ${color1.btn} d-flex justify-content-between align-items-center col-7`} onClick={handleClickAgregar}>
             <p className='m-0 fs-3'>Agregar</p>
             <p className='m-0 fs-3'>{!categorySelected.isCategoryOfPoints ? `${valorVariosArticulos} RD$` : `${valorPuntosVariosArticulos} puntos` } </p>
           </button>
@@ -242,29 +320,47 @@ const OrderSelectArticle = ({setViewOrderSelectArticle}) => {
 
 export default OrderSelectArticle;
 
-const AdicionalesList = ({adicional, isMiddle, i, handleClickMitad}) => {
+const AdicionalesList = ({mitad, adicional, isMiddle, i, handleClickMitad, articlesOfCategorySelected}) => {
 
-  useEffect( () => {
-    console.log(isMiddle);
-  }, [] );
-
-  if(isMiddle){
-    return (
-      <div className='d-flex justify-content-between'>
-        <div className="form-check">
-          <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadio${i}`} onClick={()=>handleClickMitad(adicional)} />
-          <label className="form-check-label" htmlFor={`flexRadio${i}`}>
-            {adicional}
-          </label>
+      return (
+        <div className='d-flex justify-content-between'>
+          <div className="form-check">
+            <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadio${i}`} onClick={()=>handleClickMitad(mitad)} />
+            <label className="form-check-label" htmlFor={`flexRadio${i}`}>
+              {mitad.ingredienteNombre}
+            </label>
+          </div>
+          <p className='m-0 text-secondary'>
+          {mitad.sizeArticlePrice}
+          </p>
         </div>
-        <p className='m-0 text-secondary'>
-        {/* {precioArticleSelected.adicionales[adicional]} */}
-        </p>
-      </div>
-    )
-  }
-}
+        );
+      }
+
+//   if(isMiddle){
+//     return (
+//       <div className='d-flex justify-content-between'>
+//         <div className="form-check">
+//           <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadio${i}`} onClick={()=>handleClickMitad(adicional)} />
+//           <label className="form-check-label" htmlFor={`flexRadio${i}`}>
+//             {adicional}
+//           </label>
+//         </div>
+//         <p className='m-0 text-secondary'>
+//         {/* {precioArticleSelected.adicionales[adicional]} */}
+//         </p>
+//       </div>
+//     )
+//   }
+// }
 
 
 
+
+
+          {/* <div className='d-flex align-items-center row col-5'>
+            <GrSubtractCircle className='display-4 col-5' onClick={handleClickReduceCantidadArticulo} />
+            <p className='mb-2 display-3 fw-bold col-2 text-center'>{cantidadArticulo}</p>
+            <BsPlusCircle className='display-4 col-5' onClick={handleClickAddCantidadArticulo} />
+          </div> */}
 

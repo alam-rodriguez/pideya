@@ -20,11 +20,51 @@ export const existAdmin = async () => {
   }
 }
 
+// // Verificar si existe usario admin
+// export const obtenerSemiAdmids = async () => {
+//   try{
+//     const docRef = doc(db, 'app', 'app-info');
+//     const docSnap = await getDoc(docRef);
+//     if( docSnap.exists()) {
+//       docSnap.data();
+//     }
+//     else return 'no-data';
+//   }catch(e){
+//     console.log(e);
+//     return false;
+//   }
+// }
+
 // Guardar el admin
 export const guardarAdmin = async (admin) => {
   try{
     await setDoc(doc(db, 'app', 'app-info'), {
       admin: admin,
+    });
+    return true;
+  }catch(e){
+    return e;
+  }
+}
+
+// Guardar el admin
+export const guardarSemisAdmins = async (admins) => {
+  try{
+    await updateDoc(doc(db, 'app', 'app-info'), {
+      semisAdmins: admins,
+    });
+    return true;
+  }catch(e){
+    console.log(e);
+    return false;
+  }
+}
+
+// Guardar el admin
+export const guardarSemiAdmin = async (admin) => {
+  try{
+    await setDoc(doc(db, 'app', 'app-info'), {
+      semisAdmin: admin,
     });
     return true;
   }catch(e){
@@ -60,7 +100,8 @@ export const obtenerInfoApp = async () => {
       return 'no hay datos de esta app';
     }
   } catch(e){
-    return e;
+    console.log(e);
+    return false;
   }
 }
 
@@ -78,7 +119,8 @@ export const createCategories = async (info) => {
     });
     return true;
   }catch(e){
-    return e;
+    console.log(e);
+    return false;
   }
 }
 
@@ -88,7 +130,7 @@ export const getCategories = async () => {
     const data = [];
     const querySnapshot = await getDocs(collection(db, 'categorias'));
     querySnapshot.forEach( (doc) => {
-      data.push(doc.data());
+      if(!doc.data().isCategoryOfPoints) data.push(doc.data());
     });
     return data;
   }catch(e){
@@ -108,12 +150,14 @@ export const createArticle = async (id, info) => {
       imgpath: info.img,
       disponible: info.disponible,
       complex: info.complex,
-      precios: info.precios
+      precios: info.precios,
+      isArticleOfPoints: false,
+      isMiddle: info.isMiddle,
     });
     return true;
   }catch(e){
     console.log(e)
-    return e.message;
+    return false;
   }
 }
 
@@ -123,7 +167,7 @@ export const getAllArticles = async () => {
     const articles = [];
     const querySnapshot = await getDocs(collection(db, 'articulos'));
     querySnapshot.forEach( (doc) => {
-      articles.push(doc.data());
+      if(!doc.data().isArticleOfPoints) articles.push(doc.data());
     });
     return articles;
   }catch(e){
@@ -166,6 +210,7 @@ export const getArticlesByCategory = async (categoriaId) => {
 
 // Guardar info de usuario 
 export const saveInfoUser = async (pedido) => {
+  console.log(pedido.codeRef);
   try {
     await setDoc(doc(db, `user-${pedido.email}`, 'info'), {
       email: pedido.email,
@@ -176,7 +221,24 @@ export const saveInfoUser = async (pedido) => {
     });
     return true;
   } catch (e) {
-    console.log(e.code);
+    console.log(e);
+    return false;
+  }
+}
+// Guardar info de usuario 
+export const updateInfoUser = async (pedido) => {
+  console.log(pedido.codeRef);
+  try {
+    await updateDoc(doc(db, `user-${pedido.email}`, 'info'), {
+      email: pedido.email,
+      nombre: pedido.nombre,
+      direccion: pedido.direccion,
+      telefono: pedido.telefono,
+      codeRef: pedido.codeRef,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
     return false;
   }
 }
@@ -191,7 +253,7 @@ export const crearPedidoUser = async (pedido) => {
       telefono: pedido.telefono,
       comentario: pedido.comentario,
       email: pedido.email,
-      hora: pedido.hora,
+      horaPedido: pedido.horaPedido,
       dia: pedido.dia,
       pedido: pedido.pedido,
       pedidoOfPoints: pedido.pedidoOfPoints,
@@ -200,16 +262,56 @@ export const crearPedidoUser = async (pedido) => {
       wasView: pedido.wasView,
       isReady: pedido.isReady,
       paid: pedido.paid,
+      guardar: pedido.guardar,
       pointsInfo: pedido.pointsInfo,
       recibioPuntos: pedido.recibioPuntos,
       total: pedido.total,
+      puntosGastados: pedido.puntosGastados,
     });
     return true;
   } catch (e) {
-    console.log(e.code);
+    console.log(e);
     return false;
   }
 }
+// export const crearPedidoUser = async (pedido) => {
+  
+//   return new Promise( async (resolve, reject) => {
+//     let res = false;
+//     try{
+//       await setDoc(doc(db, 'pedidos', `${pedido.email}-${pedido.pedidoId}`), {
+//         id: pedido.pedidoId,
+//         user: pedido.nombre,
+//         direccion: pedido.direccion,
+//         telefono: pedido.telefono,
+//         comentario: pedido.comentario,
+//         email: pedido.email,
+//         hora: pedido.hora,
+//         dia: pedido.dia,
+//         pedido: pedido.pedido,
+//         pedidoOfPoints: pedido.pedidoOfPoints,
+//         isDelivery: pedido.isDelivery,
+//         deliveryInfo: pedido.deliveryInfo,
+//         wasView: pedido.wasView,
+//         isReady: pedido.isReady,
+//         paid: pedido.paid,
+//         pointsInfo: pedido.pointsInfo,
+//         recibioPuntos: pedido.recibioPuntos,
+//         total: pedido.total,
+//       });
+//       res = true;
+//     } catch(e) {
+//       console.log(e);
+//       res = false;
+//     }
+//     if(res) {
+//       resolve('bien')
+//     } else {
+//       reject('mal');
+//     }
+//   });
+
+// }
 
 // Mostrar Pedidos a cliente
 export const getPedidosByClient = async (email) => {
@@ -230,7 +332,7 @@ export const getPedidosByClient = async (email) => {
 // Mostrar pedidos que no estan listos
 export const getordersNotView = async () => {
   try{
-    const q = query(collection(db, 'pedidos'), where('isReady', '==' ,false));
+    const q = query(collection(db, 'pedidos'), where('guardar', '==' ,false));
     const querySnapshot = await getDocs(q);
     let data = [];
     querySnapshot.forEach((doc) => {
@@ -251,7 +353,7 @@ export const getInfoUser = async (email) => {
     if( docSnap.exists() ){
       return docSnap.data();
     }else {
-      return false;
+      return 'no-exist';
     }
 
   } catch (e) {
@@ -299,7 +401,9 @@ export const updateArticle = async (id, articleUpdated) => {
       subtitulo: articleUpdated.subtitulo,
       categoria: articleUpdated.categoria,
       precios: articleUpdated.precios,
-      disponible: articleUpdated.disponible
+      disponible: articleUpdated.disponible,
+      isMiddle: articleUpdated.isMiddle,
+      isArticleOfPoints: false,
     });
     return true;
   } catch (e) {
@@ -312,6 +416,17 @@ export const updateArticle = async (id, articleUpdated) => {
 export const deleteArticle =  async (id) => {
   try {
     await deleteDoc(doc(db, 'articulos', id));
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Borrar categoria
+export const deleteArticleOfPoints =  async (id) => {
+  try {
+    await deleteDoc(doc(db, 'articulos', `articulo-categoria-puntos-${id}`));
     return true;
   } catch (e) {
     console.log(e);
@@ -348,12 +463,43 @@ export const searchCodeRef = async (codeRef) => {
     return res;
   } catch (e) {
     console.log(e);
+    return false;
   }
 
 }
 
 // Actualizar para agregar referidos a user
 export const addReferidoPor = async (email, infoCodeRef) => {
+  console.log(infoCodeRef)
+  try {
+    const docRef = doc(db, `user-${email}`, 'info');
+    await updateDoc(docRef, {
+      referidoPor: infoCodeRef,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Actualizar si recivio puntos por invitar
+export const givePointForRefFriend = async (email, infoCodeRef) => {
+  console.log(infoCodeRef)
+  try {
+    const docRef = doc(db, `user-${email}`, 'info');
+    await updateDoc(docRef, {
+      referidoPor: infoCodeRef,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+// Actualizar si recivio puntos por invitar
+export const givePointForRefGoodFriend = async (email, infoCodeRef) => {
+  console.log(infoCodeRef)
   try {
     const docRef = doc(db, `user-${email}`, 'info');
     await updateDoc(docRef, {
@@ -367,13 +513,14 @@ export const addReferidoPor = async (email, infoCodeRef) => {
 }
 
 // Aptualizar si el pedido esta listo y si lo hemos visto
-export const UpdateOrderClient = async (email, idOrder, isReady, paid) => {
+export const UpdateOrderClient = async (email, idOrder, isReady, paid, guardar) => {
   try {
     const orderRef = doc(db, 'pedidos', `${email}-${idOrder}`);
     await updateDoc(orderRef, {
       wasView: true,
       isReady: isReady,
       paid: paid,
+      guardar: guardar,
     });
     return true;
   } catch (e) {
@@ -457,10 +604,12 @@ export const createCategoryPunto = async (info) => {
       viewInHome: info.viewInHome,
       viewInMenu: info.viewInMenu,
       imgpath: info.imgpath,
+      isCategoryOfPoints: 'true',
     });
     return true;
   }catch(e){
-    return e;
+    console.log(e);
+    return false;
   }
 }
 
@@ -473,7 +622,7 @@ export const updateCategoryPunto = async (info) => {
       sizeView: info.sizeView,
       viewInHome: info.viewInHome,
       viewInMenu: info.viewInMenu,
-      isCategoryOfPoints: info.isCategoryOfPoints,
+      isCategoryOfPoints: true,
     });
     return true;
   } catch (e) {
@@ -521,11 +670,12 @@ export const createArticleOfPoints = async (id, info) => {
       disponible: info.disponible,
       complex: info.complex,
       puntos: info.puntos,
+      isArticleOfPoints: true,
     });
     return true;
   }catch(e){
     console.log(e)
-    return e.message;
+    return false;
   }
 }
 
@@ -537,6 +687,7 @@ export const updateArticleOfPoints = async (article) => {
       puntos: article.puntos,
       subtitulo: article.subtitulo,
       titulo: article.titulo,
+      isArticleOfPoints: true,
     });
     return true;
   } catch (e) {
@@ -554,6 +705,7 @@ export const saveEstadistica = async (email, info) => {
       pedidoId: info.id,
       fecha: info.fecha,
       gastado: info.gastado,
+      puntosGastados: info.puntosGastados,
       puntosGenerados: info.puntosGenerados,
     });
     return true;
@@ -574,14 +726,33 @@ export const deleteEstadistica = async (email, estadisticaId) => {
   }
 }
 
+// // create estadisticas del cliente
+// export const createEstadisticas = async (email, info) => {
+//   try {
+//     await setDoc(doc(db, `user-${email}`, 'estadisticas'), {
+//       dineroGastado: info.dineroGastado,
+//       puntosGanados: info.puntosGanados,
+//       puntosGastados: info.puntosGastados,
+//       puntosRestantes: info.puntosGanados - info.puntosGastados,
+//     });
+//     return true;
+//   } catch (e) {
+//     console.log(e);
+//     return false;
+//   }
+// }
+
 // create estadisticas del cliente
 export const createEstadisticas = async (email, info) => {
   try {
-    await setDoc(doc(db, `user-${email}`, 'estadisticas'), {
+    await setDoc(doc(db, 'estadisticas', `user-${email}`), {
+      nombre: info.nombre,
+      email: email,
       dineroGastado: info.dineroGastado,
       puntosGanados: info.puntosGanados,
+      pointsForInviteFriend: info.pointsForInviteFriend,
       puntosGastados: info.puntosGastados,
-      puntosRestantes: info.puntosRestantes,
+      puntosRestantes: (info.puntosGanados + info.pointsForInviteFriend) - info.puntosGastados,
     });
     return true;
   } catch (e) {
@@ -590,15 +761,33 @@ export const createEstadisticas = async (email, info) => {
   }
 }
 
+// // editar estadistica de usuario
+// export const editEstadistica = async (email, info) => {
+//   try {
+//     const estadisticaRef = doc(db, `user-${email}`, 'estadisticas');
+//     await updateDoc(estadisticaRef, {
+//       dineroGastado: info.dineroGastado,
+//       puntosGanados: info.puntosGanados,
+//       puntosGastados: info.puntosGastados,
+//       puntosRestantes: info.puntosGanados - info.puntosGastados,
+//     });
+//     return true;
+//   } catch (e) {
+//     console.log(e);
+//     return false;
+//   }
+// }
 // editar estadistica de usuario
 export const editEstadistica = async (email, info) => {
   try {
-    const estadisticaRef = doc(db, `user-${email}`, 'estadisticas');
+    const estadisticaRef = doc(db, 'estadisticas', `user-${email}`);
     await updateDoc(estadisticaRef, {
+      nombre: info.nombre,
       dineroGastado: info.dineroGastado,
       puntosGanados: info.puntosGanados,
+      pointsForInviteFriend: info.pointsForInviteFriend,
       puntosGastados: info.puntosGastados,
-      puntosRestantes: info.puntosRestantes,
+      puntosRestantes: (info.puntosGanados + info.pointsForInviteFriend) - info.puntosGastados,
     });
     return true;
   } catch (e) {
@@ -623,14 +812,37 @@ export const editPoints = async (email, info) => {
   }
 }
 
+// // obtener estadisticas del cliente
+// export const getEstadisticas = async (email) => {
+//   try {
+//     const docRef = doc(db, `user-${email}`, 'estadisticas');
+//     const docSnap = await getDoc(docRef);
+
+//     if( docSnap.exists()){
+//       return docSnap.data();
+//     }else{
+//       return 'no estadisticas';
+//     }
+//   } catch (e) {
+//     console.log(e);
+//     return false;
+//   }
+// }
 // obtener estadisticas del cliente
 export const getEstadisticas = async (email) => {
   try {
-    const docRef = doc(db, `user-${email}`, 'estadisticas');
-    const docSnap = await getDoc(docRef);
+    const q = query(collection(db, 'estadisticas'), where('email', '==', email));
+    
+    const res = [];
 
-    if( docSnap.exists()){
-      return docSnap.data();
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach( (estadistica) => {
+      res.push(estadistica.data());
+    });
+
+    if( res.length > 0){
+      return res[0];
     }else{
       return 'no estadisticas';
     }
@@ -654,4 +866,22 @@ export const getEachStatitics = async (email) => {
     console.log(e);
     return false;
   }
+}
+
+
+// obtener las estadisticas de todos los usuarios
+export const getAllStatistics  = async () => {
+
+  try {
+    const querySnapshot = await getDocs(collection(db, 'estadisticas'));
+    const res = [];
+    querySnapshot.forEach( (estadistica) => {
+      res.push(estadistica.data());
+    });
+    return res;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
 }

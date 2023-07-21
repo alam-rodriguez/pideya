@@ -12,7 +12,7 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 // React-Icons
 import { FaPizzaSlice } from 'react-icons/fa';
 
-const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id }) => {
+const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id, setViewArticleSelected }) => {
   const navigate = useNavigate();
 
   const [imgUrl, setImgUrl] = useState(null);
@@ -36,7 +36,8 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id 
       subTitle, 
       id,
     });
-    navigate('/article');
+    setViewArticleSelected('abrir');
+    // navigate('/article');
   }
 
   if(size == 'small'){

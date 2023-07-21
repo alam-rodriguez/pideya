@@ -30,11 +30,10 @@ const SingIn = () => {
   const handleClickGoogle = async () => {
     // await registrarAdmin();
   }
-  const i = () => {
-    
-  }
+  const i = () => {}
+
   return (
-    <section className='d-flex justify-content-center flex-column align-items-center col-9 m-auto mt-5 vh-100'>
+    <section className='d-flex justify-content-center flex-column align-items-center col-9 m-auto mx-5 vh-100'>
       
       <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} />
 
@@ -42,7 +41,7 @@ const SingIn = () => {
       <p className='text-start fw-bold fs-3'>Por favor inicia sesion con tu email.</p>
       <p>Ut nisi ad commodo veniam mollit ullamco. In Lorem cillum anim cillum et aliqua. Dolore anim cillum id veniam elit esse excepteur.</p>
 
-        <div className='w-100'>
+        <div className='w-100 z-1'>
           <SingInButton 
             icon={<GrFacebookOption className='fs-1 text-white' />} 
             bgColor='bg-primary' 
@@ -63,7 +62,7 @@ const SingIn = () => {
           />
         </div>     
         
-      <p className='position-absolute bottom-0 w-75 text-center'>Nostrud adipisicing labore laboris amet non sint laboris aute nulla cillum est voluptate.</p>
+      <p className='position-absolute bottom-0 w-75 text-center z-0'>Nostrud adipisicing labore laboris amet non sint laboris aute nulla cillum est voluptate.</p>
     </section>
   )
 }

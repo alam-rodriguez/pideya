@@ -1,33 +1,27 @@
 // React
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 // Context
 import { AppContext } from '../context/AppContext';
 
-// React Router
-import { useNavigate } from 'react-router-dom';
-
 // react Icons
 import { ImCancelCircle } from 'react-icons/im';
 
-const Article = () => {
-  const navigate = useNavigate();
+const Article = ({viewArticleSelected, setViewArticleSelected}) => {
+  
+  const { color1, articleSeleted, setArticleSeleted } = useContext(AppContext);
 
-    const { color1, articleSeleted, setArticleSeleted } = useContext(AppContext);
-
-    useEffect(()=>{
-      // if(articleSeleted == null) navigate('/home');
-    }, [] );
-
-    const handleClickBack = () => {
+  const handleClickBack = () => {
+    setViewArticleSelected('cerrar');
+    setTimeout(() => {
       setArticleSeleted(null);
-      navigate('/home');
-    }
+    }, 1000);
+  }  
 
   if(articleSeleted != null){
     return (
-      <main className='animate__animated animate__fadeInRight container-fluid vh-100 vw-100 start-0 bg-danger'>
-        <ImCancelCircle className='position-absolute text-white display-3' style={{top:20, left:20}} onClick={handleClickBack} />
+      <main className={`animate__animated ${viewArticleSelected=='abrir' ? 'animate__slideInRight' : viewArticleSelected=='cerrar' ? 'animate__slideOutRight' : ''}  container-fluid p-0 position-fixed start-0 top-0 vh-100 vw-100 bg-light z-3`}>
+        <ImCancelCircle className=' position-absolute text-white display-3' style={{top:20, left:20}} onClick={handleClickBack} />
         <img className='w-100 object-fit-cover'  src={articleSeleted.imgUrl} style={{height:'78%'}} />
         <div className='d-flex flex-column justify-content-between h-25 bg-white rounded-5 position-absolute bottom-0 w-100 p-4 pt-0 shadow-lg'>
             <div className='align-self-center mt-2 bg-secondary rounded-5' style={{height:4, width:40}}></div>

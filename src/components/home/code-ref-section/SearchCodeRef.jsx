@@ -12,24 +12,29 @@ import { addReferidoPor, editEstadistica, getEstadisticas, getInfoUser, obtenerI
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
 
+// React-Toaster
+import { toast } from 'react-toastify';
+import { registrarUsuario } from '../../../firebase/firebaseAuthGoogle';
+
 const SearchCodeRef = ({viewSearchCode, setViewSearchCode}) => {
 
   const navigate = useNavigate();
 
-  const { color1, email } = useContext(AppContext);
+  const { color1, email, setEmail } = useContext(AppContext);
 
   const [infoReferido, setInfoReferido] = useState(null);
 
   const [infoPointsApp, setInfoPointsApp] = useState(null);
 
+  
   useEffect( () => {
     if(email == null) navigate('/home');
     const f = async () => {
-
+      
       const infoApp = await obtenerInfoApp();
       console.log(infoApp.infoPoints);
       setInfoPointsApp(infoApp.infoPoints);
-
+      
       const res = await getInfoUser(email);
       if(res.referidoPor != undefined) {
         setInfoReferido( res.referidoPor );
@@ -43,39 +48,83 @@ const SearchCodeRef = ({viewSearchCode, setViewSearchCode}) => {
   const handleChangeInputValue = (e) => setInputValue(e.target.value); 
 
   const handleClick = async () => {
-    const res = await searchCodeRef( Number(inputValue) );
-    console.log(res.email);
-    if(res.email != undefined){
-      const referidoInfo = {
-        codeRef: res.codeRef,
-        email: res.email,
-        nombre: res.nombre,
-        givePointsForSpendMoney: false,
+
+    const searchCodePromise = new Promise( async (resolve, reject) => {
+
+      let emailUser = email;
+
+      const resBusqueda = await searchCodeRef( Number(inputValue) );
+
+      console.log(resBusqueda.email);
+
+      if(resBusqueda.email != undefined){
+        const res = await getInfoUser(emailUser);
+
+        if(emailUser == null || res == 'no-exist'){
+          const resRegistro = await registrarUsuario();
+          if(resRegistro != false) emailUser = resRegistro;
+        }
+
+        // console.log(emailUser);
+        // if(res != 'no-exist' && res != false) {
+          
+          
+          
+          const estadisticas = await getEstadisticas(emailUser);
+          
+          const referidoInfo = {
+            codeRef: resBusqueda.codeRef,
+            email: resBusqueda.email,
+            nombre: resBusqueda.nombre,
+            givePointsForInviteFriend: false,
+            givePointsForSpendMoney: false,
+          }
+
+          if(estadisticas != 'no estadisticas' && estadisticas != false){
+            
+            if(estadisticas.dineroGastado > 500){
+              
+              referidoInfo.givePointsForInviteFriend = true;
+              const estadisticasAmigo = await getEstadisticas(resBusqueda.email);
+              const newEstadistcas = {
+                dineroGastado: estadisticasAmigo.dineroGastado, 
+                puntosGanados: estadisticasAmigo.puntosGanados + Number(infoPointsApp.refFriendGenerate),
+                puntosGastados: estadisticasAmigo.puntosGastados,
+                puntosRestantes: estadisticasAmigo.puntosRestantes + Number(infoPointsApp.refFriendGenerate),
+              }
+              const res3 = await editEstadistica(resBusqueda.email, newEstadistcas);
+              console.log(res3);
+              
+            } else {
+        
+      
+            }
+            
+          }
+
+          setInfoReferido( resBusqueda );
+          console.log( resBusqueda );
+          // setInfoReferido(res);
+          const resRef = await addReferidoPor(emailUser, referidoInfo);
+
+        // }
+
+        resolve();
+      }else {
+        reject();
       }
-      setInfoReferido( res );
-      console.log( res );
-      setInfoReferido(res);
-      const resRef = await addReferidoPor(email, referidoInfo);
+    });
 
-      const estadisticasAmigo = await getEstadisticas(res.email);
-      const newEstadistcas = {
-        dineroGastado: estadisticasAmigo.dineroGastado, 
-        puntosGanados: estadisticasAmigo.puntosGanados + Number(infoPointsApp.refFriendGenerate),
-        puntosGastados: estadisticasAmigo.puntosGastados,
-        puntosRestantes: estadisticasAmigo.puntosRestantes + Number(infoPointsApp.refFriendGenerate),
-      }
-      const res3 = await editEstadistica(res.email, newEstadistcas);
-      console.log(res3);
+    toast.promise( searchCodePromise, {
+      pending: 'Buscando codigo',
+      success: 'Codigo encontrado',
+      error: 'no se ha escontrado este codigo'
+    });
 
-
-
-    }else {
-      alert('no se ha escontrado este codigo');
-    }
   }
 
   return (
-    <div className={`animate__animated ${viewSearchCode ? 'animate__fadeInRight' : 'animate__fadeOutRight'} container-fluid vh-100 vw-100 position-absolute bg-white top-0 start-0 z-3`}>
+    <div className={`animate__animated ${viewSearchCode == 'abrir' ? 'animate__slideInRight' : viewSearchCode == 'cerrar' ? 'animate__slideOutRight' : ''} container-fluid vh-100 vw-100 position-fixed bg-white top-0 start-0 z-3`}>
       <Header title='Entra el codigo de promo' setViewSearchCode={setViewSearchCode} />
 
       <section className='mx-4 d-flex flex-column justify-content-evenly' style={{height:'90vh'}}>
@@ -85,12 +134,12 @@ const SearchCodeRef = ({viewSearchCode, setViewSearchCode}) => {
             <>
               <input className='form-control border-0 border-bottom text-center fs-2 fw-bold'  type="text" value={infoReferido.codeRef} readOnly />  
               <div className='d-flex justify-content-between mt-5'>
-                <p className='m-0 fs-3 fw-medium'>Nombre:</p>
-                <p className='m-0 fs-3 fw-bold'>{infoReferido.nombre}</p>
+                <p className='m-0 fs-4 fw-medium'>Nombre:</p>
+                <p className='m-0 fs-4 fw-bold'>{infoReferido.nombre}</p>
               </div>
               <div className='d-flex justify-content-between mt-5'>
-                <p className='m-0 fs-3 fw-medium'>Nombre:</p>
-                <p className='m-0 fs-3 fw-bold'>{infoReferido.email}</p>
+                <p className='m-0 fs-4 fw-medium'>email:</p>
+                <p className='m-0 fs-4 fw-bold'>{infoReferido.email}</p>
               </div>
             </>
             : <input className='form-control border-0 border-bottom text-center fs-2 fw-bold'  type="text" onChange={handleChangeInputValue} />
@@ -106,4 +155,4 @@ const SearchCodeRef = ({viewSearchCode, setViewSearchCode}) => {
   )
 }
 
-export default SearchCodeRef
+export default SearchCodeRef;

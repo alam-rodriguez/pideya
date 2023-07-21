@@ -26,6 +26,8 @@ const AdminOptions = () => {
   const handleClickViewCategories = () => navigate('/view-categories') ;
   const handleClickViewArticles = () => navigate('/view-articles');
   const handleClickAjustesPuntos = () => navigate('/admin-options/ajustes-puntos');
+  const handleClickViewListArticles = () => navigate('/admin-options/list-clients');
+
   
   return (
     <section className='container'>
@@ -38,6 +40,8 @@ const AdminOptions = () => {
 
       {/* Btn para ver los articulos */}
       <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickViewArticles}>Ver los Articulos</button>
+
+      <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickViewListArticles}>Lista de Clientes</button>
 
       <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAjustesPuntos}>Ajustes de Puntos</button>
 

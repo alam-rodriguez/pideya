@@ -17,11 +17,15 @@ const AppContextProvider = ({children}) => {
   // const [color1Text, setColor1Text] = useState('text-success');
   // const [color1BtnOutline, setColor1BtnOutline] = useState('btn-outline-success');
 
+  const [categories, setCategories] = useState(null);
+
+  const [categoriesOfMenu, setCategoriesOfMenu] = useState(null);
+
   const [articleSeleted, setArticleSeleted] = useState(null);
 
   const [viewMenu, setViewMenu] = useState(false);
 
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState('customer');
 
   const [email, setEmail] = useState(null);
 
@@ -49,9 +53,17 @@ const AppContextProvider = ({children}) => {
 
   const [infoPointsUser, setInfoPointsUser] = useState(null);
 
+  const [amountPoints, setAmountPoints] = useState(0);
+
+  const [codeUser, setCodeUser] = useState(null);
+
+  const [estadisticasUser, setEstadisticasUser] = useState(null);
+
   return(
     <AppContext.Provider 
       value={{
+        categories, setCategories,
+        categoriesOfMenu, setCategoriesOfMenu,
         color1,
         articleSeleted, setArticleSeleted,
         viewMenu, setViewMenu,
@@ -68,7 +80,10 @@ const AppContextProvider = ({children}) => {
         SeletedOrder, setSeletedOrder,
         infoPoints, setInfoPoints,
         clientOrders, setClientOrders,
-        infoPointsUser, setInfoPointsUser
+        infoPointsUser, setInfoPointsUser,
+        amountPoints, setAmountPoints,
+        codeUser, setCodeUser,
+        estadisticasUser, setEstadisticasUser,
       }}
     >
       {children}

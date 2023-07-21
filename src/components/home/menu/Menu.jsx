@@ -3,76 +3,69 @@ import React, { useContext } from 'react';
 // React Router
 import { Link } from 'react-router-dom';
 
-// Context
-import { AppContext } from '../../../context/AppContext';
-
 // Reatc Icon
 import { HiFaceSmile } from 'react-icons/hi2';
 
 // Component
 import MenuItem from './MenuItem';
 
+// Context
+import { AppContext } from '../../../context/AppContext';
+
+// Swal-Notification
+import Swal from 'sweetalert2';
+// React-Toaster
+// import { toast } from 'react-toastify';
+
 const Menu = () => {
 
-  const { color1, viewMenu, setViewMenu, } = useContext(AppContext);
+	const { email } = useContext(AppContext);
 
-  if(viewMenu){
-  	return (
-    	<section className='w-75 mt-5'>
-        <Link className='text-decoration-none text-secondary d-flex align-items-center' to='/registro'>
-					<HiFaceSmile className='' style={{fontSize:80}} />
-          <p className='m-0 ms-3 fs-5 fw-medium'>Iniciar sesion</p>
-        </Link>
-				<nav>
+	const notification = () => Swal.fire({
+    icon: 'info',
+    title: 'No puedes',
+    text: 'Para acceder a esta seccion debes de iniciar sesion y hacer por lo menos un pedido',
+  });
+
+  return (
+    <section className='w-75 mt-5 mx-4 position-absolute'>
+      
+			<Link className='text-decoration-none text-secondary d-flex align-items-center' to='/registro'>
+				<HiFaceSmile className='' style={{fontSize:80}} />
+         <p className='m-0 ms-3 fs-5 fw-medium'>Iniciar sesion</p>
+      </Link>
+
+			<nav>
 
 				<MenuItem
 					link='#' 
 					text='SOBRE NOSOTROS'
 				/>
-
 				<MenuItem
 					link='/invite-friends' 
 					text='INVITAR AMIGOS'
+					type={email == null ? 'no-email' : null}
+					notification={notification}
 				/>
-
 				<MenuItem
 					link='/order-history' 
 					text='HISTORIAL DE ORDENES'
+					type={email == null ? 'no-email' : null}
+					notification={notification}
 				/>
-
 				<MenuItem
 					link='/ajustes' 
 					text='AJUSTES'
 				/>
-
 				<MenuItem
 					link='#' 
-					text='AYUDA'
+					text='AYUDA' 
 				/>
 					
-					{/* <Link to='#'>
-						<p>Sobre de nosotros</p>
-					</Link>
-					<Link to='#'>
-						<p>Sobre de nosotros</p>
-					</Link>
-					<Link to='#'>
-						<p>Sobre de nosotros</p>
-					</Link>
-					<Link to='#'>
-						<p>Sobre de nosotros</p>
-					</Link>
-					<Link to='#'>
-						<p>Sobre de nosotros</p>
-					</Link> */}
-					
-				</nav>
-    	</section>
-  );
-  }else {
-    return <></>;
-  }
+			</nav>
 
+    </section>
+  );
 }
 
-export default Menu
+export default Menu;

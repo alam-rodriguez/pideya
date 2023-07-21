@@ -9,13 +9,16 @@ import { getCategories } from '../../../firebase/firebaseFirestore';
 import { useNavigate } from 'react-router-dom';
 
 // Header
-import Header from '../add-articles-components/Header'
+import Header from './components/Header';
 
 // Context
 import { AppContext } from '../../../context/AppContext';
+import { ToastContainer } from 'react-toastify';
 
 const ViewCategories = () => {
   
+  const { setCategorySelected } = useContext(AppContext);
+
   const navigate = useNavigate();
 
   // Effects
@@ -28,7 +31,6 @@ const ViewCategories = () => {
   }, [] );
 
   // States
-  const { setCategorySelected } = useContext(AppContext);
   const [categories, setCategories] = useState(null);
 
   // handles
@@ -39,25 +41,30 @@ const ViewCategories = () => {
 
   const handleClickCrearCategoria = () => navigate('/create-categories');
 
+  const handleClickAtras = () => navigate('/admin-options');
+
   if(categories != null){
     return (
       <main className='border-0 mx-3' >
         {/* Header */}
-        <Header path='/admin-options' />
+        <Header handleClickAtras={handleClickAtras} />
   
         <section className='d-flex flex-column gap-4'>
   
           { categories != null 
-            ? categories.map((category)=>(
-              <div className='border-bottom py-2' key={category.id} onClick={()=>handleClickCategory(category)}>
-                <p className='m-0 fs-1 fw-medium'>{category.nombre}</p>
-              </div>
-            ))
+            ? categories.length > 0 
+              ? categories.map((category)=>(
+                <div className='border-bottom py-2' key={category.id} onClick={()=>handleClickCategory(category)}>
+                  <p className='m-0 fs-1 fw-medium'>{category.nombre}</p>
+                </div>
+              ))
+              : <p className='m-0 fs-1 fw-medium text-center'>No hay categorias</p>
           : <></>}
   
           <button className='btn form-control btn-success fs-3 position-absolute bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
   
         </section>
+        <ToastContainer />
       </main>
     );
   }else {
@@ -70,7 +77,6 @@ const ViewCategories = () => {
     );
   }
 }
-
 
 export default ViewCategories;
 

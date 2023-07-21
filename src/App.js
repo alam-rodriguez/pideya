@@ -13,6 +13,7 @@ import SingIn from './components/home/menu/sign-section/SingIn';
 import Settings from './components/home/menu/settings-section/Settings';
 import SignInLikeAdmin1 from './components/home/menu/sign-section/SignInLikeAdmin1';
 import SignInLikeAdmin2 from './components/home/menu/sign-section/SignInLikeAdmin2';
+import SignInLikeSemiAdmin from './components/home/menu/sign-section/SignInLikeSemiAdmin';
 import AdminOptions from './components/add-articles/ViewArticles';
 import ViewCategories from './components/add-articles/categories/ViewCategories';
 import CreateCategory from './components/add-articles/categories/CreateCategory';
@@ -31,6 +32,7 @@ import ViewCategoryPuntos from './components/admin-options/ajustes-puntos/ajuste
 import CreateOrEditCategoriaPuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-categoria/CreateOrEditCategoriaPuntos';
 import ViewArticlesPuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-articulos/ViewArticlesPuntos';
 import CreateOrEditArticlePuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-articulos/CreateOrEditArticlePuntos';
+import ListClients from './components/admin-options/lista-clientes/ListClients';
 
 // React Router
 import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
@@ -42,12 +44,12 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 // Animaciones
 import 'animate.css';
 
-function App() {
+// toaster
+import 'react-toastify/dist/ReactToastify.css';
 
-  // const navigate = useNavigate();
-  // const naveggar = () => {
-  //   navigate('/home')
-  // }
+import 'react-clock/dist/Clock.css';
+
+function App() {
 
   return (
     <AppContextProvider>
@@ -56,10 +58,11 @@ function App() {
           <Route path='/welcome' Component={FirstEntry}></Route>
           <Route path='/home' Component={Home}></Route>
           <Route path='/home/search-code-ref' Component={SearchCodeRef}></Route>
-          <Route path='/article' Component={Article}></Route>
+          {/* <Route path='/article' Component={Article}></Route> */}
           <Route path='/registro' Component={SingIn}></Route>
           <Route path='/registro-like-admin' Component={SignInLikeAdmin1}></Route>
           <Route path='/registro-like-admin/details-app' Component={SignInLikeAdmin2}></Route>
+          <Route path='/registro-like-semi-admin' Component={SignInLikeSemiAdmin}></Route>
           <Route path='/ajustes' Component={Settings}></Route>
           <Route path='/order-history' Component={OrderHistory}></Route>
           <Route path='/invite-friends' Component={InviteFriends}></Route>
@@ -71,6 +74,7 @@ function App() {
           <Route path='/admin-options/ajustes-puntos/create-category' Component={CreateOrEditCategoriaPuntos}></Route>
           <Route path='/admin-options/ajustes-puntos/view-articles' Component={ViewArticlesPuntos}></Route>
           <Route path='/admin-options/ajustes-puntos/create-article' Component={CreateOrEditArticlePuntos}></Route>
+          <Route path='/admin-options/list-clients' Component={ListClients}></Route>
           <Route path='/create-categories' Component={CreateCategory}></Route>
           <Route path='/view-articles' Component={ViewArticles}></Route>
           <Route path='/edit-article' Component={EditArticle}></Route>

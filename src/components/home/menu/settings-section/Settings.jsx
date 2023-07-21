@@ -23,6 +23,9 @@ import { AppContext } from '../../../../context/AppContext';
 // Componentes
 import SettingsItem from './SettingsItem';
 
+// Toaster
+import { toast } from 'react-toastify';
+
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -38,12 +41,41 @@ const Settings = () => {
   //   }
   // }
 
+  const notificationSucces = (text) => {
+    return toast.success( text, {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+  const notificationError = (text) => {
+    return toast.error( text, {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+
   const handleClickCerrarSesion = async () => {
     const res = await logOut();
     if(res){
-      navigate('/home');
-      setIsAdmin(false);
-    }
+      notificationSucces('Haz cerrado sesion exitosamente');
+      setTimeout( () => {
+        window.location.reload();
+        navigate('/home');
+        setIsAdmin(false);
+      }, 5000);
+    }else notificationError();
   }
 
   return (

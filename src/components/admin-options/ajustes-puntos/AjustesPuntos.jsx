@@ -20,15 +20,16 @@ const AjustesPuntos = () => {
 
   const [configCodeRef, setConfigCodeRef] = useState({
     refFriendGenerate: 10,
-    minForSpend: 2500,
+    minForSpend: 7500,
     pointsForMinSpend: 50,
   });
 
   useEffect( () => {
     const f = async () => {
       const res = await obtenerInfoApp();
-      console.log(res.infoPoints.activatePoints);
-      if(res.infoPoints.activatePoints != undefined){
+      if(res.infoPoints != undefined){
+        console.log(res);
+        console.log(res.infoPoints.activatePoints);
         setActivatePoints(res.infoPoints.activatePoints);
         setEachPointValue(res.infoPoints.eachPointValue);
         setEachMoneyGenerateOnePoint(res.infoPoints.eachMoneyGenerateOnePoint);
@@ -68,10 +69,12 @@ const AjustesPuntos = () => {
 
   const handleClickCategoryPoints = () => navigate('/admin-options/ajustes-puntos/view-category');
 
+  const handleClickAtras = () => navigate('/admin-options');
+
   return (
     <main>
 
-      <Header />
+      <Header handleClickAtras={handleClickAtras} />
 
       <section className='mx-4'>
         <p className='m-0 fs-5'>Los puntos son recompensas que los usuarios obtienen al hacer compras, y estas recompensas o puntos los pueden utilizar para hacer compras gratuitas de articulos.</p>
