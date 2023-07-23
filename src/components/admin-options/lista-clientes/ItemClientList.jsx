@@ -1,18 +1,15 @@
-import React from 'react'
-import { useState } from 'react';
-import { useEffect } from 'react'
+import React, { useState, useEffect} from 'react'
 
 const ItemClientList = ({nombre, valueProp, selectValue}) => {
 
   const [value, setValue] = useState(0);
   useEffect( () => {
-    // console.log(selectValue);
     if(selectValue == 'dinero-gastado') setValue(Math.trunc(valueProp.dineroGastado));
     else if(selectValue == 'puntos-ganados') setValue(Math.trunc(valueProp.puntosGanados));
     else if(selectValue == 'puntos-por-invitar') setValue(Math.trunc(valueProp.pointsForInviteFriend));
     else if(selectValue == 'puntos-gastados') setValue(Math.trunc(valueProp.puntosGastados));
     else if(selectValue == 'puntos-restantes') setValue(Math.trunc(valueProp.puntosRestantes));
-  }, [selectValue] )
+  }, [selectValue] );
 
   return (
     <div className='d-flex justify-content-between border-bottom py-3'>
@@ -22,4 +19,4 @@ const ItemClientList = ({nombre, valueProp, selectValue}) => {
   );
 }
 
-export default ItemClientList
+export default ItemClientList;

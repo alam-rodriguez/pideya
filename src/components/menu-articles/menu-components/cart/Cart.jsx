@@ -114,6 +114,8 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     if(type == 'hora') return hora;
     if(type == 'minuto') return minutos;
     if(type == 'segundo') return minutos;
+    if(type == 'dia') return `${dia}/${mes}/${anio}`;
+    if(type == 'horaString') return `${hora}:${minutos} ${am_pm}`;
     return `${dia}/${mes}/${anio}, ${hora}:${minutos} ${am_pm}`;
   }
 
@@ -277,7 +279,8 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     // let userEmail = email;
     // if( email == null) userEmail = await registrarUsuario();
         
-    const fecha = getFecha();
+    const dia = getFecha('dia');
+    const horaString = getFecha('horaString');
     const hora = getFecha('hora');
     const minuto = getFecha('minuto');
     const segundo = getFecha('segundo');
@@ -294,12 +297,13 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
       codeRef: codeRef,
       // precio: cart.precio,
       // categoriaNombre: categorySelected.nombre,
+      dia: dia,
+      horaString: horaString,
       horaPedido: {
         hora: hora,
         minuto: minuto,
         segundo: segundo,
       },
-      dia: fecha,
       email: email,
       isDelivery: entrega == 'quiero delivery' ? true : false,
       deliveryInfo: entrega == 'quiero delivery' ? lugarDelivery : null,
@@ -318,7 +322,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
     const visita = {
       id: pedidoId,
-      fecha: fecha,
+      fecha: dia,
       gastado: total,
       puntosGastados: puntos,
       puntosGenerados: infoPoints != undefined ? infoPoints.activatePoints ? total / infoPoints.eachPointValue : 0 : 0,

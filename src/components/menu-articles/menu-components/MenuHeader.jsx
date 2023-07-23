@@ -34,6 +34,15 @@ const MenuHeader = ({viewMenu, setViewMenu, setArticlesOfCategorySelected}) => {
       </div>
     </header>
   )
+  // return (
+  //   <header className='d-flex justify-content-between py-4 position-absolute'>
+  //     <IoIosArrowBack className='display-4 ' onClick={handleClickBack} /> 
+  //     <div className='d-flex me-4 align-items-center gap-2'>
+  //       <p className='m-0 fs-4'>{amountPoints}</p>
+  //       <FaPizzaSlice className='fs-5' />
+  //     </div>
+  //   </header>
+  // )
 }
 
 export default MenuHeader

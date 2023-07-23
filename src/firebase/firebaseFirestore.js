@@ -345,6 +345,23 @@ export const getordersNotView = async () => {
   }
 }
 
+// Ver todos los pedidos de hoy
+export const orderOfToday = async (hoy) => {
+  try {
+    const q = query(collection(db, 'pedidos'), where('dia', '==', hoy));
+    const data = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach( (pedido) => {
+      data.push(pedido.data());
+    });
+    if(data.length > 0) return data;
+    else return 'no-hay-pedidos';
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 // obtener info del cliente
 export const getInfoUser = async (email) => {
   try {

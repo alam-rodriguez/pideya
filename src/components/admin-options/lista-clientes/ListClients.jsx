@@ -12,7 +12,6 @@ import ItemClientList from './ItemClientList';
 // Firebase
 import { getAllStatistics } from '../../../firebase/firebaseFirestore';
 
-
 const ListClients = () => {
 
   const [listUsers, setListUsers] = useState([]);
@@ -20,27 +19,17 @@ const ListClients = () => {
   const [selectValue, setSelectValue] = useState('dinero-gastado');
   const handleChangeSelect = (e) => setSelectValue(e.target.value);
   
-
-  // useEffect( () => {
-  //   const f = async () => {
-  //     // let users = [];
-  //     // if(listUsers.length == 0){
-  //       const users = await getAllStatistics();
-  //       setListUsers(users);
-  //     //   console.log(users);
-  //     // }else {
-  //     //   users = listUsers;
-  //     // }
-  //   }
-  //   f();
-  // }, [] );
+  useEffect( () => {
+    const f = async () => {
+      let users = await getAllStatistics();
+      setListUsers(users);
+    }
+    f();
+  }, [] );
 
   useEffect(()=>{
     const f = async () => {
-      let users = [];
-
-      if(listUsers.length == 0) users = await getAllStatistics();
-      else users = listUsers;
+      let users = [...listUsers];
       
       if(selectValue == 'dinero-gastado'){
         users.sort((a, b) => b.dineroGastado - a.dineroGastado);
@@ -49,8 +38,8 @@ const ListClients = () => {
         users.sort((a, b) => b.puntosGanados - a.puntosGanados);
         setListUsers(users);
       }else if(selectValue == 'puntos-por-invitar'){
-        const newArray = users.sort((a, b) => b.pointsForInviteFriend - a.pointsForInviteFriend);
-        setListUsers(newArray);
+        users.sort((a, b) => b.pointsForInviteFriend - a.pointsForInviteFriend);
+        setListUsers(users);
       }else if(selectValue == 'puntos-gastados'){
         users.sort((a, b) => b.puntosGastados - a.puntosGastados);
         setListUsers(users);
@@ -92,4 +81,4 @@ const ListClients = () => {
   )
 }
 
-export default ListClients
+export default ListClients;
