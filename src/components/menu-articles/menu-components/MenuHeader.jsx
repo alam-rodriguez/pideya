@@ -26,7 +26,7 @@ const MenuHeader = ({viewMenu, setViewMenu, setArticlesOfCategorySelected}) => {
   }
 
   return (
-    <header className='d-flex justify-content-between py-4'>
+    <header className='d-flex justify-content-between py-4 '>
       <IoIosArrowBack className='display-4 ' onClick={handleClickBack} /> 
       <div className='d-flex me-4 align-items-center gap-2'>
         <p className='m-0 fs-4'>{amountPoints}</p>
