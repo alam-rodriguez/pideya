@@ -48,11 +48,11 @@ const ViewArticles = () => {
 
   if(articles != null){
     return (
-      <main className='border-0 mx-3' >
+      <main className='border-0 mx-3 d-block vh-100 bg-warning- ' >
         {/* Header */}
         <CreateArticleHeader path='/admin-options' whatReset='articleSeletc' />
   
-        <section className='d-flex flex-column gap-4'>
+        <section className='d-flex flex-column gap-5  bg-danger- ' style={{height:''}}>
   
           { articles != null 
             ? articles.length > 0 
@@ -64,8 +64,10 @@ const ViewArticles = () => {
               : <p className='m-0 fs-1 fw-medium text-center'>No hay articulos</p>
             : <></>
           }
-  
-          <button className='btn form-control btn-success fs-3 position-absolute bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
+
+          <div>
+             <button className='btn form-control btn-success fs-3 position-fixed bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
+          </div>
   
         </section>
       </main>
