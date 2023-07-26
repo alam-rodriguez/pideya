@@ -207,8 +207,8 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
   const [close, setClose] = useState(false);
   
   return (
-    <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-absolute top-0 start-0 w-100 bg-white vh-100 overflow-hidden z-1`}>
-      <section className='z-0 overflow-hidden d-flex justify-content-center align-items-center' style={{height:'25%'}}>
+    <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-absolute top-0 start-0 w-100 bg-white vh-100 overflow-hidden z-1`} style={{}}>
+      <section className='z-0 overflow-y-hidden d-flex justify-content-center align-items-center' style={{height:'25%'}}>
         <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
           <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
         </div>
@@ -300,7 +300,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
 
         </div>
 
-        <footer className='row h-auto' style={{}}>
+        <footer className='row h-auto mb-5' style={{}}>
           <div className='d-flex gap-3 align-items-center col-5'>
             <GrSubtractCircle className='display-6' onClick={handleClickReduceCantidadArticulo} />
             <p className='mb-2 display-4 fw-medium text-center'>{cantidadArticulo}</p>

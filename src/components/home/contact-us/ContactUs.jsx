@@ -29,7 +29,7 @@ const ContactUs = () => {
   }, [] );
 
   return (
-    <section className='d-flex justify-content-around gap-2 pb-5'>
+    <section className='d-flex justify-content-around gap-2' style={{paddingBottom:70}}>
 
       <ContactUsItem
         icon={<RiFacebookCircleLine className='display-2 me-1' />} 

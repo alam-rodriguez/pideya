@@ -23,7 +23,7 @@ import TemporizadorLastOrder from './home/preview-orders/TemporizadorLastOrder';
 
 // Firebase 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, getCategories, getCategoriesFilted, getPedidosByClient, obtenerInfoApp } from '../firebase/firebaseFirestore';
+import { auth, getAllCategories, getCategories, getCategoriesFilted, getPedidosByClient, obtenerInfoApp } from '../firebase/firebaseFirestore';
 
 // Toaster
 import { ToastContainer } from 'react-toastify';
@@ -34,7 +34,7 @@ import { ToastContainer } from 'react-toastify';
 const Home = () => {
   const navigate = useNavigate();
 
-  const { color1, categories, setCategories, viewMenu, setViewMenu, articleSeleted, setArticleSeleted, email, setEmail, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories,  infoPoints, setInfoPoints, clientOrders, setClientOrders } = useContext(AppContext);
+  const { color1, categories, setCategories, viewMenu, setViewMenu, articleSeleted, setArticleSeleted, email, setEmail, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories,  infoPoints, setInfoPoints, clientOrders, setClientOrders, categoriesOfMenu, setCategoriesOfMenu } = useContext(AppContext);
 
   // const [infoPoints, setInfoPoints] = useState(null);
 
@@ -86,15 +86,30 @@ const Home = () => {
           }
         }
       }
-      // obtiene categorias y articulos para renderizar
-      const getInfo = async () => {
-        const res = await getCategoriesFilted('viewInHome');
-        setCategories(res);
-        console.log(res);
-      }
-      getInfo();
     }
   }, [categories] );
+
+  // Obtener categorias
+  useEffect( () => {
+    if(categories == null || categoriesOfMenu == null){
+      // obtiene categorias y articulos para renderizar
+    const getInfo = async () => {
+      let categoryiesOfHome = [];
+      let categoriesOfMenu = [];
+      const categories = await getAllCategories('viewInHome');
+      
+      categories.forEach( (categoria) => {
+        if(categoria.viewInHome) categoryiesOfHome.push(categoria);
+        if(categoria.viewInMenu) categoriesOfMenu.push(categoria);
+      })
+
+      // const res = await getCategoriesFilted('viewInHome');
+      setCategories(categoryiesOfHome);
+      setCategoriesOfMenu(categoriesOfMenu);
+    }
+    getInfo();
+    }
+  }, [] );
   
   // Obtener pedidos de usuario
   // useEffect(()=>{

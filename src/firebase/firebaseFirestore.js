@@ -176,6 +176,25 @@ export const getAllArticles = async () => {
   }
 }
 
+// obtener todas las categorias
+export const getAllCategories = async () => {
+
+  try {
+    const querySnapshot = await getDocs(collection(db, 'categorias'));
+    const data = [];
+    querySnapshot.forEach( (categoria) => {
+      data.push(categoria.data());
+    });
+    return data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
+}
+
+
+
 // Obtener categorias que van al home
 export const getCategoriesFilted = async (filtro) => {
   try{

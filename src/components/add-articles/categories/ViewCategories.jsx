@@ -61,7 +61,7 @@ const ViewCategories = () => {
               : <p className='m-0 fs-1 fw-medium text-center'>No hay categorias</p>
           : <></>}
   
-          <button className='btn form-control btn-success fs-3 position-absolute bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
+          <button className='btn form-control btn-success fs-3 position-fixed bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
   
         </section>
         <ToastContainer />

@@ -528,7 +528,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
       </section>
 
       {/* Btn para ordenar */}
-      <div className='p-4 bg-white position-absolute bottom-0 w-100'>
+      <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100' style={{}}>
         { existUser 
           ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickOrdenar}>Ordenar</button>
           : <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickRegistrarse}>Registrarse</button>

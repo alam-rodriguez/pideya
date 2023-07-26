@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 
 // Firebase
-import { getArticlesByCategory, getCategoriesFilted, getEstadisticas, obtenerInfoApp } from '../../firebase/firebaseFirestore';
+import { getAllCategories, getArticlesByCategory, getCategoriesFilted, getEstadisticas, obtenerInfoApp } from '../../firebase/firebaseFirestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // Components
@@ -104,18 +104,38 @@ const MenuArticles = () => {
   //   }
   //   f();
   // }, [viewMenu] );
+
+  // Obtener categorias
   useEffect( () => {
+    if(categories == null || categoriesOfMenu == null){
+      // obtiene categorias y articulos para renderizar
+    const getInfo = async () => {
+      let categoryiesOfHome = [];
+      let categoriesOfMenu = [];
+      const categories = await getAllCategories('viewInHome');
+      
+      categories.forEach( (categoria) => {
+        if(categoria.viewInHome) categoryiesOfHome.push(categoria);
+        if(categoria.viewInMenu) categoriesOfMenu.push(categoria);
+      })
+
+      // const res = await getCategoriesFilted('viewInHome');
+      setCategories(categoryiesOfHome);
+      setCategoriesOfMenu(categoriesOfMenu);
+    }
+    getInfo();
+    }
+  }, [] );
+
+  // obtener articulos de cateoria seleccionada
+  useEffect( () => {
+    if(viewMenu == 1){
     const f = async () => {
-      if(categoriesOfMenu == null){
-        const res = await getCategoriesFilted('viewInMenu');
-        setCategoriesOfMenu(res);  
-      }
-      if(viewMenu == 1){
         const res = await getArticlesByCategory(categorySelected.id);
         setArticlesOfCategorySelected(res);
       }
+      f();
     }
-    f();
   }, [viewMenu] );
 
   const resetCart = () => {
@@ -131,7 +151,7 @@ const MenuArticles = () => {
 
   if(categoriesOfMenu != null){
     return (
-      <main className={`overflow-scroll z-3 animate__animated animate__fadeIn px-3 vh-100 ${viewPreviewInfoArticle ? 'animate__animated animate__fadeIn z-0 bg-black bg-opacity-25' : ''}`}>
+      <main className={`overflow-scroll z-3 animate__animated animate__fadeIn px-3 vh-100 ${viewPreviewInfoArticle ? 'animate__animated animate__fadeIn z-0 bg-black bg-opacity-25' : ''}`} style={{paddingBottom:'70px'}}>
         {/* <div className={`position-absolute px-3 vh-100 vw-100 p-0 m-0 start-0 animate__animated animate__fadeIn z-0${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}> */}
           {/* Header */}
           <MenuHeader className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected}/>
