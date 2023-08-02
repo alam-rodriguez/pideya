@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // React Icons
 import { GrFacebookOption } from 'react-icons/gr';
@@ -21,32 +21,38 @@ import { registrarUsuario } from '../../../../firebase/firebaseAuthGoogle';
 import { AppContext } from '../../../../context/AppContext';
 
 const SingIn = () => {
+
+  const { isAdmin, appInfo } = useContext(AppContext); 
+
   const navigate = useNavigate();
 
-  const { isAdmin } = useContext(AppContext); 
+  const [appName, setAppName] = useState('');
+	useEffect(()=>{
+		if(appInfo != null)setAppName(appInfo.nombre);
+    else handleClickBack();
+	});
 
   const handleClickBack = () => navigate('/home');
 
   const handleClickGoogle = async () => {
     // await registrarAdmin();
   }
-  const i = () => {}
-
+  
   return (
     <section className='d-flex justify-content-center flex-column align-items-center col-9 m-auto mx-5 vh-100'>
       
       <IoIosArrowBack className='position-absolute top-0 start-0 mt-4 display-4' onClick={handleClickBack} />
 
-      <h2 className='display-1 text-danger fw-bold mb-5'>Pedido ya</h2>
+      <h2 className='display-1 text-danger fw-bold mb-5'>{appName}</h2>
       <p className='text-start fw-bold fs-3'>Por favor inicia sesion con tu email.</p>
-      <p>Ut nisi ad commodo veniam mollit ullamco. In Lorem cillum anim cillum et aliqua. Dolore anim cillum id veniam elit esse excepteur.</p>
+      <p>Es importante que inicies sesion con tu email, de esta manera te daremos un mejor servicio y podremos otorgarte los puntos que mereces. </p>
 
         <div className='w-100 z-1'>
           <SingInButton 
             icon={<GrFacebookOption className='fs-1 text-white' />} 
             bgColor='bg-primary' 
             text='Facebook' 
-            handleClick={i}
+            handleClick={registrarUsuario}
           />
           <SingInButton 
             icon={<FcGoogle className='fs-1' />} 
@@ -58,11 +64,11 @@ const SingIn = () => {
             icon={<TfiEmail className='fs-1' />} 
             bgColor='' 
             text='Email' 
-            handleClick={i}
+            handleClick={registrarUsuario}
           />
         </div>     
         
-      <p className='position-absolute bottom-0 w-75 text-center z-0'>Nostrud adipisicing labore laboris amet non sint laboris aute nulla cillum est voluptate.</p>
+      <p className='position-absolute bottom-0 w-75 text-center z-0'>Le recordamos que esta app es nuestra y las reglas las ponemos nosotros.</p>
     </section>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react'
 
-const ItemClientList = ({nombre, valueProp, selectValue}) => {
+const ItemClientList = ({nombre, email, valueProp, selectValue}) => {
 
   const [value, setValue] = useState(0);
   useEffect( () => {
@@ -12,8 +12,11 @@ const ItemClientList = ({nombre, valueProp, selectValue}) => {
   }, [selectValue] );
 
   return (
-    <div className='d-flex justify-content-between border-bottom py-3'>
-      <p className='m-0 fs-3 fw-medium'>{nombre}</p>
+    <div className='d-flex justify-content-between align-items-center border-bottom py-3'>
+      <div>
+        <p className='m-0 fs-3 fw-medium'>{nombre}</p>
+        <p className='m-0 fs-6 fw-medium'>{email}</p>
+      </div>
       <p className='m-0 fs-3 fw-medium'>{value}</p>
     </div>
   );

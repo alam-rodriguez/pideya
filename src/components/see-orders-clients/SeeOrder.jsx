@@ -229,9 +229,9 @@ const handleClickGuardar = async () => {
 
     // const res3 = await editPoints(seletedOrder.email);
       
-    const res3 = await savePointsUser(seletedOrder.email, newPoints);
+    // const res3 = await savePointsUser(seletedOrder.email, newPoints);
 
-    if(res || oldPoints || res3){
+    if(res || oldPoints){
       workAddPuntos = true;
     }else{
       workAddPuntos = false;
@@ -568,7 +568,7 @@ const givePointsToFriend = async (statistics) => {
 
               <ItemList 
                 clave='Fecha:' 
-                valor={`${seletedOrder.dia}, ${seletedOrder.hora}`}
+                valor={`${seletedOrder.dia} | ${seletedOrder.horaPedido.hora}:${seletedOrder.horaPedido.minuto}`}
               />
 
               <ItemList 

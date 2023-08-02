@@ -73,7 +73,7 @@ const ListClients = () => {
         </div>
 
         { listUsers.map( (user) => (
-          <ItemClientList nombre={user.nombre} valueProp={user} selectValue={selectValue} key={user.email}/>
+          <ItemClientList nombre={user.nombre} email={user.email} valueProp={user} selectValue={selectValue} key={user.email}/>
         ))}
 
       </section>

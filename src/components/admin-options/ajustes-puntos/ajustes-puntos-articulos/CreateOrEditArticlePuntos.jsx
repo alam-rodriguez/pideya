@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // React-Icons
-import { BsCloudUploadFill } from 'react-icons/bs';
+import { BsCloudUploadFill, BsPlusCircle } from 'react-icons/bs';
 
 // uuid
 import { v4 as uuidv4 } from 'uuid';
@@ -24,6 +24,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 // Notificaciones Swal
 import Swal from 'sweetalert2';
+import { GrSubtractCircle } from 'react-icons/gr';
 
 const CreateOrEditArticlePuntos = () => {
   
@@ -37,6 +38,8 @@ const CreateOrEditArticlePuntos = () => {
       setTitulo(articleSelected.titulo);
       setSubtitulo(articleSelected.subtitulo);
       setPuntos(articleSelected.puntos);
+      setPosition(articleSelected.position);
+      
       const f = async () => {
         const imgLink = await getUrlImage(articleSelected.imgpath);
         if(imgLink != false) setImgLink(imgLink);
@@ -58,8 +61,14 @@ const CreateOrEditArticlePuntos = () => {
   const handleChangePuntos = (e) => setPuntos(e.target.value);
 
   const handleClickImg = () => document.querySelector('#select-img').click();
-
   const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
+
+  const [position, setPosition] = useState(1);
+  const handleClickSubtractPosition = () => {
+    if(position == 1) return;
+    setPosition(position - 1);
+  }
+  const handleClickAddPosition = () => setPosition(position + 1);
 
   const [showBottonToBack, setShowBottonToBack] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
@@ -88,6 +97,7 @@ const CreateOrEditArticlePuntos = () => {
         disponible: true,
         complex: false,
         puntos: puntos,
+        position: position,
       }
 
       const createArticlePromise = new Promise( async (resolve, reject) => {
@@ -147,6 +157,7 @@ const CreateOrEditArticlePuntos = () => {
         subtitulo: subtitulo,        
         disponible: true,
         puntos: puntos,
+        position: position,
       }
       console.log(info)
       const res = await updateArticleOfPoints(info);
@@ -246,6 +257,15 @@ const CreateOrEditArticlePuntos = () => {
             </div>
             <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
           </div>
+
+          <div className='d-flex align-items-center my-2'>
+            <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
+            <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
+              <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
+              <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
+              <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+            </div>
+          </div>
   
           {/* <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/> */}
           { !showBottonToBack
@@ -290,6 +310,15 @@ const CreateOrEditArticlePuntos = () => {
               }
             </div>
             <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+          </div>
+
+          <div className='d-flex'>
+            <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
+            <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
+              <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
+              <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
+              <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+            </div>
           </div>
 
           <MdDeleteForever className='text-danger mt-0' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />

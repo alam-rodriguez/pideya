@@ -33,6 +33,7 @@ import CreateOrEditCategoriaPuntos from './components/admin-options/ajustes-punt
 import ViewArticlesPuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-articulos/ViewArticlesPuntos';
 import CreateOrEditArticlePuntos from './components/admin-options/ajustes-puntos/ajustes-puntos-articulos/CreateOrEditArticlePuntos';
 import ListClients from './components/admin-options/lista-clientes/ListClients';
+import EstadisticasApp from './components/admin-options/estadisticas-app/EstadisticasApp';
 
 // React Router
 import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom';
@@ -75,6 +76,7 @@ function App() {
           <Route path='/admin-options/ajustes-puntos/view-articles' Component={ViewArticlesPuntos}></Route>
           <Route path='/admin-options/ajustes-puntos/create-article' Component={CreateOrEditArticlePuntos}></Route>
           <Route path='/admin-options/list-clients' Component={ListClients}></Route>
+          <Route path='/admin-options/view-estadisticas-app' Component={EstadisticasApp}></Route>
           <Route path='/create-categories' Component={CreateCategory}></Route>
           <Route path='/view-articles' Component={ViewArticles}></Route>
           <Route path='/edit-article' Component={EditArticle}></Route>

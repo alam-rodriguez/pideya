@@ -66,9 +66,14 @@ const CreateArticle = () => {
   const handleChangePrecio = (e) => setPrecio(e.target.value);
 
   const handleClickImg = () => document.querySelector('#select-img').click();
-
-  
   const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
+
+  const [position, setPosition] = useState(1);
+  const handleClickSubtractPosition = () => {
+    if(position == 1) return;
+    setPosition(position - 1);
+  }
+  const handleClickAddPosition = () => setPosition(position + 1);
 
   const [showBottonToBack, setShowBottonToBack] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
@@ -188,6 +193,7 @@ const CreateArticle = () => {
         complex: complejo,
         precios: complejo ? infoArticleComplex : precio,
         isMiddle: !complejo ? false : isMiddle,
+        position: position,
       }
 
       const createArticlePromise = new Promise( async (resolve, reject) => {
@@ -304,6 +310,15 @@ const CreateArticle = () => {
             <BsCloudUploadFill className='text-success' style={{fontSize:100}} />
           </div>
           <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+        </div>
+
+        <div className='d-flex align-items-center my-2'>
+          <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
+          <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
+            <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
+            <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
+            <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+          </div>
         </div>
 
         { complejo ? 

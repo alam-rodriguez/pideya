@@ -116,6 +116,7 @@ export const createCategories = async (info) => {
       viewInMenu: info.viewInMenu,
       imgpath: info.imgpath,
       isCategoryOfPoints: info.isCategoryOfPoints,
+      position: info.position,
     });
     return true;
   }catch(e){
@@ -153,6 +154,7 @@ export const createArticle = async (id, info) => {
       precios: info.precios,
       isArticleOfPoints: false,
       isMiddle: info.isMiddle,
+      position: info.position,
     });
     return true;
   }catch(e){
@@ -408,6 +410,7 @@ export const ACtualizarCategory = async (id, newInfo) => {
       sizeView: newInfo.sizeView,
       viewInHome: newInfo.viewInHome,
       viewInMenu: newInfo.viewInMenu,
+      position: newInfo.position,
     });
     return true;
   } catch (e) {
@@ -440,6 +443,7 @@ export const updateArticle = async (id, articleUpdated) => {
       disponible: articleUpdated.disponible,
       isMiddle: articleUpdated.isMiddle,
       isArticleOfPoints: false,
+      position: articleUpdated.position,
     });
     return true;
   } catch (e) {
@@ -641,6 +645,7 @@ export const createCategoryPunto = async (info) => {
       viewInMenu: info.viewInMenu,
       imgpath: info.imgpath,
       isCategoryOfPoints: 'true',
+      position: info.position,
     });
     return true;
   }catch(e){
@@ -707,6 +712,7 @@ export const createArticleOfPoints = async (id, info) => {
       complex: info.complex,
       puntos: info.puntos,
       isArticleOfPoints: true,
+      position: info.position
     });
     return true;
   }catch(e){
@@ -724,6 +730,7 @@ export const updateArticleOfPoints = async (article) => {
       subtitulo: article.subtitulo,
       titulo: article.titulo,
       isArticleOfPoints: true,
+      position: article.position,
     });
     return true;
   } catch (e) {
@@ -733,11 +740,31 @@ export const updateArticleOfPoints = async (article) => {
 
 }
 
+// // Para actualizar la informacion de estadisticas del cliente
+// export const saveEstadistica = async (email, info) => {
+//   try {
+//     await setDoc(doc(db, `user-${email}`, `estadistica-pedido-${info.id}`), {
+//       isEstadistica: true,
+//       pedidoId: info.id,
+//       fecha: info.fecha,
+//       gastado: info.gastado,
+//       puntosGastados: info.puntosGastados,
+//       puntosGenerados: info.puntosGenerados,
+//     });
+//     return true;
+//   } catch (e) {
+//     console.log(e);
+//     return false;
+//   }
+// }
+
 // Para actualizar la informacion de estadisticas del cliente
 export const saveEstadistica = async (email, info) => {
   try {
-    await setDoc(doc(db, `user-${email}`, `estadistica-pedido-${info.id}`), {
-      isEstadistica: true,
+    await setDoc(doc(db, `estadiscas-cada-pedido`, `estadistica-pedido-${email}-${info.id}`), {
+      email: email,
+      id: info.id,
+      // isEstadistica: true,
       pedidoId: info.id,
       fecha: info.fecha,
       gastado: info.gastado,
@@ -754,7 +781,7 @@ export const saveEstadistica = async (email, info) => {
 // Borrar estadistica de la info del usuario
 export const deleteEstadistica = async (email, estadisticaId) => {
   try {
-    await deleteDoc(doc(db, `user-${email}`, `estadistica-pedido-${estadisticaId}`));
+    await deleteDoc(doc(db, `estadiscas-cada-pedido`, `estadistica-pedido-${email}-${estadisticaId}`));
     return true;
   } catch (e) {
     console.log(e);
@@ -888,10 +915,25 @@ export const getEstadisticas = async (email) => {
   }
 }
 
+// // obtener cada estadisticas del cliente
+// export const getEachStatitics = async (email) => {
+//   try {
+//     const q = query(collection(db, `user-${email}`), where('isEstadistica', '==', true));
+//     const querySnapshot = await getDocs(q);
+//     const data = [];
+//     querySnapshot.forEach( (doc) => {
+//       data.push(doc.data());
+//     });
+//     return data;
+//   } catch (e) {
+//     console.log(e);
+//     return false;
+//   }
+// }
 // obtener cada estadisticas del cliente
 export const getEachStatitics = async (email) => {
   try {
-    const q = query(collection(db, `user-${email}`), where('isEstadistica', '==', true));
+    const q = query(collection(db, `estadiscas-cada-pedido`), where('email', '==', email));
     const querySnapshot = await getDocs(q);
     const data = [];
     querySnapshot.forEach( (doc) => {
@@ -904,6 +946,38 @@ export const getEachStatitics = async (email) => {
   }
 }
 
+// // obtener cada estadisticas del cliente
+// export const getEachStatitics = async (email) => {
+//   try {
+//     const q = query(collection(db, `estadiscas-cada-pedido`), where('email', '==', email));
+//     const querySnapshot = await getDocs(q);
+//     const data = [];
+//     querySnapshot.forEach( (doc) => {
+//       data.push(doc.data());
+//     });
+//     return data;
+//   } catch (e) {
+//     console.log(e);
+//     return false;
+//   }
+// }
+
+// obtener las estadisticas de todos los usuarios
+export const getEveryStatistics  = async () => {
+
+  try {
+    const querySnapshot = await getDocs(collection(db, 'estadiscas-cada-pedido'));
+    const res = [];
+    querySnapshot.forEach( (estadistica) => {
+      res.push(estadistica.data());
+    });
+    return res;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
+}
 
 // obtener las estadisticas de todos los usuarios
 export const getAllStatistics  = async () => {

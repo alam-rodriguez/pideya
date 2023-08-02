@@ -34,9 +34,9 @@ const FirstEntry = () => {
             img={image1}
             imgWidth={0.8}
             imgHeigth={280}
-            text='holaestgjsjysjerhdf dryyrjdy drdjhdr rdrdyrd jdjjrdjd yrhdcy rds' 
+            text='DISFRUTA DE PROMCIONES Y ARTICULOS QUE SOLO ESTAN DISPONIBLES EN LA APP' 
             content={
-              <p>Vienvenido a PediYa, en esta app podra ordenar todo lo que desee</p>
+              <p>Vienvenido a Pizza Mia, en esta app podra ordenar todo lo que desee.</p>
             }
             btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
@@ -46,7 +46,7 @@ const FirstEntry = () => {
             img={image2}
             imgWidth={1}
             imgHeigth={280}
-            text='holaestgjsjysjerhdf dryyrjdy drdjhdr rdrdyrd jdjjrdjd yrhdcy rds' 
+            text='GANA PUNTOS AL HACER COMPRAS Y PODRAS OBTENER TU COMIDA FAVORITA TOTALMENTE GRATIS' 
             content={''}
             btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
@@ -56,7 +56,7 @@ const FirstEntry = () => {
             img={image3}
             imgWidth={0.8}
             imgHeigth={280}
-            text='holaestgjsjysjerhdf dryyrjdy drdjhdr rdrdyrd jdjjrdjd yrhdcy rds' 
+            text='CUANDO ESTES EN LA PIZZERIA, MUESTRANOS TU CODIGO PARA GANAR PUNTOS' 
             content={''}
             btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
@@ -66,7 +66,7 @@ const FirstEntry = () => {
             img={image4}
             imgWidth={0.8}
             imgHeigth={280}
-            text='holaestgjsjysjerhdf dryyrjdy drdjhdr rdrdyrd jdjjrdjd yrhdcy rds' 
+            text='ORDENA TU PEDIDO Y TE LO LLEVAMOS A CASA ' 
             content={''}
             btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
@@ -76,9 +76,9 @@ const FirstEntry = () => {
             img={image5}
             imgWidth={0.8}
             imgHeigth={280}
-            text='holaestgjsjysjerhdf dryyrjdy drdjhdr rdrdyrd jdjjrdjd yrhdcy rds' 
+            text='EVITE LAS FILAS Y LA FILA AL USAR NUESTRA APP' 
             content={
-              <p>Vienvenido a PediYa, en esta app podra ordenar todo lo que desee</p>
+              <p>Le recordamos que esta app es nuestra y las reglas las ponemos nosotros.</p>
             }
             btnText='Go to the app'
             handleClickNextEntry={handleClickNextEntry}

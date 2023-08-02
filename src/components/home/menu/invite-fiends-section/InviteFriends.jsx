@@ -21,7 +21,7 @@ const InviteFriends = () => {
 
   const navigate = useNavigate();
 
-  const { email, codeUser, setCodeUser } = useContext(AppContext);
+  const { email, codeUser, setCodeUser, infoPoints } = useContext(AppContext);
 
   useEffect( () => {
     if(email == null) navigate('/home');
@@ -29,6 +29,7 @@ const InviteFriends = () => {
       const f = async () => {
         const res = await getInfoUser(email);
         if(res) setCodeUser(res.codeRef);
+        console.log(infoPoints);
       }
       f();
     }
@@ -44,9 +45,7 @@ const InviteFriends = () => {
 
         <section className='mx-3 d-flex flex-column justify-content-between' style={{height:'87vh'}}>
 
-          <div>
-            
-          </div>
+          <div></div>
 
           <div className='border rounded-4 py-4'>
             <p className='m-0 text-center fs-3'>Comparte tu codigo de referido</p>
@@ -61,11 +60,11 @@ const InviteFriends = () => {
 
           <div className='' >
 
-            <p className='fs-1 fw-bold'>Obtiene 100 puntos por cada amigo invitado</p>
+            <p className='fs-3 fw-bold'>Obtiene {infoPoints.refFriendGenerate + infoPoints.pointsForMinSpend} puntos por cada amigo invitado</p>
             <div className='row'>
-              <p className='fs-4 fw-medium col-9'>Si un amigo se registra en la pagina y usa tu codigo y hace su primera orden</p>
+              <p className='fs-5 fw-medium col-9'>Si un amigo se registra en la pagina y usa tu codigo y hace su primera orden</p>
               <div className='d-flex justify-content-end align-items-center col-3 gap-2 align-self-start'>
-                <p className={`m-0 fs-3 fw-medium ${color1.textColor}`}>+100</p>
+                <p className={`m-0 fs-3 fw-medium ${color1.textColor}`}>+{infoPoints.refFriendGenerate + infoPoints.pointsForMinSpend}</p>
 			          <FaPizzaSlice className={`fs-5 ${color1.textColor}`} />
               </div>
             </div>

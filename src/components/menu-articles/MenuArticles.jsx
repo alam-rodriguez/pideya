@@ -108,22 +108,22 @@ const MenuArticles = () => {
   // Obtener categorias
   useEffect( () => {
     if(categories == null || categoriesOfMenu == null){
-      // obtiene categorias y articulos para renderizar
-    const getInfo = async () => {
-      let categoryiesOfHome = [];
-      let categoriesOfMenu = [];
-      const categories = await getAllCategories('viewInHome');
-      
-      categories.forEach( (categoria) => {
-        if(categoria.viewInHome) categoryiesOfHome.push(categoria);
-        if(categoria.viewInMenu) categoriesOfMenu.push(categoria);
-      })
+      const getInfo = async () => {
+        let categoryiesOfHome = [];
+        let categoriesOfMenu = [];
+        const categories = await getAllCategories('viewInHome');
+        
+        categories.forEach( (categoria) => {
+          if(categoria.viewInHome) categoryiesOfHome.push(categoria);
+          if(categoria.viewInMenu) categoriesOfMenu.push(categoria);
+        });
 
-      // const res = await getCategoriesFilted('viewInHome');
-      setCategories(categoryiesOfHome);
-      setCategoriesOfMenu(categoriesOfMenu);
-    }
-    getInfo();
+        categoryiesOfHome.sort((a, b) => a.position - b.position);
+        categoriesOfMenu.sort((a, b) => a.position - b.position);
+        setCategories(categoryiesOfHome);
+        setCategoriesOfMenu(categoriesOfMenu);
+      }
+      getInfo();
     }
   }, [] );
 
@@ -132,6 +132,7 @@ const MenuArticles = () => {
     if(viewMenu == 1){
     const f = async () => {
         const res = await getArticlesByCategory(categorySelected.id);
+        res.sort((a,b) => a.position - b.position);
         setArticlesOfCategorySelected(res);
       }
       f();
@@ -139,13 +140,12 @@ const MenuArticles = () => {
   }, [viewMenu] );
 
   const resetCart = () => {
-    setCategoriesOfMenu(null);
-    setCart(null);
-    setCartOfCategoryPoints(null);
-    setArticlesOfCategorySelected(null);
     setViewMenu(0);
     setViewPreviewInfoArticle(false);
     setViewOrderSelectArticle(false);
+    setArticlesOfCategorySelected(null);
+    setCartOfCategoryPoints([]);
+    setCart([]);
     setViewCart(false);
   }
 

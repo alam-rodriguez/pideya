@@ -11,45 +11,87 @@ import { useNavigate } from 'react-router-dom';
 
 // Context
 import { AppContext } from '../../context/AppContext';
+import Swal from 'sweetalert2';
 
 const SeeOrders = () => {
 
   const navigate = useNavigate();
 
-  const { SeletedOrder, setSeletedOrder } = useContext(AppContext);
+  const { SeletedOrder, setSeletedOrder, isAdmin } = useContext(AppContext);
 
   const [orders, setOrders] = useState(null);
 
   const [dateToSearch, setDateToSearch] = useState('');
 
-  useEffect( () => {
+  const fecha = () => {
     const day = new Date();
     const hoy = `${day.getDate()}/${day.getMonth() + 1}/${day.getFullYear()}`;
     setDateToSearch(hoy);
-  }, [] );
+    return hoy;
+  }
+
+  const viewNewOrders = async () => {
+    console.log('first')
+    if(dateToSearch === '') fecha();
+    const orders = await orderOfToday(dateToSearch);
+  
+    if(orders != null && orders != 'no-hay-pedidos' && !viewSaved){
+      let res = [];
+      orders.forEach( (order) => {
+        // console.log(order.horaPedido.hora);
+        // const hora = parseFloat(`${order.horaPedido.hora}.${order.horaPedido.minuto}`);
+        if(!order.wasView){
+          Swal.fire({
+            icon: 'warning',
+            title: 'Nuevo pedido',
+            text: 'Hay un nuevo pedido, tienes que revisarlo',
+          });
+        }
+        if(!order.guardar){
+          res.push(order);
+        }
+      });
+      res.sort((a, b) => parseFloat(`${b.horaPedido.hora}.${b.horaPedido.minuto}`) -  parseFloat(`${a.horaPedido.hora}.${a.horaPedido.minuto}`));
+      setOrders(res);
+      return;
+    }
+    if(orders != null && orders != 'no-hay-pedidos' && viewSaved) {
+      orders.sort((a, b) => parseFloat(`${b.horaPedido.hora}.${b.horaPedido.minuto}`) -  parseFloat(`${a.horaPedido.hora}.${a.horaPedido.minuto}`));
+      setOrders(orders);
+      return;
+    }
+  }
 
   const [viewSaved, setviewSaved] = useState(false);
 
   useEffect( () => {
-    const f = async () => {
-      const orders = await orderOfToday(dateToSearch);
-      console.log(dateToSearch);
-      const res = [];
-      if(orders != null && orders != 'no-hay-pedidos' && !viewSaved){
-        orders.forEach( (order) => {
-          if(!order.guardar){
-            res.push(order);
-            console.log(order);
-          }
-        });
-        setOrders(res);
-      }else {
-        setOrders(orders);
-      }
-      
+    viewNewOrders();
+    const timeInterval = setInterval(viewNewOrders, 60000);
+    return () => {
+      clearInterval(timeInterval);
     }
-    f();
   }, [dateToSearch, viewSaved] );
+
+  // const viewOders = async () => {
+  //   if(isAdmin == 'admin' || isAdmin == 'semi-admin'){
+  //     console.log(isAdmin)
+  //     const day = new Date();
+  //     const hoy = `${day.getDate()}/${day.getMonth() + 1}/${day.getFullYear()}`;
+  //     const orders = await orderOfToday(hoy);
+
+  //     if(orders == 'no-hay-pedidos') return;
+  //     orders.forEach( (order) => {
+  //       if(!order.wasView){
+  //         alert('Hay un nuevo pedido, tienes que revisarlo');
+  //       }
+  //     })
+  //   }
+  // }
+  
+  // useEffect( () => {
+  //   viewOders();
+  //   setInterval(viewOders,60000);
+  // }, [isAdmin] );
 
   const handleClickOrder = (orden) => {
     setSeletedOrder(orden);
@@ -113,7 +155,7 @@ const SeeOrders = () => {
 
                       <div className='d-flex justify-content-between align-items-center border-bottom py-2'>
                         <p className='m-0 fw-bold fs-5 w-25'>Fecha:</p>
-                        <p className='m-0 fw-medium fs-5 w-75 text-end'>{orden.dia}, {orden.hora}</p>
+                        <p className='m-0 fw-medium fs-5 w-75 text-end'>{orden.dia} | {orden.horaPedido.hora}:{orden.horaPedido.minuto}</p>
                       </div>
 
                       { orden.pedidoOfPoints.length > 0 ?  
@@ -166,3 +208,50 @@ export default SeeOrders
 // console.log(res);
       // const res = await getordersNotView();
       // console.log(res)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //     const [dateToSearch, setDateToSearch] = useState('');
+
+  // useEffect( () => {
+  //   const day = new Date();
+  //   const hoy = `${day.getDate()}/${day.getMonth() + 1}/${day.getFullYear()}`;
+  //   setDateToSearch(hoy);
+  // }, [] );
+
+  // const [viewSaved, setviewSaved] = useState(false);
+
+  // useEffect( () => {
+  //   const f = async () => {
+  //     const orders = await orderOfToday(dateToSearch);
+  //     console.log(dateToSearch);
+  //     const res = [];
+  //     if(orders != null && orders != 'no-hay-pedidos' && !viewSaved){
+  //       orders.forEach( (order) => {
+  //         if(!order.guardar){
+  //           res.push(order);
+  //           console.log(order);
+  //         }
+  //       });
+  //       setOrders(res);
+  //     }else {
+  //       setOrders(orders);
+  //     }
+      
+  //   }
+  //   f();
+  // }, [dateToSearch, viewSaved] );

@@ -268,7 +268,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     const resSwal = await Swal.fire({
       title: 'Estas seguro?',
       text: "Quieres realmente hacer este pedido ?",
-      icon: 'warning',
+      icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',

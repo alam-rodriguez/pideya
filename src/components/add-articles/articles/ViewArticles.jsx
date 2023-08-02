@@ -21,23 +21,47 @@ import CreateArticleHeader from '../sections/CreateArticleHeader';
 
 // Context
 import { AppContext } from '../../../context/AppContext';
+import Header from './components/Header';
 
 const ViewArticles = () => {
   const navigate = useNavigate();
 
-  const { articleSelected, setArticleSelected, setCategories} = useContext(AppContext);
+  const { articleSelected, setArticleSelected, categories, setCategories, categorySelected, setCategorySelected} = useContext(AppContext);
 
   const [articles, setArticles] = useState(null);
+  const [articlesFilted, setArticlesFilted] = useState(null);
+
+  const [allCategories, setAllCategories] = useState([]);
 
   useEffect( () => {
     const f = async () => { 
       const res = await getAllArticles();
       setArticles(res);
-      console.log(res);
+    
+      const categories = await getCategories();
+      categories.sort((a, b) => a.position - b.position);
+      setAllCategories(categories);
     }
     f();
   }, [] );
-
+  
+  useEffect( () => {  
+    console.log(articles);
+    if(categorySelected == 'Todos los articulos' || categorySelected == null) {
+      setArticlesFilted(articles);
+      console.log(articles);
+      return;
+    }
+    if(articles != null){
+      let articlesOfCategorySelected = [];
+      articles.forEach( article => {
+        if(article.categoria == categorySelected) articlesOfCategorySelected.push(article);
+      });
+      articlesOfCategorySelected.sort((a,b) => a.position - b.position)
+      setArticlesFilted(articlesOfCategorySelected);
+    }
+  }, [categorySelected, articles] );
+  
   // handles
   const handleClickArticle = (article) => {
     setArticleSelected(article);
@@ -46,19 +70,21 @@ const ViewArticles = () => {
 
   const handleClickCrearCategoria = () => navigate('/create-article');
 
+  const handleClickAtras = () => navigate('/admin-options');
+
   if(articles != null){
     return (
       <main className='border-0 mx-3 d-block vh-100 bg-warning- ' >
         {/* Header */}
-        <CreateArticleHeader path='/admin-options' whatReset='articleSeletc' />
+        <Header handleClickAtras={handleClickAtras} filter={true} allCategories={allCategories} setCategorySelected={setCategorySelected} />
   
         <section className='d-flex flex-column gap-5  bg-danger- ' style={{height:''}}>
   
-          { articles != null 
-            ? articles.length > 0 
-              ? articles.map((article)=>(
+          { articlesFilted != null 
+            ? articlesFilted.length > 0 
+              ? articlesFilted.map((article)=>(
                  <div className='border-bottom py-2' key={article.id} onClick={()=>handleClickArticle(article)}>
-                    <p className='m-0 fs-1 fw-medium'>{article.titulo}</p>
+                    <p className='m-0 fs-1 fw-medium'>{categorySelected != 'Todos los articulos' && categorySelected != null ? `${article.position} - ${article.titulo}` : article.titulo}</p>
                   </div>
                 ))
               : <p className='m-0 fs-1 fw-medium text-center'>No hay articulos</p>

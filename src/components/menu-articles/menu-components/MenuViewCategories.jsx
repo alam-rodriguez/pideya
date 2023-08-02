@@ -18,7 +18,7 @@ const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
   const [countItem, setCountItem] = useState(0);
 
   const handleClick = () => {
-    console.log(category);
+    // console.log(category);
     setCategorySelected(category);
     setViewMenu(1);
     // console.log(categorySelect);
@@ -26,8 +26,9 @@ const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
   }
 
   useEffect( () => {
+    // console.log(category.position);
     const f = async () => {
-      console.log(category);
+      // console.log(category);
       // const res = await getArticlesByCategory(id);
       const img = await getUrlImage(imgpath);
       setImg(img);

@@ -23,10 +23,11 @@ import TemporizadorLastOrder from './home/preview-orders/TemporizadorLastOrder';
 
 // Firebase 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, getAllCategories, getCategories, getCategoriesFilted, getPedidosByClient, obtenerInfoApp } from '../firebase/firebaseFirestore';
+import { auth, getAllCategories, getCategories, getCategoriesFilted, getPedidosByClient, obtenerInfoApp, orderOfToday } from '../firebase/firebaseFirestore';
 
 // Toaster
 import { ToastContainer } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 // Temporizador
 // import Temporizador from './home/temporizador/Temporizador';
@@ -34,14 +35,14 @@ import { ToastContainer } from 'react-toastify';
 const Home = () => {
   const navigate = useNavigate();
 
-  const { color1, categories, setCategories, viewMenu, setViewMenu, articleSeleted, setArticleSeleted, email, setEmail, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories,  infoPoints, setInfoPoints, clientOrders, setClientOrders, categoriesOfMenu, setCategoriesOfMenu } = useContext(AppContext);
+  const { color1, categories, setCategories, viewMenu, setViewMenu, articleSeleted, setArticleSeleted, email, setEmail, appInfo, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories,  infoPoints, setInfoPoints, clientOrders, setClientOrders, categoriesOfMenu, setCategoriesOfMenu } = useContext(AppContext);
 
   // const [infoPoints, setInfoPoints] = useState(null);
 
   // const [clientOrders, setClientOrders] = useState(null);
 
   useEffect( () => {
-    if(categories == null){
+    if(appInfo == null){
       // logear usuario automaticamente
       onAuthStateChanged(auth, (user) => {
         if(user == null && goToHome == true) {
@@ -92,22 +93,22 @@ const Home = () => {
   // Obtener categorias
   useEffect( () => {
     if(categories == null || categoriesOfMenu == null){
-      // obtiene categorias y articulos para renderizar
-    const getInfo = async () => {
-      let categoryiesOfHome = [];
-      let categoriesOfMenu = [];
-      const categories = await getAllCategories('viewInHome');
-      
-      categories.forEach( (categoria) => {
-        if(categoria.viewInHome) categoryiesOfHome.push(categoria);
-        if(categoria.viewInMenu) categoriesOfMenu.push(categoria);
-      })
+      const getInfo = async () => {
+        let categoryiesOfHome = [];
+        let categoriesOfMenu = [];
+        const categories = await getAllCategories('viewInHome');
+        
+        categories.forEach( (categoria) => {
+          if(categoria.viewInHome) categoryiesOfHome.push(categoria);
+          if(categoria.viewInMenu) categoriesOfMenu.push(categoria);
+        })
 
-      // const res = await getCategoriesFilted('viewInHome');
-      setCategories(categoryiesOfHome);
-      setCategoriesOfMenu(categoriesOfMenu);
-    }
-    getInfo();
+        categoryiesOfHome.sort((a, b) => a.position - b.position);
+        categoriesOfMenu.sort((a, b) => a.position - b.position);
+        setCategories(categoryiesOfHome);
+        setCategoriesOfMenu(categoriesOfMenu);
+      }
+      getInfo();
     }
   }, [] );
   
@@ -125,6 +126,35 @@ const Home = () => {
   const handleClickMain = () => {
     if(viewMenu) setViewMenu(false);
   }
+
+  const viewOders = async () => {
+    if(isAdmin == 'admin' || isAdmin == 'semi-admin'){
+      console.log('---------')
+      const day = new Date();
+      const hoy = `${day.getDate()}/${day.getMonth() + 1}/${day.getFullYear()}`;
+      const orders = await orderOfToday(hoy);
+
+      if(orders == 'no-hay-pedidos') return;
+      orders.forEach( async (order) => {
+        if(!order.wasView){
+          await Swal.fire({
+            icon: 'warning',
+            title: 'Nuevo pedido',
+            text: 'Hay un nuevo pedido, tienes que revisarlo',
+          });
+          return;
+        }
+      })
+    }
+  }
+  
+  useEffect( () => {
+    viewOders();
+    const timeInterval = setInterval(viewOders,60000);
+    return () => {
+      clearInterval(timeInterval);
+    }
+  }, [isAdmin] );
 
   // // obtener info de la app y compruebo si es admin
   //   const getData = useCallback(async (emailUser) => {
@@ -157,17 +187,16 @@ const Home = () => {
 
   if(categories != null){
     return(
-      <div className={`${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} animate__animated animate__fadeIn container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
+      <div className={` ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} animate__animated animate__fadeIn container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
         
         {/* Menu  */}
         <Menu />
   
-        <div className={`main px-4 z-3 ${viewMenu ? 'border border-secondary shadow-lg overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '' : ''}} onClick={handleClickMain}>
+        <div className={`container-sm main px-4 z-3 ${viewMenu ? 'border border-secondary shadow-lg overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '' : ''}} onClick={handleClickMain}>
           <main className={`${viewMenu ? 'position-absolute w-100': ''} `}>
-            
 
             {/* Header */}
-            <Header />
+            <Header className='' />
             
             {/* Order Section */}
             <OrderSection />
@@ -176,11 +205,11 @@ const Home = () => {
             <UseCode viewSearchCode={viewSearchCode} setViewSearchCode={setViewSearchCode} />
     
             { (categories != null)
-                ? categories.map( (category) => (
+              ? categories.map( (category) => (
                   <CategoryMenu key={category.id} category={category} color1={color1} setViewArticleSelected={setViewArticleSelected} />
-                  ))
-                  : <></>
-                }
+                ))
+              : <></>
+            }
 
             <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
 
@@ -189,11 +218,6 @@ const Home = () => {
     
             {/* Seccion de contacto del negocio */}
             <ContactUs />
-
-            {/* { clientOrders != null 
-              ? <TemporizadorLastOrder clientOrders={clientOrders} />
-              : <></>
-            } */}
             
             <TemporizadorLastOrder viewMenu={viewMenu} />
 

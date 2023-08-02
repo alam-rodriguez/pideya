@@ -25,6 +25,7 @@ const ViewCategories = () => {
   useEffect( () => {
     const f = async () => { 
       const res = await getCategories();
+      res.sort((a, b) => a.position - b.position);
       setCategories(res);
     }
     f();
@@ -55,7 +56,7 @@ const ViewCategories = () => {
             ? categories.length > 0 
               ? categories.map((category)=>(
                 <div className='border-bottom py-2' key={category.id} onClick={()=>handleClickCategory(category)}>
-                  <p className='m-0 fs-1 fw-medium'>{category.nombre}</p>
+                  <p className='m-0 fs-1 fw-medium'>{category.position} - {category.nombre}</p>
                 </div>
               ))
               : <p className='m-0 fs-1 fw-medium text-center'>No hay categorias</p>

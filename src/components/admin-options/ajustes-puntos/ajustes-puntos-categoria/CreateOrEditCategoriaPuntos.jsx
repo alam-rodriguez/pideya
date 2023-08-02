@@ -91,6 +91,7 @@ const CreateCategory = () => {
         viewInMenu:viewInMenu,
         imgpath: `imagenes/${id}`,
         isCategoryOfPoints: true,
+        position: 0,
       }
       console.log( categoryInfo );
   
