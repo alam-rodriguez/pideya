@@ -31,15 +31,19 @@ const SeeOrders = () => {
   }
 
   const viewNewOrders = async () => {
-    console.log('first')
+    
     if(dateToSearch === '') fecha();
+    
     const orders = await orderOfToday(dateToSearch);
+    
+    if(orders == 'no-hay-pedidos' ) {
+      setOrders([]);
+      return
+    }
   
     if(orders != null && orders != 'no-hay-pedidos' && !viewSaved){
       let res = [];
       orders.forEach( (order) => {
-        // console.log(order.horaPedido.hora);
-        // const hora = parseFloat(`${order.horaPedido.hora}.${order.horaPedido.minuto}`);
         if(!order.wasView){
           Swal.fire({
             icon: 'warning',
@@ -47,19 +51,19 @@ const SeeOrders = () => {
             text: 'Hay un nuevo pedido, tienes que revisarlo',
           });
         }
-        if(!order.guardar){
-          res.push(order);
-        }
+        if(!order.guardar) res.push(order);
       });
       res.sort((a, b) => parseFloat(`${b.horaPedido.hora}.${b.horaPedido.minuto}`) -  parseFloat(`${a.horaPedido.hora}.${a.horaPedido.minuto}`));
       setOrders(res);
       return;
     }
+
     if(orders != null && orders != 'no-hay-pedidos' && viewSaved) {
       orders.sort((a, b) => parseFloat(`${b.horaPedido.hora}.${b.horaPedido.minuto}`) -  parseFloat(`${a.horaPedido.hora}.${a.horaPedido.minuto}`));
       setOrders(orders);
       return;
     }
+
   }
 
   const [viewSaved, setviewSaved] = useState(false);
@@ -104,7 +108,7 @@ const SeeOrders = () => {
     const mes = Number(fechaPartes[1]);
     const anio = Number(fechaPartes[0]);
     const hoy = `${dia}/${mes}/${anio}`;
-    // console.log(hoy);
+    console.log(hoy);
     setDateToSearch(hoy);
   }
 
@@ -114,7 +118,7 @@ const SeeOrders = () => {
   }
 
   return (
-    <main>
+    <main className='overflow-hidden'>
       <Header />
 
       <section>
@@ -130,7 +134,7 @@ const SeeOrders = () => {
 
         { 
           (orders != null )
-            ? orders != 'no-hay-pedidos' ?  
+            ? orders != 'no-hay-pedidos' && orders.length > 0 ?  
               orders.map((orden)=>{
                 let total = 0;
                 orden.pedido.map( (item) => {
@@ -186,8 +190,10 @@ const SeeOrders = () => {
                   </div>
                 );
               })
-            : <p>No hay pedidos</p> 
-          : <></>
+            : (!viewSaved )
+              ? <p>Todos los pedidos estan guardados</p> 
+              : <p>No hay ningun pedido aun</p> 
+          : <p>Cargando pedidos...</p> 
         }
 
       </section>

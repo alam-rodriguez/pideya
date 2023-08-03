@@ -29,7 +29,12 @@ const EstadisticasApp = () => {
   const [anios, setAnios] = useState([]);
 
   // Estadisticas to view
-  const [estadisticasApp, setEstadisticasApp] = useState({});
+  const [estadisticasApp, setEstadisticasApp] = useState({
+    dineroGastado: 0,
+    puntosGenerados: 0,
+    puntosGastados: 0,
+    cantidadClientes: 0,
+  });
 
   // Todas las estadisticas
   const [everyStatistics, setEveryStatistics] = useState([]);
@@ -43,18 +48,18 @@ const EstadisticasApp = () => {
       let dineroGastado = 0;
       let puntosGenerados = 0;
       let puntosGastados = 0;
-      let cantidadclientes = 0;
+      let cantidadClientes = 0;
       everyStatistics.forEach( (statistics) => {
         dineroGastado += statistics.gastado;
         puntosGenerados += statistics.puntosGenerados;
         puntosGastados += statistics.puntosGastados;
-        cantidadclientes = cantidadclientes + 1;
+        cantidadClientes = cantidadClientes + 1;
       });
       setEstadisticasApp({
         dineroGastado: dineroGastado,
         puntosGenerados: puntosGenerados,
         puntosGastados: puntosGastados,
-        cantidadclientes: cantidadclientes,
+        cantidadClientes: cantidadClientes,
       })
       console.log(everyStatistics);
     }
@@ -62,20 +67,20 @@ const EstadisticasApp = () => {
 
     let dias = [];
     for(let i = 1 ; i <= 31; i++){
-      dias.push(<option value={i}>{i}</option>);
+      dias.push(<option key={i} value={i}>{i}</option>);
     }
     setDias(dias);
 
     const eachMonth = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Obtubre', 'Noviembre', 'Dicciembre'];
     let monthss = [];
-    for(let i = 0; i < eachMonth.length; i++){
-      monthss.push(<option value={i}>{eachMonth[i]}</option>);
+    for(let i = 1; i < eachMonth.length; i++){
+      monthss.push(<option key={i} value={i + 1}>{eachMonth[i]}</option>);
     }
     setmonths(monthss);
 
     let anios = [];
     for(let i = 2020 ; i <= 2100; i++){
-      anios.push(<option value={i}>{i}</option>);
+      anios.push(<option key={i} value={i}>{i}</option>);
     }
     setAnios(anios);
   }, [] );
@@ -118,10 +123,13 @@ const EstadisticasApp = () => {
 
       // Si hay año seleccionado
       if(daySelect == 'todos' && monthSelect == 'todos' && yearSelect != 'todos'){
+        console.log(yearSelect);
         const fechaStatistcs = statistics.fecha.split('/');
         const anioStatistics = fechaStatistcs[2];
+        console.log(anioStatistics);
         if(anioStatistics == yearSelect){
           res.push(statistics);
+          console.log(statistics);
         }
       }
 
@@ -130,6 +138,8 @@ const EstadisticasApp = () => {
         const fechaStatistcs = statistics.fecha.split('/');
         const monthStatistics = fechaStatistcs[1];
         const anioStatistics = fechaStatistcs[2];
+        console.log(monthStatistics);
+        console.log(monthSelect)
         if(anioStatistics == yearSelect && monthStatistics == monthSelect){
           res.push(statistics);
         }
@@ -151,19 +161,19 @@ const EstadisticasApp = () => {
     let dineroGastado = 0;
     let puntosGenerados = 0;
     let puntosGastados = 0;
-    let cantidadclientes = 0;
+    let cantidadClientes = 0;
 
     res.forEach( (statistics) => {
       dineroGastado += statistics.gastado;
       puntosGenerados += statistics.puntosGenerados;
       puntosGastados += statistics.puntosGastados;
-      cantidadclientes = cantidadclientes + 1;
+      cantidadClientes = cantidadClientes + 1;
     });
     setEstadisticasApp({
       dineroGastado: dineroGastado,
       puntosGenerados: puntosGenerados,
       puntosGastados: puntosGastados,
-      cantidadclientes: cantidadclientes,
+      cantidadClientes: cantidadClientes,
     })
     console.log(everyStatistics);
 
@@ -213,22 +223,22 @@ const EstadisticasApp = () => {
 
           <ItemTableEstadisticas
             llave='Dinero gastado por usuarios:' 
-            valor={estadisticasApp.dineroGastado + ' $'}
+            valor={Math.trunc(estadisticasApp.dineroGastado) + ' $'}
           />
 
           <ItemTableEstadisticas
             llave='Puntos generados por usuarios:' 
-            valor={estadisticasApp.puntosGenerados}
+            valor={Math.trunc(estadisticasApp.puntosGenerados)}
           />
 
           <ItemTableEstadisticas
             llave='Puntos gastados por usuarios:' 
-            valor={estadisticasApp.puntosGastados}
+            valor={Math.trunc(estadisticasApp.puntosGastados)}
           />
 
           <ItemTableEstadisticas
             llave='Cantidad de usuarios:' 
-            valor={estadisticasApp.cantidadclientes}
+            valor={Math.trunc(estadisticasApp.cantidadClientes)}
           />
 
         </div>

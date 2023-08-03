@@ -49,14 +49,14 @@ export const registrarSemiAdmin = async () => {
 export const registrarUsuario = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
-    const infoUser = {
-      email: result.user.email,
-      nombre: '',
-      direccion: '',
-      telefono: Number('0'.repeat(8)),
-      codeRef: Number('0'.repeat(5)),
-    }
-    await saveInfoUser(infoUser);
+    // const infoUser = {
+    //   email: result.user.email,
+    //   nombre: '',
+    //   direccion: '',
+    //   telefono: Number('0'.repeat(8)),
+    //   codeRef: Number('0'.repeat(5)),
+    // }
+    // await saveInfoUser(infoUser);
     return result.user.email;
   } catch (e) {
     console.log(e);

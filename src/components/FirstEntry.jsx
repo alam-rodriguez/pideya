@@ -38,7 +38,6 @@ const FirstEntry = () => {
             content={
               <p>Vienvenido a Pizza Mia, en esta app podra ordenar todo lo que desee.</p>
             }
-            btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
           />
         :(firstEntryView == 2) ?
@@ -48,7 +47,6 @@ const FirstEntry = () => {
             imgHeigth={280}
             text='GANA PUNTOS AL HACER COMPRAS Y PODRAS OBTENER TU COMIDA FAVORITA TOTALMENTE GRATIS' 
             content={''}
-            btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
           /> 
         :(firstEntryView == 3) ?
@@ -58,7 +56,6 @@ const FirstEntry = () => {
             imgHeigth={280}
             text='CUANDO ESTES EN LA PIZZERIA, MUESTRANOS TU CODIGO PARA GANAR PUNTOS' 
             content={''}
-            btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
           /> 
         :(firstEntryView == 4) ?
@@ -68,7 +65,6 @@ const FirstEntry = () => {
             imgHeigth={280}
             text='ORDENA TU PEDIDO Y TE LO LLEVAMOS A CASA ' 
             content={''}
-            btnText='Netx'
             handleClickNextEntry={handleClickNextEntry}
           /> 
         :(firstEntryView == 5) ?

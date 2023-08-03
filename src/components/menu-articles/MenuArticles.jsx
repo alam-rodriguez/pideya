@@ -19,9 +19,14 @@ import Cart from './menu-components/cart/Cart';
 // Toaster
 import { ToastContainer } from 'react-toastify';
 
+// React-Router-Dom
+import { useNavigate } from 'react-router-dom';
+
 const MenuArticles = () => {
 
-  const { email, categories, setCategories, categoriesOfMenu, setCategoriesOfMenu, setEmail, categorySelected, cart, setCart, cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, setInfoPointsUser, amountPoints, setAmountPoints, infoPoints, setInfoPoints, estadisticasUser, setEstadisticasUser } = useContext(AppContext)
+  const navigate = useNavigate();
+
+  const { email, categories, setCategories, categoriesOfMenu, setCategoriesOfMenu, setEmail, categorySelected, cart, setCart, cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, setInfoPointsUser, amountPoints, setAmountPoints, infoPoints, setInfoPoints, estadisticasUser, setEstadisticasUser, setClientOrders } = useContext(AppContext)
 
   const [articlesOfCategorySelected, setArticlesOfCategorySelected] = useState(null);
 
@@ -147,6 +152,9 @@ const MenuArticles = () => {
     setCartOfCategoryPoints([]);
     setCart([]);
     setViewCart(false);
+    setClientOrders(null);
+    setInfoPointsUser(null);
+    navigate('/home');
   }
 
   if(categoriesOfMenu != null){
@@ -158,7 +166,7 @@ const MenuArticles = () => {
           
           { viewMenu == 0 ? 
             <>
-              <h2 className='fs-1 fw-bold '>Menu</h2>
+              <h2 className='fs-1 fw-bold'>Menu</h2>
 
               <div className='d-flex flex-wrap justify-content-around'>
                 { categoriesOfMenu != null 

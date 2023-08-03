@@ -62,7 +62,7 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
 
       <div className='mb-5'>
         <p className='m-0 fs-4 fw-semibold'>Numero de telefono:</p>
-        <input className='ps-0 form-control border-0 border-bottom fs-4' type="text" placeholder='Tu numero' value={telefono} onChange={handleChangeDirrecion} />
+        <input className='ps-0 form-control border-0 border-bottom fs-4' type="number" placeholder='Tu numero' value={telefono} onChange={handleChangeDirrecion} />
       </div>
 
       <div className='mt-5'>

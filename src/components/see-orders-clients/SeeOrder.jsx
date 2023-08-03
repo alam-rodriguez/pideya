@@ -107,11 +107,10 @@ const SeeOrder = () => {
   const [paid, setPaid] = useState(seletedOrder.paid);
   const [givePoints, setgivePoints] = useState(seletedOrder.recibioPuntos);
   
-  // change wasView t true
+  // change wasView t0 true
   useEffect( () => {
     if(seletedOrder != null){
       const f = async () => {
-        // if(seletedOrder.wasView == false || seletedOrder.isReady != isReady || seletedOrder.paid != paid || seletedOrder.guardar != guardar);
         if(seletedOrder.wasView == false){
           const res = await UpdateOrderClient(seletedOrder.email, seletedOrder.id, isReady, paid, guardar);
           if(res) swalAlert('Pedido Actualizado');
@@ -120,7 +119,7 @@ const SeeOrder = () => {
       }
       f();
     }
-  }, [isReady] );
+  }, [] );
 
 
   
@@ -182,6 +181,10 @@ const SeeOrder = () => {
     console.log('kk')
   }
 
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
 const handleClickGuardar = async () => {
 
   if(!(seletedOrder.guardar != guardar || seletedOrder.isReady != isReady || seletedOrder.paid != paid || seletedOrder.recibioPuntos != givePoints)){
@@ -200,8 +203,9 @@ const handleClickGuardar = async () => {
   });
   if(!resSwal.isConfirmed) return;
 
-
   const saveOrderPromise = new Promise( async (resolve, reject) => {
+
+  setIsSaving(true);
     
   let workChangeIsReady = true;
   let workAddPuntos = true;
@@ -239,6 +243,7 @@ const handleClickGuardar = async () => {
   }
 
   if( workChangeIsReady && workAddPuntos ){
+    setIsSaved(true);
     resolve('Pedido actualizado con exito');
   }else {
     reject('Ha ocurrido un error al actualizar el pedido');
@@ -549,9 +554,13 @@ const givePointsToFriend = async (statistics) => {
   // }
 }
 
+  const handleClickVolver = () => {
+    navigate('/see-orders');
+  }
+
   if(seletedOrder != null){
     return (
-      <main className=''>
+      <main className='overflow-hidden'>
         <Header link='/see-orders' title='Pedido' />
   
         <section className=''>
@@ -766,7 +775,12 @@ const givePointsToFriend = async (statistics) => {
             : <></>
             }
 
-            <button className='btn btn-success form-control fs-3 mt-5 p-2' onClick={handleClickGuardar}>Guardar</button>
+            { (!isSaving && !isSaved )
+                ? <button className='btn btn-success form-control fs-3 mt-5 p-2' onClick={handleClickGuardar}>Guardar</button>
+                : (isSaving && !isSaved) 
+                  ? <button className='btn btn-success form-control fs-3 mt-5 p-2'>Guardando...</button>
+                  : <button className='btn btn-success form-control fs-3 mt-5 p-2' onClick={handleClickVolver}>Volver</button>
+            }
 
           </div>
   

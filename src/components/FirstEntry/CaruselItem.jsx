@@ -7,7 +7,7 @@ import UseScreenSize from '../../hooks/useScreenSize';
 // Context
 import { AppContext } from '../../context/AppContext';
 
-const CaruselItem = ({img, imgWidth, imgHeigth, text, content, btnText, handleClickNextEntry}) => {
+const CaruselItem = ({img, imgWidth, imgHeigth, text, content, btnText = 'Next', handleClickNextEntry}) => {
 
   const { heigth, width } = UseScreenSize();
 

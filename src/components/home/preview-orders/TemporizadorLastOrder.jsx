@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 
 // Temporizador
 import Temporizador from '../temporizador/Temporizador';
+import { getPedidosByClient } from '../../../firebase/firebaseFirestore';
 
 const TemporizadorLastOrder = ({viewMenu}) => {
 
@@ -26,8 +27,19 @@ const TemporizadorLastOrder = ({viewMenu}) => {
     title: 'Estado de pedido',
     text: text,
   });
-  
+
   useEffect( () => {
+    const f = async () => {
+      if(clientOrders == null){
+        const pedidosClient = await getPedidosByClient( email );
+        setClientOrders(pedidosClient);
+      }
+    }
+    f();
+  }, [email] );
+
+  useEffect( () => {
+    console.log(clientOrders);
     if(clientOrders != null){
 
       const fecha = new Date();
@@ -60,11 +72,11 @@ const TemporizadorLastOrder = ({viewMenu}) => {
           // else if((horas > 0 || minutos > waitingTime) && order.isReady) swalNotification('Su pedido ya esta listo', 'success');
 
           const waitingTime = 25;
-          if(order.isReady && !order.guardar) {
-            swalNotification('Su pedido ya esta listo', 'success');
-          }else if(horas == 0 && minutos < waitingTime -2 ){
+          if(!order.wasView && horas == 0 && minutos < waitingTime -2) {
             setMinutosTemp(waitingTime - minutos);
             setSegundosTemp(60 - segundos);
+          }else if(order.isReady && !order.guardar) {
+            swalNotification('Su pedido ya esta listo', 'success');
           }
           else if((horas < 0 || minutos > waitingTime) && !order.isReady) swalNotification('Su pedido casi esta listo');  
           else if((horas < 0 || minutos > waitingTime) && order.isReady) swalNotification('Su pedido ya esta listo', 'success');

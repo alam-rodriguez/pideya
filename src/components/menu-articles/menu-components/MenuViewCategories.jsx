@@ -48,7 +48,7 @@ const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
   }, [cart] );
 
   return (
-    <div className='animate__animated animate__fadeInLeft d-flex flex-column border rounded-4 overflow-hidden position-relative m-2' style={{height:190, width:160}} onClick={handleClick}>
+    <div className='animate__animated animate__fadeInLeft d-flex flex-column border rounded-3 overflow-hidden position-relative m-2' style={{height:190, width:160}} onClick={handleClick}>
       { countItem > 0 
         ? <div className={`${color1.bgColor} rounded-circle position-absolute top-0 end-0 m-3 shadow  d-flex justify-content-center align-content-center `} style={{height:30, width:30}}>
             <p className='fs-3 text-white' >{countItem}</p>
@@ -64,7 +64,7 @@ const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
           </div>
       }
 
-      <p className='m-0 fs-3 fw-bold px-2' style={{height:'35%'}}>{nombre}</p>
+      <p className='m-0 fs-5 fw-semibold px-2' style={{height:'35%'}}>{nombre}</p>
     </div>
   );
 }

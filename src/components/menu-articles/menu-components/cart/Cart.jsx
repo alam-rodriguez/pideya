@@ -243,6 +243,9 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     text: text, 
   });
 
+  const [isOrdenando, setIsOrdenando] = useState(false);
+  const [isOrded, setIsOrded] = useState(false);
+
   const handleClickOrdenar = async () => {
 
     if( nombre.length < 3) {
@@ -276,119 +279,115 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     });
     if(!resSwal.isConfirmed) return;
 
-    // let userEmail = email;
-    // if( email == null) userEmail = await registrarUsuario();
+    const crearOrderPromise = new Promise( async (resolve, reject) => {          
+
+      setIsOrdenando(true);
         
-    const dia = getFecha('dia');
-    const horaString = getFecha('horaString');
-    const hora = getFecha('hora');
-    const minuto = getFecha('minuto');
-    const segundo = getFecha('segundo');
-    
-    const pedido = {
-      horaQuierePedido: horaQuierePedido == null ? 'ahora mismo' : horaQuierePedido,
-      metodoPago: metodoPago,
-      nombre,
-      direccion,
-      telefono,
-      comentario,
-      pedido: cart,
-      pedidoOfPoints: cartOfCategoryPoints,
-      codeRef: codeRef,
-      // precio: cart.precio,
-      // categoriaNombre: categorySelected.nombre,
-      dia: dia,
-      horaString: horaString,
-      horaPedido: {
-        hora: hora,
-        minuto: minuto,
-        segundo: segundo,
-      },
-      email: email,
-      isDelivery: entrega == 'quiero delivery' ? true : false,
-      deliveryInfo: entrega == 'quiero delivery' ? lugarDelivery : null,
-      pedidoId: pedidoId,
-      wasView: false,
-      isReady: false,
-      paid: true/*false*/,
-      guardar: false,
-      pointsInfo: pointsInfo != null ? pointsInfo : 'no genera puntos',
-      recibioPuntos: true/*false*/,
-      total: total,
-      puntosGastados: puntos,
-    }
-
-    // console.log();
-
-    const visita = {
-      id: pedidoId,
-      fecha: dia,
-      gastado: total,
-      puntosGastados: puntos,
-      puntosGenerados: infoPoints != undefined ? infoPoints.activatePoints ? total / infoPoints.eachPointValue : 0 : 0,
-    }
-    const guardarEstadisca = await saveEstadistica(email, visita);
-    if(guardarEstadisca){
-      console.log('Estadistica guardada');
-    }
-
-    // if(estadisticasUser != null);
-    const estadisticas = await getEstadisticas(email);
-    if(estadisticas == 'no estadisticas'){
-      const firstEstadisticas = {
-        email: pedido.email,
-        nombre: pedido.nombre,
-        dineroGastado: total,
-        puntosGanados: infoPoints != undefined ? infoPoints.activatePoints ? total / infoPoints.eachPointValue : 0 : 0,
+      const dia = getFecha('dia');
+      const horaString = getFecha('horaString');
+      const hora = getFecha('hora');
+      const minuto = getFecha('minuto');
+      const segundo = getFecha('segundo');
+      
+      const pedido = {
+        horaQuierePedido: horaQuierePedido == null ? 'ahora mismo' : horaQuierePedido,
+        metodoPago: metodoPago,
+        nombre,
+        direccion,
+        telefono,
+        comentario,
+        pedido: cart,
+        pedidoOfPoints: cartOfCategoryPoints,
+        codeRef: codeRef,
+        dia: dia,
+        horaString: horaString,
+        horaPedido: {
+          hora: hora,
+          minuto: minuto,
+          segundo: segundo,
+        },
+        email: email,
+        isDelivery: entrega == 'quiero delivery' ? true : false,
+        deliveryInfo: entrega == 'quiero delivery' ? lugarDelivery : null,
+        pedidoId: pedidoId,
+        wasView: false,
+        isReady: false,
+        paid: true/*false*/,
+        guardar: false,
+        pointsInfo: pointsInfo != null ? pointsInfo : 'no genera puntos',
+        recibioPuntos: true/*false*/,
+        total: total,
         puntosGastados: puntos,
-        pointsForInviteFriend: 0,
-        // puntosRestantes: infoPoints.activatePoints ? total / infoPoints.eachPointValue : 0,
-      }
-      const res = await createEstadisticas(email, firstEstadisticas);
-    }else {
-      const newStatistics = {
-        nombre: pedido.nombre,
-        dineroGastado: estadisticas.dineroGastado + total,
-        puntosGanados: estadisticas.puntosGanados + (total / infoPoints.eachPointValue),
-        puntosGastados: estadisticas.puntosGastados + puntos,
-        pointsForInviteFriend: estadisticas.pointsForInviteFriend,
-      }
-      console.log( newStatistics );
-
-      const resEstadisticas = await editEstadistica(email, newStatistics);
-      if(resEstadisticas){
-        console.log('Estadisticas actualizadas')
       }
 
-    }
+      const visita = {
+        id: pedidoId,
+        fecha: dia,
+        gastado: total,
+        puntosGastados: puntos,
+        puntosGenerados: infoPoints != undefined ? infoPoints.activatePoints ? total / infoPoints.eachPointValue : 0 : 0,
+      }
+      const guardarEstadisca = await saveEstadistica(email, visita);
+      if(guardarEstadisca){
+        console.log('Estadistica guardada');
+      }
+
+      // if(estadisticasUser != null);
+      let resEstadisticas = true;
+      const estadisticas = await getEstadisticas(email);
+      if(estadisticas == 'no estadisticas'){
+        const firstEstadisticas = {
+          email: pedido.email,
+          nombre: pedido.nombre,
+          dineroGastado: total,
+          puntosGanados: infoPoints != undefined ? infoPoints.activatePoints ? total / infoPoints.eachPointValue : 0 : 0,
+          puntosGastados: puntos,
+          pointsForInviteFriend: 0,
+          // puntosRestantes: infoPoints.activatePoints ? total / infoPoints.eachPointValue : 0,
+        }
+        resEstadisticas = await createEstadisticas(email, firstEstadisticas);
+      }else {
+        const newStatistics = {
+          nombre: pedido.nombre,
+          dineroGastado: estadisticas.dineroGastado + total,
+          puntosGanados: estadisticas.puntosGanados + (total / infoPoints.eachPointValue),
+          puntosGastados: estadisticas.puntosGastados + puntos,
+          pointsForInviteFriend: estadisticas.pointsForInviteFriend,
+        }
+        console.log( newStatistics );
+
+        resEstadisticas = await editEstadistica(email, newStatistics);
+        if(resEstadisticas){
+          console.log('Estadisticas actualizadas')
+        }
+
+      }
+      
+
+          
+        console.log(pedido)
+        let res = true;
+        let infoUser = true;
+        // TODO: si existe la info del user, en la funcion de ff usar updateDoc y no setDoc
+        if(stateUserInfo == 'no-exist') infoUser = await saveInfoUser(pedido);
+        else infoUser = updateInfoUser(pedido);
+        const resCode = await saveCodeRef(email, nombre, codeRef);
+          
+        // if( res == true){
+          let res2 = false
     
-
-        
-      console.log(pedido)
-      let res = true;
-      // TODO: si existe la info del user, en la funcion de ff usar updateDoc y no setDoc
-      if(stateUserInfo == 'no-exist') res = await saveInfoUser(pedido);
-      else updateInfoUser(pedido);
-      const resCode = await saveCodeRef(email, nombre, codeRef);
-        
-      if( res == true){
-        let res2 = false
-  
-        const crearOrderPromise = new Promise( async (resolve, reject) => {          
-          const res = await crearPedidoUser(pedido);
-          // console.log(pointsInfo);
-          givePointsToFriendWhoInviteMe(pedido.email);
-          if(res) {
-            resolve('bien');
-            setTimeout(() => {
-              setCart(null);
-              setCartOfCategoryPoints(null);
-              navigate('/home');
-              resetCart();
-            }, 5000);
-            setAmountPoints(amountPoints - puntos); 
-          }
-          else reject('mal');
+            const resPedido = await crearPedidoUser(pedido);
+            // console.log(pointsInfo);
+            givePointsToFriendWhoInviteMe(pedido.email);
+            if(guardarEstadisca && resPedido && infoUser && resCode) {
+              resolve('bien');
+              setIsOrded(true);
+              setTimeout(() => {
+                resetCart();
+              }, 5000);
+              setAmountPoints(amountPoints - puntos); 
+            }
+            else reject('mal');
 
         });
           
@@ -398,9 +397,9 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
           error: 'Ah ocurrido un errror, vuelva a intentarlo'
         });
       
-      }else {
-        notificacion('Ha ocurrido un error, vuela a intentarlo');
-      }
+      // }else {
+      //   notificacion('Ha ocurrido un error, vuela a intentarlo');
+      // }
   
   }
 
@@ -466,6 +465,8 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
   }
 
+  const handleClickVolver = () => resetCart();
+
   const handleClickRegistrarse = async () => {
 
     const userEmail = await registrarUsuarioAgain();
@@ -529,8 +530,10 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
       {/* Btn para ordenar */}
       <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100' style={{}}>
-        { existUser 
+        { existUser && !isOrdenando
           ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickOrdenar}>Ordenar</button>
+            : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>
+            : isOrdenando && isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickVolver}>Volver</button>
           : <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickRegistrarse}>Registrarse</button>
         }
       </div>
