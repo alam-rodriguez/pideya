@@ -1,7 +1,7 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
 
 // Firestore Service
-import { guardarAdmin, saveInfoUser } from "./firebaseFirestore";
+import { getInfoUser, guardarAdmin, saveInfoUser } from "./firebaseFirestore";
 import { doc } from "firebase/firestore";
 
 export const auth = getAuth();
@@ -49,14 +49,18 @@ export const registrarSemiAdmin = async () => {
 export const registrarUsuario = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
-    // const infoUser = {
-    //   email: result.user.email,
-    //   nombre: '',
-    //   direccion: '',
-    //   telefono: Number('0'.repeat(8)),
-    //   codeRef: Number('0'.repeat(5)),
-    // }
-    // await saveInfoUser(infoUser);
+    const exitsUser = await getInfoUser(result.user.email);
+    if(exitsUser != 'no-exist'){
+      return 'usuario-registrado';
+    }
+    const infoUser = {
+      email: result.user.email,
+      nombre: '',
+      direccion: '',
+      telefono: Number('0'.repeat(8)),
+      // codeRef: Number('0'.repeat(5)),
+    }
+    await saveInfoUser(infoUser);
     return result.user.email;
   } catch (e) {
     console.log(e);

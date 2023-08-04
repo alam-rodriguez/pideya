@@ -72,7 +72,7 @@ const TemporizadorLastOrder = ({viewMenu}) => {
           // else if((horas > 0 || minutos > waitingTime) && order.isReady) swalNotification('Su pedido ya esta listo', 'success');
 
           const waitingTime = 25;
-          if(!order.wasView && horas == 0 && minutos < waitingTime -2) {
+          if(horas == 0 && minutos < waitingTime -2) {
             setMinutosTemp(waitingTime - minutos);
             setSegundosTemp(60 - segundos);
           }else if(order.isReady && !order.guardar) {

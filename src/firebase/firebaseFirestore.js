@@ -229,17 +229,28 @@ export const getArticlesByCategory = async (categoriaId) => {
   }
 }
 
+// Generar codigo de usario
+const generateCodeRef = (i) => {
+  const codeRef = Math.floor(Math.random() * 100000);
+  if(i == 0) return codeRef;
+  if(codeRef.toString().length == 5) return codeRef;
+  else generateCodeRef(i - 1);
+} 
+
 // Guardar info de usuario 
 export const saveInfoUser = async (pedido) => {
-  console.log(pedido.codeRef);
+  let codeRef = generateCodeRef(10);
+  console.log(codeRef);
+  // console.log(pedido.codeRef);
   try {
     await setDoc(doc(db, `user-${pedido.email}`, 'info'), {
       email: pedido.email,
       nombre: pedido.nombre,
       direccion: pedido.direccion,
       telefono: pedido.telefono,
-      codeRef: pedido.codeRef,
+      codeRef: codeRef,
     });
+    await saveCodeRef(pedido.email, pedido.nombre, codeRef);
     return true;
   } catch (e) {
     console.log(e);

@@ -260,7 +260,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
       notificacion('Debes de indicar si vas a pasar a recoger el pedido o si quieres un delivery');
       return;
     }
-    if(puntos == 0 && (total - Number(lugarDelivery.costo)) < 150) {
+    if(puntos == 0 && total < 150) {
       notificacion('Para poder hacer un pedido debes de gastar por lo menos 150 pesos');
       return;
     }
@@ -371,7 +371,6 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
         // TODO: si existe la info del user, en la funcion de ff usar updateDoc y no setDoc
         if(stateUserInfo == 'no-exist') infoUser = await saveInfoUser(pedido);
         else infoUser = updateInfoUser(pedido);
-        const resCode = await saveCodeRef(email, nombre, codeRef);
           
         // if( res == true){
           let res2 = false
@@ -379,7 +378,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
             const resPedido = await crearPedidoUser(pedido);
             // console.log(pointsInfo);
             givePointsToFriendWhoInviteMe(pedido.email);
-            if(guardarEstadisca && resPedido && infoUser && resCode) {
+            if(guardarEstadisca && resPedido && infoUser) {
               resolve('bien');
               setIsOrded(true);
               setTimeout(() => {

@@ -20,6 +20,11 @@ import { registrarUsuario } from '../../../../firebase/firebaseAuthGoogle';
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
 
+import { ToastContainer, toast } from 'react-toastify';
+
+import Swal from 'sweetalert2';
+// import { saveInfoUser } from '../../../../firebase/firebaseFirestore';
+
 const SingIn = () => {
 
   const { isAdmin, appInfo } = useContext(AppContext); 
@@ -35,7 +40,37 @@ const SingIn = () => {
   const handleClickBack = () => navigate('/home');
 
   const handleClickGoogle = async () => {
-    // await registrarAdmin();
+
+    const iniciarSesionPromise = new Promise( async (resolve, reject) => {
+      
+      const res = await registrarUsuario();
+
+      if(res == 'usuario-registrado'){
+        resolve();
+        Swal.fire({
+          icon: 'success',
+          title: 'Usuario',
+          text: 'Ya este usuario esta registrado',
+        });
+        return;
+      }
+      if(res != false && res != 'usuario-registrado'){
+        resolve();
+        setTimeout(() => {
+          navigate('/home');
+        }, 5000);
+      }else {
+        reject();
+      }
+
+    });
+
+    toast.promise( iniciarSesionPromise ,{
+      pending: 'Iniciando sesion',
+      success: 'Sesion iniciada con exito',
+      error: 'Error al iniciar secion'
+    })
+
   }
   
   return (
@@ -52,23 +87,24 @@ const SingIn = () => {
             icon={<GrFacebookOption className='fs-1 text-white' />} 
             bgColor='bg-primary' 
             text='Facebook' 
-            handleClick={registrarUsuario}
+            handleClick={handleClickGoogle}
           />
           <SingInButton 
             icon={<FcGoogle className='fs-1' />} 
             bgColor='' 
             text='Google' 
-            handleClick={registrarUsuario}
+            handleClick={handleClickGoogle}
           />
           <SingInButton 
             icon={<TfiEmail className='fs-1' />} 
             bgColor='' 
             text='Email' 
-            handleClick={registrarUsuario}
+            handleClick={handleClickGoogle}
           />
         </div>     
         
       <p className='position-absolute bottom-0 w-75 text-center z-0'>Le recordamos que esta app es nuestra y las reglas las ponemos nosotros.</p>
+      <ToastContainer />
     </section>
   )
 }

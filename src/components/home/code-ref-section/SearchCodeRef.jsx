@@ -37,7 +37,15 @@ const SearchCodeRef = ({viewSearchCode, setViewSearchCode}) => {
       
       const res = await getInfoUser(email);
       if(res.referidoPor != undefined) {
-        setInfoReferido( res.referidoPor );
+        const obj = {
+          codeRef: res.referidoPor.codeRef,
+          nombre: res.referidoPor.nombre,
+          email: res.referidoPor.email,
+        }
+        
+        const infoUser = await getInfoUser(res.referidoPor.email);
+        obj.nombre = infoUser.nombre;
+        setInfoReferido( obj );
       }
     }
     f();
