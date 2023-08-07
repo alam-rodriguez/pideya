@@ -438,6 +438,10 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
         }
       }
       if(!referidoInfo.givePointsForSpendMoney){
+
+        infoUser = await getInfoUser(email);
+        referidoInfo = infoUser.referidoPor;
+
         const estadisticas = await getEstadisticas(email);
         const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
         if(estadisticas.dineroGastado > pointsInfo.minForSpend){
