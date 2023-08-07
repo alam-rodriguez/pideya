@@ -475,7 +475,7 @@ const givePointsToFriend = async (statistics) => {
           // TODO: editar info de user
       }
       const infoUser2 = await getInfoUser(seletedOrder.email);
-      const referidoInfo2 = infoUser1.referidoPor;
+      const referidoInfo2 = infoUser2.referidoPor;
       if(!referidoInfo2.givePointsForSpendMoney){
         const estadisticas = await getEstadisticas(seletedOrder.email);
         const estadisticasAmigo = await getEstadisticas(referidoInfo2.email);
