@@ -414,21 +414,21 @@ const handleClickGuardar = async () => {
 const givePointsToFriend = async (statistics) => {
   // const givePointsToFriendWhoInviteMe = async () => {
     
-    const infoUser = await getInfoUser(seletedOrder.email);
-    const referidoInfo = infoUser.referidoPor;
-    if(referidoInfo != undefined){
+    const infoUser1 = await getInfoUser(seletedOrder.email);
+    const referidoInfo1 = infoUser1.referidoPor;
+    if(referidoInfo1 != undefined){
 
-      console.log(infoUser);
+      console.log(infoUser1);
 
       console.log(infoPoints);
 
-      console.log(referidoInfo);
+      // console.log(referidoInfo);
 
       // console.log(pointsInfo);
       
-      if(!referidoInfo.givePointsForInviteFriend){
+      if(!referidoInfo1.givePointsForInviteFriend){
         const estadisticas = await getEstadisticas(seletedOrder.email);
-        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo1.email);
         console.log(estadisticas.dineroGastado > 500);
         if(estadisticas.dineroGastado > 500){
           console.log('-----------------------------');
@@ -439,20 +439,20 @@ const givePointsToFriend = async (statistics) => {
             pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend + infoPoints.refFriendGenerate,
             puntosGastados: estadisticasAmigo.puntosGastados,
           }
-          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const resEstadisticas = await editEstadistica(referidoInfo1.email, newStatistics);
           const info = {
-            codeRef: referidoInfo.codeRef,
-            email: referidoInfo.email,
+            codeRef: referidoInfo1.codeRef,
+            email: referidoInfo1.email,
             givePointsForInviteFriend: true,
-            givePointsForSpendMoney: referidoInfo.givePointsForSpendMoney,
-            nombre: referidoInfo.nombre,
+            givePointsForSpendMoney: referidoInfo1.givePointsForSpendMoney,
+            nombre: referidoInfo1.nombre,
           }
           const res = await givePointForRefFriend(seletedOrder.email, info);
           // TODO: editar info de user
         }
       }else if(statistics.dineroGastado < 500){
         const estadisticas = await getEstadisticas(seletedOrder.email);
-        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo1.email);
         
         // if(estadisticas.dineroGastado > 500){
           // console.log('-----------------------------');
@@ -463,20 +463,22 @@ const givePointsToFriend = async (statistics) => {
             pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend - infoPoints.refFriendGenerate,
             puntosGastados: estadisticasAmigo.puntosGastados,
           }
-          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const resEstadisticas = await editEstadistica(referidoInfo1.email, newStatistics);
           const info = {
-            codeRef: referidoInfo.codeRef,
-            email: referidoInfo.email,
+            codeRef: referidoInfo1.codeRef,
+            email: referidoInfo1.email,
             givePointsForInviteFriend: false,
-            givePointsForSpendMoney: referidoInfo.givePointsForSpendMoney,
-            nombre: referidoInfo.nombre,
+            givePointsForSpendMoney: referidoInfo1.givePointsForSpendMoney,
+            nombre: referidoInfo1.nombre,
           }
           const res = await givePointForRefFriend(seletedOrder.email, info);
           // TODO: editar info de user
       }
-      if(!referidoInfo.givePointsForSpendMoney){
+      const infoUser2 = await getInfoUser(seletedOrder.email);
+      const referidoInfo2 = infoUser1.referidoPor;
+      if(!referidoInfo2.givePointsForSpendMoney){
         const estadisticas = await getEstadisticas(seletedOrder.email);
-        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo2.email);
         if(estadisticas.dineroGastado > infoPoints.minForSpend){
           const newStatistics = {
             nombre: estadisticasAmigo.nombre,
@@ -485,13 +487,13 @@ const givePointsToFriend = async (statistics) => {
             pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend + infoPoints.pointsForMinSpend,
             puntosGastados: estadisticasAmigo.puntosGastados,
           }
-          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const resEstadisticas = await editEstadistica(referidoInfo2.email, newStatistics);
           const info = {
-            codeRef: referidoInfo.codeRef,
-            email: referidoInfo.email,
-            givePointsForInviteFriend: referidoInfo.givePointsForInviteFriend,
+            codeRef: referidoInfo2.codeRef,
+            email: referidoInfo2.email,
+            givePointsForInviteFriend: referidoInfo2.givePointsForInviteFriend,
             givePointsForSpendMoney: true,
-            nombre: referidoInfo.nombre,
+            nombre: referidoInfo2.nombre,
           }
           const res = await givePointForRefGoodFriend(seletedOrder.email, info);
           // TODO: editar info de user
@@ -499,7 +501,7 @@ const givePointsToFriend = async (statistics) => {
       }else if(statistics.dineroGastado < infoPoints.minForSpend) {
         console.log('----------------------')
         const estadisticas = await getEstadisticas(seletedOrder.email);
-        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo2.email);
         // if(estadisticas.dineroGastado > infoPoints.minForSpend){
           const newStatistics = {
             nombre: estadisticasAmigo.nombre,
@@ -508,13 +510,13 @@ const givePointsToFriend = async (statistics) => {
             pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend - infoPoints.pointsForMinSpend,
             puntosGastados: estadisticasAmigo.puntosGastados,
           }
-          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const resEstadisticas = await editEstadistica(referidoInfo2.email, newStatistics);
           const info = {
-            codeRef: referidoInfo.codeRef,
-            email: referidoInfo.email,
-            givePointsForInviteFriend: referidoInfo.givePointsForInviteFriend,
+            codeRef: referidoInfo2.codeRef,
+            email: referidoInfo2.email,
+            givePointsForInviteFriend: referidoInfo2.givePointsForInviteFriend,
             givePointsForSpendMoney: false,
-            nombre: referidoInfo.nombre,
+            nombre: referidoInfo2.nombre,
           }
           const res = await givePointForRefGoodFriend(seletedOrder.email, info);
           // TODO: editar info de user
