@@ -439,11 +439,11 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
       }
       if(!referidoInfo.givePointsForSpendMoney){
 
-        infoUser = await getInfoUser(email);
-        referidoInfo = infoUser.referidoPor;
+        const infoUser2 = await getInfoUser(email);
+        const referidoInfo2 = infoUser2.referidoPor;
 
         const estadisticas = await getEstadisticas(email);
-        const estadisticasAmigo = await getEstadisticas(referidoInfo.email);
+        const estadisticasAmigo = await getEstadisticas(referidoInfo2.email);
         if(estadisticas.dineroGastado > pointsInfo.minForSpend){
           const newStatistics = {
             nombre: estadisticasAmigo.nombre,
@@ -452,13 +452,13 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
             pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend + pointsInfo.pointsForMinSpend, 
             puntosGastados: estadisticasAmigo.puntosGastados,
           }
-          const resEstadisticas = await editEstadistica(referidoInfo.email, newStatistics);
+          const resEstadisticas = await editEstadistica(referidoInfo2.email, newStatistics);
           const info = {
-            codeRef: referidoInfo.codeRef,
-            email: referidoInfo.email,
+            codeRef: referidoInfo2.codeRef,
+            email: referidoInfo2.email,
             givePointsForInviteFriend: referidoInfo.givePointsForInviteFriend,
             givePointsForSpendMoney: true,
-            nombre: referidoInfo.nombre,
+            nombre: referidoInfo2.nombre,
           }
           const res = await givePointForRefGoodFriend(email, info);
           // TODO: editar info de user
