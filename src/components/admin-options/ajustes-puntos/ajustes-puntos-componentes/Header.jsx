@@ -5,15 +5,14 @@ import { IoIosArrowBack } from 'react-icons/io';
 
 const Header = ({handleClickAtras, title = 'Ajustes de Puntos'}) => {
 
-  const handleClickBack = () =>  handleClickAtras();
-
   return (
-    <header className='row border-bottom py-3'>
-      <IoIosArrowBack className='display-2 col-2' onClick={handleClickBack} />
-      <p className='m-0 fs-1 fw-medium col-8 text-center'>{title}</p>
-      <div className='col-2'></div>
+    <header className='d-flex align-items-center border-bottom- py-3 m-0'>
+      <IoIosArrowBack className='display-4 col-2- text-start' onClick={handleClickAtras} />
+      <p className='m-0 w-100 fs-1 fw-medium col-8- text-center'>{title}</p>
+      <div className='col-2-'></div>
     </header>
   );
+
 }
 
 export default Header;

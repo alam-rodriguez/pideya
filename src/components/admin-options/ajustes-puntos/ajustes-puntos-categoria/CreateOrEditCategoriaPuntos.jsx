@@ -194,11 +194,11 @@ const CreateCategory = () => {
 
   if(categorySelected != null){
     return (
-      <section className='border-0 border-bottom border-top' >
+      <section className='container border-0 border-bottom border-top' >
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} />
   
-        <div className='my-5 mx-3'>
+        <div className='mt-3 mb-5 overflow-scroll' style={{height:'80vh'}}>
           <div className='row mx-auto d-flex flex-column gap-4'>
 
             <div>
@@ -218,7 +218,7 @@ const CreateCategory = () => {
   
             <div>
               <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
-              <div className='d-flex justify-content-center align-items-center p-4 rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
+              <div className='d-flex justify-content-center align-items-center p-2 rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
                 { imgpath == null ?
                   <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
                     <span className="visually-hidden">Loading...</span>
@@ -241,11 +241,19 @@ const CreateCategory = () => {
   
           </div>
           {/* <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickUpdateCategory}>Actualizar Categoria</button> */}
-          { !showBottonToBack 
+          {/* { !showBottonToBack 
             ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickUpdateCategory}>Actualizar Categoria</button>
             : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
+          } */}
+        </div>
+
+        <div className='bg-white position-fixed vw-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+          { !showBottonToBack 
+            ? <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickUpdateCategory}>Actualizar Categoria</button>
+            : <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickAtras}>Salir</button>
           }
         </div>
+
         <ToastContainer />
       </section>
     );
@@ -255,7 +263,7 @@ const CreateCategory = () => {
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} />
   
-        <div className='my-5 mx-3'>
+        <div className='mt-3 mb-5 overflow-scroll' style={{height:'80vh'}}>
           <div className='row mx-auto d-flex flex-column gap-4'>
 
             <div>
@@ -294,11 +302,22 @@ const CreateCategory = () => {
   
           </div>
           {/* <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button> */}
-          { !showBottonToBack 
+          {/* { !showBottonToBack 
             ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
             : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
+          } */}
+
+
+        </div>
+
+        <div className='bg-white position-fixed vw-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+          { !showBottonToBack 
+            ? <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickAddArticle}>Crear Categoria</button>
+            : <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickAtras}>Salir</button>
           }
         </div>
+
+
         <ToastContainer />
       </section>
     );

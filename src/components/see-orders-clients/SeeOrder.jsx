@@ -42,6 +42,10 @@ const SeeOrder = () => {
   // Crea y obtiene estadisticas de usuarios
   useEffect( () => {
     const f = async () => {
+      if(seletedOrder == null) {
+        navigate('/see-orders');
+        return;
+      }
       const estadisticas = await getEstadisticas(seletedOrder.email);
       console.log(estadisticas);
       if(estadisticas.dineroGastado != undefined){
@@ -102,10 +106,10 @@ const SeeOrder = () => {
     }
   }, [] );
   
-  const [isReady, setIsReady] = useState(seletedOrder.isReady);
-  const [guardar, setGuardar] = useState(seletedOrder.guardar);
-  const [paid, setPaid] = useState(seletedOrder.paid);
-  const [givePoints, setgivePoints] = useState(seletedOrder.recibioPuntos);
+  const [isReady, setIsReady] = useState(seletedOrder != null ? seletedOrder.isReady : false);
+  const [guardar, setGuardar] = useState(seletedOrder != null ? seletedOrder.guardar : false);
+  const [paid, setPaid] = useState(seletedOrder != null ? seletedOrder.paid : false);
+  const [givePoints, setgivePoints] = useState(seletedOrder != null ? seletedOrder.recibioPuntos : false);
   
   // change wasView t0 true
   useEffect( () => {

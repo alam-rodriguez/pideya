@@ -15,6 +15,7 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
     // console.log(category.sizeView);
     const f = async () => {
       const res = await getArticlesByCategory(category.id);
+      res.sort( (a,b) => a.position - b.position);
       setArticlesOfThisMenu(res);
       console.log(res);
     }

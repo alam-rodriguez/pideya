@@ -57,9 +57,9 @@ const ListClients = () => {
 
   const handleClickAtras = () => navigate('/admin-options');
   return (
-    <main>
+    <main className='container'>
       <Header handleClickAtras={handleClickAtras}/>
-      <section className='mx-3'>
+      <section className='mx-3-'>
 
         <div className='d-flex justify-content-between my-4'>
           <p className='m-0 w-50 fs-3 fw-medium'>Nombre</p>

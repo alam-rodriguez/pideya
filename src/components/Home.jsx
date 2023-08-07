@@ -79,7 +79,7 @@ const Home = () => {
                 appInfo.semisAdmins.forEach( (semiAdmin) => {
                   if(semiAdmin == emailUser) {
                     setIsAdmin('semi-admin');
-                  }
+                  }else setIsAdmin('customer');
                 });
               }
             }

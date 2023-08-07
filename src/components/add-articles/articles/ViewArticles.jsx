@@ -8,7 +8,7 @@ import { BsCloudUploadFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
-import { createArticle, getAllArticles, getCategories } from '../../../firebase/firebaseFirestore';
+import { auth, createArticle, getAllArticles, getCategories, obtenerInfoApp } from '../../../firebase/firebaseFirestore';
 import { uploadImage } from '../../../firebase/firebaseStorage';
 // import { createArticle, createCategories } from '../../firebase/firebaseFirestore';
 // import { uploadImage } from '../../firebase/firebaseStorage';
@@ -22,16 +22,57 @@ import CreateArticleHeader from '../sections/CreateArticleHeader';
 // Context
 import { AppContext } from '../../../context/AppContext';
 import Header from './components/Header';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const ViewArticles = () => {
   const navigate = useNavigate();
 
-  const { articleSelected, setArticleSelected, categories, setCategories, categorySelected, setCategorySelected} = useContext(AppContext);
+  const { articleSelected, setArticleSelected, categories, setCategories, categorySelected, setCategorySelected, setEmail, setIsAdmin, isAdmin} = useContext(AppContext);
 
   const [articles, setArticles] = useState(null);
   const [articlesFilted, setArticlesFilted] = useState(null);
 
   const [allCategories, setAllCategories] = useState([]);
+  
+  useEffect( () => {
+    if(isAdmin == ''){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null) {
+          navigate('/home'); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        let status = 'customer';
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/home'); 
+          return
+        }
+        if(appInfo.nombre == undefined){
+          alert('No hay datos de la app');
+          navigate('/home');
+          return; 
+        } 
+        if(appInfo.admin == emailUser) status = 'admin';
+        else {
+          if(appInfo.semisAdmins != undefined){
+            appInfo.semisAdmins.forEach( (semiAdmin) => {
+              if(semiAdmin == emailUser) status = 'semi-admin';
+              else status = 'customer';
+            });
+          }
+        }
+        setIsAdmin(status);
+        if(status != 'admin') navigate('/home');
+      }
+    }
+  }, [] );
 
   useEffect( () => {
     const f = async () => { 
@@ -74,25 +115,33 @@ const ViewArticles = () => {
 
   if(articles != null){
     return (
-      <main className='border-0 mx-3 d-block vh-100 bg-warning- ' >
+      <main className='border-0'>
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} filter={true} allCategories={allCategories} setCategorySelected={setCategorySelected} />
   
-        <section className='d-flex flex-column gap-5  bg-danger- ' style={{height:''}}>
+        <section className='' style={{height:''}}>
   
-          { articlesFilted != null 
-            ? articlesFilted.length > 0 
-              ? articlesFilted.map((article)=>(
-                 <div className='border-bottom py-2' key={article.id} onClick={()=>handleClickArticle(article)}>
-                    <p className='m-0 fs-1 fw-medium'>{categorySelected != 'Todos los articulos' && categorySelected != null ? `${article.position} - ${article.titulo}` : article.titulo}</p>
-                  </div>
-                ))
-              : <p className='m-0 fs-1 fw-medium text-center'>No hay articulos</p>
-            : <></>
-          }
+          <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
+            { articlesFilted != null 
+              ? articlesFilted.length > 0 
+                ? articlesFilted.map((article)=>(
+                  <div className='border-bottom py-2' key={article.id} onClick={()=>handleClickArticle(article)}>
+                      <p className='m-0 fs-1 fw-medium'>{categorySelected != 'Todos los articulos' && categorySelected != null ? `${article.position} - ${article.titulo}` : article.titulo}</p>
+                    </div>
+                  ))
+                : <p className='m-0 fs-1 fw-medium text-center'>No hay articulos</p>
+              : <></>
+            }
+          </div>
 
-          <div>
+          {/* <div>
              <button className='btn form-control btn-success fs-3 position-fixed bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
+          </div> */}
+
+          
+          <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            {/* <button className='btn form-control btn-success fs-3 rounded-3' onClick={handleClickCrearCategoria}>Crear Categoria</button> */}
+            <button className='btn form-control btn-success fs-3 rounded-3' onClick={handleClickCrearCategoria}>Crear Nuevo Articulo</button>
           </div>
   
         </section>

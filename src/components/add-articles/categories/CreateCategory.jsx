@@ -23,10 +23,17 @@ import { ToastContainer, toast } from 'react-toastify';
 // Context
 import { AppContext } from '../../../context/AppContext';
 import Swal from 'sweetalert2';
+import { useEffect } from 'react';
 
 const CreateCategory = () => {
 
   const navigate = useNavigate();
+
+  const { isAdmin } = useContext(AppContext);
+
+  useEffect( () => {
+    if(isAdmin != 'admin') navigate('/view-categories');
+  }, [] );
 
   const { setCategorySelected } = useContext(AppContext);
   
@@ -122,12 +129,12 @@ const CreateCategory = () => {
       {/* Header */}
       <Header handleClickAtras={handleClickAtras} />
 
-      <div className='my-5 mx-3'>
-        <div className='row mx-auto d-flex flex-column gap-4'>
+      <div className='mt-3 mb-5'>
+        <div className='row mx-auto d-flex flex-column flex-nowrap gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
 
           <div>
             <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
-            <input className='form-control rounded border-secondary' type="text" style={{height:35}} onChange={handleChangeNombre}/>
+            <input className='form-control rounded border-secondary' type="text" style={{height:35}} placeholder='Nombre de la categoria' onChange={handleChangeNombre}/>
           </div>
 
           {/* <input type="text" className='col-12 border-1 fs-3 p-3' placeholder='Nombre de la nueva Categoria' onChange={handleChangeNombre} /> */}
@@ -144,7 +151,7 @@ const CreateCategory = () => {
           {/* <MdPlaylistAddCheckCircle className='col-3 display-1 text-success' onClick={handleClickAddArticle} /> */}
           <div>
             <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
-            <div className='d-flex justify-content-center align-items-center' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
+            <div className='d-flex justify-content-center align-items-center rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
               <BsCloudUploadFill className='text-success' style={{fontSize:100}} />
             </div>
             <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
@@ -171,11 +178,12 @@ const CreateCategory = () => {
 
         </div>
 
-        { !showBottonToBack 
-          ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
-          : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
-        }
-
+        <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+          { !showBottonToBack 
+            ? <button className='btn form-control btn-success fs-3' onClick={handleClickAddArticle}>Crear Categoria</button>
+            : <button className='btn form-control btn-success fs-3' onClick={handleClickAtras}>Salir</button>
+          }
+        </div>
       
       </div>
       <ToastContainer />

@@ -234,44 +234,55 @@ const CreateOrEditArticlePuntos = () => {
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} />
   
-        <section className='d-flex flex-column gap-4'>
+        <section>
   
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
-            <input className='form-control rounded border-secondary' type="text" style={{height:35}} value={titulo} onChange={handleChangeTitulo}/>
-          </div>
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
-            <textarea className='form-control border-secondary' name="" id="" style={{minHeight:35, maxHeight:200}} value={subtitulo} onChange={handleChangeSubtitulo}></textarea>
-          </div>
-  
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Puntos:</p>
-            <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={puntos} onChange={handleChangePuntos}/>
-          </div>
-  
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
-            <div className='d-flex justify-content-center align-items-center' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
-              <BsCloudUploadFill className='text-success' style={{fontSize:100}} />
+          <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
+
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
+              <input className='form-control rounded border-secondary' type="text" style={{height:35}} value={titulo} onChange={handleChangeTitulo}/>
             </div>
-            <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
+              <textarea className='form-control border-secondary' name="" id="" style={{minHeight:35, maxHeight:200}} value={subtitulo} onChange={handleChangeSubtitulo}></textarea>
+            </div>
+    
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Puntos:</p>
+              <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={puntos} onChange={handleChangePuntos}/>
+            </div>
+    
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
+              <div className='d-flex justify-content-center align-items-center' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
+                <BsCloudUploadFill className='text-success' style={{fontSize:100}} />
+              </div>
+              <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+            </div>
+
+            <div className='d-flex align-items-center my-2'>
+              <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
+              <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
+                <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
+                <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
+                <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+              </div>
+            </div>
+    
+            {/* <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/> */}
+            {/* { !showBottonToBack
+              ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
+              : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
+            } */}
+
           </div>
 
-          <div className='d-flex align-items-center my-2'>
-            <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
-            <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
-              <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
-              <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
-              <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
-            </div>
+          <div className='bg-white position-fixed vw-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            { !showBottonToBack
+              ? <input className='btn btn-success form-control fs-3 rounded-3' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
+              : <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickAtras}>Salir</button>
+            }
           </div>
-  
-          {/* <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/> */}
-          { !showBottonToBack
-            ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
-            : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
-          }
   
         </section>
         <ToastContainer />
@@ -279,55 +290,70 @@ const CreateOrEditArticlePuntos = () => {
     );
   }else {
     return (
-      <main className='border-0 border-bottom border-top mx-3 col-11 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
+      <main className='border-0 border-bottom- border-top mx-3- col-11- col-sm-8 col-md-6 col-lg-6 mx-auto-' style={{}} >
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} />
   
-        <section className='d-flex flex-column gap-4'>
+        <section>
   
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
-            <input className='form-control rounded border-secondary' type="text" style={{height:35}} value={titulo} onChange={handleChangeTitulo}/>
-          </div>
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
-            <textarea className='form-control border-secondary' name="" id="" style={{minHeight:35, maxHeight:200}} value={subtitulo} onChange={handleChangeSubtitulo}></textarea>
-          </div>
-  
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Puntos:</p>
-            <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={puntos} onChange={handleChangePuntos}/>
-          </div>
-  
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
-            <div className='d-flex justify-content-center align-items-center p-4 rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
-              { imgLink == null ?
-                <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              : <img src={imgLink} className='w-100 h-100 object-fit-cover rounded-5' />  
-              }
+          <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
+
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
+              <input className='form-control rounded border-secondary' type="text" style={{height:35}} value={titulo} onChange={handleChangeTitulo}/>
             </div>
-            <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
+              <textarea className='form-control border-secondary' name="" id="" style={{minHeight:35, maxHeight:200}} value={subtitulo} onChange={handleChangeSubtitulo}></textarea>
+            </div>
+    
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Puntos:</p>
+              <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={puntos} onChange={handleChangePuntos}/>
+            </div>
+    
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
+              <div className='d-flex justify-content-center align-items-center p-2 rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
+                { imgLink == null ?
+                  <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                : <img src={imgLink} className='w-100 h-100 object-fit-cover rounded-5' />  
+                }
+              </div>
+              <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+            </div>
+
+            <div className='d-flex'>
+              <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
+              <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
+                <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
+                <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
+                <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+              </div>
+            </div>
+
+            <div className='d-flex justify-content-center'>
+              <MdDeleteForever className='text-danger' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />
+            </div>
+
+            {/* <MdDeleteForever className='text-danger mt-0' style={{fontSize: 80}} onClick={handleClickDeleteArticle} /> */}
+    
+            {/* <input className='btn btn-success fs-3 rounded-0' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/> */}
+            {/* { !showBottonToBack
+              ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/>
+              : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
+            } */}
+
           </div>
 
-          <div className='d-flex'>
-            <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
-            <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
-              <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
-              <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
-              <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
-            </div>
+          <div className='bg-white position-fixed vw-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            { !showBottonToBack
+              ? <input className='btn btn-success form-control fs-3 rounded-3' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/>
+              : <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickAtras}>Salir</button>
+            }
           </div>
-
-          <MdDeleteForever className='text-danger mt-0' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />
-  
-          {/* <input className='btn btn-success fs-3 rounded-0' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/> */}
-          { !showBottonToBack
-            ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Aptualizar Articulo' onClick={handleClickAptualizarArticulo}/>
-            : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
-          }
   
         </section>
         <ToastContainer />

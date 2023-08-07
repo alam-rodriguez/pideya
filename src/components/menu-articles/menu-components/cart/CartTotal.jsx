@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from 'react'
 // Context
 import { AppContext } from '../../../../context/AppContext';
 
+import FinCart from '../../../../images/cart/finCart.jpg'
+
 const CartTotal = ({isDelivery,precioDelivey, lugarDelivery, setPrecioTotal, total, setTotal, puntos, setPuntos}) => {
 
   const { cart, setCart, cartOfCategoryPoints } = useContext(AppContext);
@@ -30,26 +32,32 @@ const CartTotal = ({isDelivery,precioDelivey, lugarDelivery, setPrecioTotal, tot
   return (
     <div className='my-5'>
 
-      <CartTotalItem
-        keyItem='Subtotal'
-        value={`RD$ ${total}`}
-      />
+      <img className='w-100' src={FinCart} alt="" />
 
-      { puntos > 0 
-        ? <CartTotalItem
-            keyItem='Total de puntos'
-            value={`${puntos} Puntos`}
-          />
-        : <CartTotalItem
-            keyItem='Tarifa de servicio'
-            value='RD$ 00.00'
-          />
-      }
-  
-      <CartTotalItem
-        keyItem='Total'
-        value={`RD$ ${total}`}
-      />
+      <div className='px-4'>
+
+        <CartTotalItem
+          keyItem='Subtotal'
+          value={`RD$ ${total}`}
+        />
+
+        { puntos > 0
+          ? <CartTotalItem
+              keyItem='Total de puntos'
+              value={`${puntos} Puntos`}
+            />
+          : <CartTotalItem
+              keyItem='Tarifa de servicio'
+              value='RD$ 00.00'
+            />
+        }
+    
+        <CartTotalItem
+          keyItem='Total'
+          value={`RD$ ${total}`}
+        />
+
+      </div>
 
     </div>
   );

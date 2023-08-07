@@ -23,10 +23,18 @@ import { ToastContainer, toast } from 'react-toastify';
 
 // Swal-Alerts
 import Swal from 'sweetalert2';
+import { useContext } from 'react';
+import { AppContext } from '../../../context/AppContext';
 
 const CreateArticle = () => {
 
   const navigate = useNavigate();
+
+  const { isAdmin } = useContext(AppContext);
+
+  useEffect( () => {
+    if(isAdmin != 'admin') navigate('/view-categories');
+  }, [] );
 
   const [categories, setCategories] = useState(null);
 
@@ -267,164 +275,176 @@ const CreateArticle = () => {
   }
 
   return (
-    <main className='border-0 border-bottom border-top mx-3 col-11 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
+    <main className='border-0 border-bottom border-top mx-3- col-11- col-sm-8 col-md-6 col-lg-6 mx-auto-' style={{}} >
       {/* Header */}
       <Header handleClickAtras={handleClickAtras} />
       {/* <CreateArticleHeader path='/view-articles' /> */}
 
-      <section className='d-flex flex-column gap-4'>
+      <section>
 
-        <div>
-          <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
-          <input className='form-control rounded border-secondary' type="text" style={{height:35}} onChange={handleChangeTitulo}/>
-        </div>
-        <div>
-          <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
-          <textarea className='form-control border-secondary' name="" id="" style={{minHeight:35, maxHeight:200}} onChange={handleChangeSubtitulo}></textarea>
-        </div>
+        <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
 
-        <div>
-          <p className='fs-3 fw-bold m-0 mb-2'>Categoria:</p>
-          <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeCategoria}>
-            <option value="sin categoria">Sin categoria</option>
-            { categories != null 
-              ? categories.map((category)=>(
-                <option key={category.id} value={category.id}>{category.nombre}</option>
-              ))
-              : <option value=""></option>
-            }
-          </select>
-        </div>
-
-        { !complejo ? 
           <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Precio:</p>
-            <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' onChange={handleChangePrecio}/>
+            <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
+            <input className='form-control rounded border-secondary' placeholder='Nombre o titulo del articulo...' type="text" style={{height:35}} onChange={handleChangeTitulo}/>
           </div>
-          : <></>
-        }
 
-        <div>
-          <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
-          <div className='d-flex justify-content-center align-items-center' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
-            <BsCloudUploadFill className='text-success' style={{fontSize:100}} />
+          <div>
+            <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
+            <textarea className='form-control border-secondary' placeholder='Subtitulo o descripcion del articulo...' name="" id="" style={{minHeight:35, maxHeight:200}} onChange={handleChangeSubtitulo}></textarea>
           </div>
-          <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
-        </div>
 
-        <div className='d-flex align-items-center my-2'>
-          <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
-          <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
-            <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
-            <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
-            <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+          <div>
+            <p className='fs-3 fw-bold m-0 mb-2'>Categoria:</p>
+            <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeCategoria}>
+              <option value="sin categoria">Sin categoria</option>
+              { categories != null 
+                ? categories.map((category)=>(
+                  <option key={category.id} value={category.id}>{category.nombre}</option>
+                ))
+                : <option value=""></option>
+              }
+            </select>
           </div>
-        </div>
 
-        { complejo ? 
-          variantes.map((precio, i)=>(
-            // <div className='row' key={i}>
-            //   {/* <GrSubtractCircle className='display-3 col-2' /> */}
-            //   <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/>
-            //   {/* <BsPlusCircle className='display-3 col-2' onClick={handleClickAddPrice}/> */}
-            //   <div className='row col-9 mx-auto'>
-            //     <GrSubtractCircle className='display-3 col-2' />
-            //     <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/>
-            //     <BsPlusCircle className='display-3 col-2' onClick={handleClickAddPrice}/>
-            //   </div>
-            // </div>
-            <div key={i} className="accordion" id='accordionExample'>
-              <div className="accordion-item">
-                <h2  className="accordion-header">
-                  <button  className={`accordion-button accordion-button-${i}`} type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="true" aria-controls="collapseOne">
-                    
-                  </button>
-                </h2>
-                <div id={`collapse${i}`}  className="accordion-collapse collapse show" data-bs-parent='#accordionExample'>
-                  <p className='m-0'>Tamaño del articulo:</p>
-                  <div  className="accordion-body">
-                    <div className='row'>
-                      <input className={`col-8 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamaño...' onChange={(e)=>handleChange(e,i)} />
-                      <input className={`col-4 variante-nombre variante-precio-${i}`} type="text" placeholder='Precio...' />
-                    </div>
+          { !complejo ? 
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Precio:</p>
+              <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' onChange={handleChangePrecio}/>
+            </div>
+            : <></>
+          }
 
-                    {/* Nombre y precio de ingredientes segun el size */}
-                    {/* <p className='m-0 mt-5'>Nombre del ingrediente y precio:</p>
-                    <div id={`variante-nombre-${i}`}>
-                      {variantePrecio.map((variantePrecio, i)=>(
-                        <div key={i} className='row my-2'>
-                          <input className={`col-6 ingrediente-nombre`}  type="text" placeholder='Nombre...' />
-                          <input className='col-6 ingrediente-precio' type="text" placeholder='Precio...' />
-                        </div>
-                      ))}
-                    </div>
-                    <div className=' d-flex justify-content-between mt-4'>
-                      <GrSubtractCircle className='display-6' onClick={handleClickRemovePrice} />
-                      <BsPlusCircle className='display-6' onClick={handleClickAddPrice}/>
-                    </div> */}
-                        
-                    {/* Ingrediente adicional y precio segun el size */}
-                    <p className='m-0 mt-5'>Ingrediente adicional y precio:</p>
-                    <div id={`variante-nombre-${i}`}>
-                      {adicionalesYPrecios.map((variantePrecio, i)=>(
-                        <div key={i} className='row my-2'>
-                          <input className='col-7 adicional-nombre'  type="text" placeholder='Adicional...' />
-                          <input className='col-3 adicional-precio' type="number" placeholder='Precio...' />
-                          <div className="form-check form-switch col-1 d-flex justify-content-center align-items-center">
-                            <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  defaultChecked/>
+          <div>
+            <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
+            <div className='d-flex justify-content-center align-items-center rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
+              <BsCloudUploadFill className='text-success' style={{fontSize:100}} />
+            </div>
+            <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+          </div>
+
+          <div className='d-flex align-items-center my-2'>
+            <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
+            <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
+              <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
+              <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
+              <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+            </div>
+          </div>
+
+          { complejo ? 
+            variantes.map((precio, i)=>(
+              // <div className='row' key={i}>
+              //   {/* <GrSubtractCircle className='display-3 col-2' /> */}
+              //   <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/>
+              //   {/* <BsPlusCircle className='display-3 col-2' onClick={handleClickAddPrice}/> */}
+              //   <div className='row col-9 mx-auto'>
+              //     <GrSubtractCircle className='display-3 col-2' />
+              //     <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/>
+              //     <BsPlusCircle className='display-3 col-2' onClick={handleClickAddPrice}/>
+              //   </div>
+              // </div>
+              <div key={i} className="accordion" id='accordionExample'>
+                <div className="accordion-item">
+                  <h2  className="accordion-header">
+                    <button  className={`accordion-button accordion-button-${i}`} type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="true" aria-controls="collapseOne">
+                      
+                    </button>
+                  </h2>
+                  <div id={`collapse${i}`}  className="accordion-collapse collapse show my-2" data-bs-parent='#accordionExample'>
+                    <div  className="accordion-body">
+                      <p className='mb-3'>Tamaño del articulo:</p>
+                      <div className='row justify-content-between mx-2'>
+                        <input className={`col-8 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamaño...' onChange={(e)=>handleChange(e,i)} />
+                        <input className={`col-3 variante-nombre variante-precio-${i}`} type="number" placeholder='Precio...' />
+                      </div>
+
+                      {/* Nombre y precio de ingredientes segun el size */}
+                      {/* <p className='m-0 mt-5'>Nombre del ingrediente y precio:</p>
+                      <div id={`variante-nombre-${i}`}>
+                        {variantePrecio.map((variantePrecio, i)=>(
+                          <div key={i} className='row my-2'>
+                            <input className={`col-6 ingrediente-nombre`}  type="text" placeholder='Nombre...' />
+                            <input className='col-6 ingrediente-precio' type="text" placeholder='Precio...' />
                           </div>
-                          {/* <input className='col-2 adicional-precio' type="text" placeholder='Precio...' /> */}
-                        </div>
-                      ))}
+                        ))}
+                      </div>
+                      <div className=' d-flex justify-content-between mt-4'>
+                        <GrSubtractCircle className='display-6' onClick={handleClickRemovePrice} />
+                        <BsPlusCircle className='display-6' onClick={handleClickAddPrice}/>
+                      </div> */}
+                          
+                      {/* Ingrediente adicional y precio segun el size */}
+                      <p className='mt-5 mb-3'>Ingrediente adicional y precio:</p>
+                      <div id={`variante-nombre-${i}`}>
+                        {adicionalesYPrecios.map((variantePrecio, i)=>(
+                          <div key={i} className='row justify-content-between m-2'>
+                            <input className='col-6 adicional-nombre'  type="text" placeholder='Adicional...' />
+                            <input className='col-3 adicional-precio' type="number" placeholder='Precio...' />
+                            <div className="form-check form-switch col-1 d-flex justify-content-center align-items-center">
+                              <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  defaultChecked/>
+                            </div>
+                            {/* <input className='col-2 adicional-precio' type="text" placeholder='Precio...' /> */}
+                          </div>
+                        ))}
+                      </div>
+                      <div className=' d-flex justify-content-end gap-3 mt-4'>
+                        <GrSubtractCircle className='display-6' onClick={handleClickRemovePriceAdicional} />
+                        <BsPlusCircle className='display-6' onClick={handleClickAddPriceAdicional}/>
+                      </div>
+                      {/* <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. */}
                     </div>
-                    <div className=' d-flex justify-content-between mt-4'>
-                      <GrSubtractCircle className='display-6' onClick={handleClickRemovePriceAdicional} />
-                      <BsPlusCircle className='display-6' onClick={handleClickAddPriceAdicional}/>
-                    </div>
-                    {/* <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. */}
                   </div>
                 </div>
               </div>
+            ))
+            : <></>
+          }
+
+          { complejo ?
+            <div className='d-flex justify-content-end gap-3' >
+                <GrSubtractCircle className='display-3' onClick={handleClickRemoveVariante} />
+                {/* <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/> */}
+                <BsPlusCircle className='display-3' onClick={handleClickAddVariante}/>
+                {/* <div className='row col-9 mx-auto'>
+                  <GrSubtractCircle className='display-3 col-2' />
+                  <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/>
+                  <BsPlusCircle className='display-3 col-2' onClick={handleClickAddPrice}/>
+                </div> */}
+              </div> 
+            : <></>
+          }
+
+          {/* Indicar si deseas que este articulo se use para una mitad de otro */}
+          { complejo ? 
+            <div className="form-check form-switch mb-2">
+              <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" onChange={handleChangeIsMiddle} />
+              <label className="form-check-label" htmlFor="handleChangeChecked">Deseas que este articulo se use para una mitad de otro articulo ?</label>
             </div>
-          ))
-          : <></>
-        }
+            : <></>
+          }
 
-        { complejo ?
-          <div className='d-flex justify-content-between' >
-              <GrSubtractCircle className='display-3' onClick={handleClickRemoveVariante} />
-              {/* <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/> */}
-              <BsPlusCircle className='display-3' onClick={handleClickAddVariante}/>
-              {/* <div className='row col-9 mx-auto'>
-                <GrSubtractCircle className='display-3 col-2' />
-                <input className='col-8 border border-secondary rounded' type="text" placeholder='Precio 1'/>
-                <BsPlusCircle className='display-3 col-2' onClick={handleClickAddPrice}/>
-              </div> */}
-            </div> 
-          : <></>
-        }
-
-        {/* Indicar si deseas que este articulo se use para una mitad de otro */}
-        { complejo ? 
-          <div className="form-check form-switch">
-            <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" onChange={handleChangeIsMiddle} />
-            <label className="form-check-label" htmlFor="handleChangeChecked">Deseas que este articulo se use para una mitad de otro articulo ?</label>
+          {/* Cambiar complejidad */}
+          <div className="form-check form-switch mb-2">
+            <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" onChange={handleChangeChecked} />
+            <label className="form-check-label" htmlFor="handleChangeChecked">Deseas que este articulo sea un articulo complejo ?</label>
           </div>
-          : <></>
-        }
 
-        {/* Cambiar complejidad */}
-        <div className="form-check form-switch">
-          <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" onChange={handleChangeChecked} />
-          <label className="form-check-label" htmlFor="handleChangeChecked">Deseas que este articulo sea un articulo complejo ?</label>
+
+          {/* <input className='btn btn-success fs-3 position-absolute bottom-0 start-50 w-100 translate-middle mb-4 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/> */}
+          {/* { !showBottonToBack
+            ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
+            : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
+          } */}
+
         </div>
 
-
-        {/* <input className='btn btn-success fs-3 position-absolute bottom-0 start-50 w-100 translate-middle mb-4 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/> */}
-        { !showBottonToBack
-          ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
-          : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
-        }
+        <div className='bg-white position-fixed vw-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+          { !showBottonToBack
+            ? <input className='btn btn-success form-control fs-3 rounded-3' type="button" value='Crear Articulo' onClick={handleClickCrearArticulo}/>
+            : <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickAtras}>Salir</button>
+          }
+        </div>
 
       </section>
       <ToastContainer />

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 // React-Icons
 
 // Firebase
-import { getCategories } from '../../../firebase/firebaseFirestore';
+import { auth, getCategories, obtenerInfoApp } from '../../../firebase/firebaseFirestore';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -14,12 +14,102 @@ import Header from './components/Header';
 // Context
 import { AppContext } from '../../../context/AppContext';
 import { ToastContainer } from 'react-toastify';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const ViewCategories = () => {
   
-  const { setCategorySelected } = useContext(AppContext);
+  const { setCategorySelected, appInfo, isAdmin, setEmail, setInfoPoints, setAppInfo, setIsAdmin } = useContext(AppContext);
 
   const navigate = useNavigate();
+
+  // useEffect( () => {
+  //   if(appInfo == null){
+  //     // logear usuario automaticamente
+  //     onAuthStateChanged(auth, (user) => {
+  //       if(user == null) {
+  //         navigate('/home'); 
+  //       }else {
+  //         getData(user.email);
+  //         console.log(user.email);
+  //         setEmail(user.email);
+  //       }
+  //     });
+  //     // obtener info de la app y compruebo si es admin
+  //     const getData = async (emailUser) => {
+  //       let status = 'customer';
+  //       const appInfo = await obtenerInfoApp();
+  //       if(appInfo == 'no hay datos de esta app'){
+  //         navigate('/home'); 
+  //         return
+  //       }
+  //       console.log(appInfo);
+  //       setInfoPoints(appInfo.infoPoints);
+  //       // const pedidosClient = await getPedidosByClient( emailUser );
+  //       // setClientOrders(pedidosClient);
+  //       if(appInfo.nombre == undefined){
+  //         // navigate('/registro-like-admin/details-app');
+  //         alert('No hay datos de la app');
+  //         navigate('/home');
+  //         return; 
+  //       } 
+  //       setAppInfo(appInfo);
+  //       if(appInfo.admin == emailUser) status = 'admin';
+  //       else {
+  //         if(appInfo.semisAdmins != undefined){
+  //           appInfo.semisAdmins.forEach( (semiAdmin) => {
+  //             if(semiAdmin == emailUser) {
+  //               status = 'semi-admin';
+  //             }else status = 'customer';
+  //           });
+  //         }
+  //       }
+  //       console.log(isAdmin)
+  //       if(status != 'admin') navigate('/home');
+  //     }
+  //   }
+  // }, [] );
+
+  useEffect( () => {
+    if(isAdmin == ''){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null) {
+          navigate('/home'); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        let status = 'customer';
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/home'); 
+          return
+        }
+        if(appInfo.nombre == undefined){
+          alert('No hay datos de la app');
+          navigate('/home');
+          return; 
+        } 
+        if(appInfo.admin == emailUser) status = 'admin';
+        else {
+          if(appInfo.semisAdmins != undefined){
+            appInfo.semisAdmins.forEach( (semiAdmin) => {
+              if(semiAdmin == emailUser) status = 'semi-admin';
+              else status = 'customer';
+            });
+          }
+        }
+        setIsAdmin(status);
+        if(status != 'admin') navigate('/home');
+      }
+    }
+  }, [] );
+
+  
 
   // Effects
   useEffect( () => {
@@ -46,23 +136,27 @@ const ViewCategories = () => {
 
   if(categories != null){
     return (
-      <main className='border-0 mx-3' >
+      <main className='border-0 mx-3-'>
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} />
   
-        <section className='d-flex flex-column gap-4'>
+        <section>
   
-          { categories != null 
-            ? categories.length > 0 
-              ? categories.map((category)=>(
-                <div className='border-bottom py-2' key={category.id} onClick={()=>handleClickCategory(category)}>
-                  <p className='m-0 fs-1 fw-medium'>{category.position} - {category.nombre}</p>
-                </div>
-              ))
-              : <p className='m-0 fs-1 fw-medium text-center'>No hay categorias</p>
-          : <></>}
+          <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height: '80vh'}}>
+            { categories != null 
+              ? categories.length > 0 
+                ? categories.map((category)=>(
+                  <div className='border-bottom py-2' key={category.id} onClick={()=>handleClickCategory(category)}>
+                    <p className='m-0 fs-1 fw-medium'>{category.position} - {category.nombre}</p>
+                  </div>
+                ))
+                : <p className='m-0 fs-1 fw-medium text-center'>No hay categorias</p>
+            : <></>}
+          </div>
   
-          <button className='btn form-control btn-success fs-3 position-fixed bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearCategoria}>Crear Categoria</button>
+          <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            <button className='btn form-control btn-success fs-3 rounded-3' onClick={handleClickCrearCategoria}>Crear Categoria</button>
+          </div>
   
         </section>
         <ToastContainer />

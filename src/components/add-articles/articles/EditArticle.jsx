@@ -154,7 +154,7 @@ const EditArticle = () => {
   const handleClickImg = () => document.querySelector('#select-img').click();  
   const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
 
-  const [position, setPosition] = useState(articleSelected.position != undefined ? articleSelected.position : 1);
+  const [position, setPosition] = useState(articleSelected != null ? articleSelected.position : 1);
   const handleClickSubtractPosition = () => {
     if(position == 1) return;
     setPosition(position - 1);
@@ -371,134 +371,147 @@ const EditArticle = () => {
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} path='/view-articles' />
   
-        <section className='d-flex flex-column gap-4'>
+        <section className=''>
   
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
-            <input className='form-control rounded border-secondary' type="text" style={{height:35}} value={titulo} onChange={handleChangeTitulo}/>
-          </div>
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
-            <textarea className='form-control border-secondary' name="" id="" style={{minHeight:35, maxHeight:200}} value={subtitulo} onChange={handleChangeSubtitulo}></textarea>
-          </div>
-  
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Categoria:</p>
-            <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeCategoria}>
-              <option value={categoryArticle?.id}>{categoryArticle?.nombre}</option>
-              
-              { categories != null 
-                ? categories.map((category)=>(
-                  <option key={category.id} value={category.id}>{category.nombre}</option>
-                ))
-                : <option value=""></option>
-              }
-            </select>
-          </div>
-  
-          { !complejo ? 
-            <div>
-              <p className='fs-3 fw-bold m-0 mb-2'>Precio:</p>
-              <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={precio} onChange={handleChangePrecio}/>
-            </div>
-            : <></>
-          }
-  
-          <div>
-            <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
-            <div className='d-flex justify-content-center align-items-center p-2 rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
-              { imgPath == null ?
-                <div className="spinner-border text-success" style={{height:70, width:70}} role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                : <img src={imgPath} className='w-100 h-100 rounded-5 object-fit-cover' />
-              }
-            </div>
-            <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
-          </div>
+          <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
 
-          <div className='d-flex align-items-center my-2'>
-            <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
-            <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
-              <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
-              <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
-              <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
+              <input className='form-control rounded border-secondary' placeholder='Nombre o titulo del articulo...' type="text" style={{height:35}} value={titulo} onChange={handleChangeTitulo}/>
             </div>
-          </div>
-  
-          { complejo ? 
-            variantes.map((precio, i)=>(
-              <div key={i} className="accordion" id='accordionExample'>
-                <div className="accordion-item">
-                  <h2  className="accordion-header">
-                    <button  className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="true" aria-controls="collapseOne">
-                      Accordion Item #1
-                    </button>
-                  </h2>
-                  <div id={`collapse${i}`}  className="accordion-collapse collapse show" data-bs-parent='#accordionExample'>
-                    <p className='m-0'>Tamaño del articulo:</p>
-                    <div  className="accordion-body">
-                      <div className='row'>
-                        <input className={`col-8 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamaño...' />
-                        <input className={`col-0 variante-nombre variante-precio-${i}`} type="text" placeholder='Precio...' />
-                      </div>
-                          
-                      {/* Ingrediente adicional y precio segun el size */}
-                      <p className='m-0 mt-5'>Ingrediente adicional y precio:</p>
-                      <div id={`variante-nombre-${i}`}>
-                        {adicionalesYPrecios.map((variantePrecio, i)=>(
-                          <div key={i} className='row my-2'>
-                            <input className={`col-6 adicional-nombre adicional-nombre-${i}`}  type="text" placeholder='Nombre...' />
-                            <input className={`col-4 adicional-precio adicional-precio-${i}`} type="text" placeholder='Precio...' />
-                            <div className="form-check form-switch col-1 d-flex justify-content-center align-items-center">
-                              <input className={`form-check-input adicional-isMiddle adicional-isMiddle-${i}`} type="checkbox" role="switch" id="flexSwitchCheckChecked"  />
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Subtitulo:</p>
+              <textarea className='form-control border-secondary' placeholder='Subtitulo o descripcion del articulo...' name="" id="" style={{minHeight:35, maxHeight:200}} value={subtitulo} onChange={handleChangeSubtitulo}></textarea>
+            </div>
+    
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Categoria:</p>
+              <select className='form-control border-secondary' style={{height:35}} onChange={handleChangeCategoria}>
+                <option value={categoryArticle?.id}>{categoryArticle?.nombre}</option>
+                
+                { categories != null 
+                  ? categories.map((category)=>(
+                    <option key={category.id} value={category.id}>{category.nombre}</option>
+                  ))
+                  : <option value=""></option>
+                }
+              </select>
+            </div>
+    
+            { !complejo ? 
+              <div>
+                <p className='fs-3 fw-bold m-0 mb-2'>Precio:</p>
+                <input className='form-control rounded border-secondary' type="number" style={{height:35}} placeholder='Precio del producto' value={precio} onChange={handleChangePrecio}/>
+              </div>
+              : <></>
+            }
+    
+            <div>
+              <p className='fs-3 fw-bold m-0 mb-2'>Imagen:</p>
+              <div className='d-flex justify-content-center align-items-center p-2 rounded-5' style={{width:'100%', height:200, border: 'dashed green 2px'}} onClick={handleClickImg}>
+                { imgPath == null ?
+                  <div className="spinner-border text-success" style={{height:70, width:70}} role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                  : <img src={imgPath} className='w-100 h-100 rounded-5 object-fit-cover' />
+                }
+              </div>
+              <input id='select-img' accept='image/*' type="file" hidden onChange={handleChangeSelectImg} />
+            </div>
+
+            <div className='d-flex align-items-center my-2'>
+              <p className='fs-3 fw-bold m-0 w-50'>Posicion:</p>
+              <div className='w-50 d-flex gap-3 align-items-center justify-content-center'>
+                <GrSubtractCircle className='display-6' onClick={handleClickSubtractPosition} />
+                <p className='mb-2 display-4 fw-medium text-center'>{position}</p>
+                <BsPlusCircle className='display-6' onClick={handleClickAddPosition} />
+              </div>
+            </div>
+    
+            { complejo ? 
+              variantes.map((precio, i)=>(
+                <div key={i} className="accordion" id='accordionExample'>
+                  <div className="accordion-item">
+                    <h2  className="accordion-header">
+                      <button  className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="true" aria-controls="collapseOne">
+                        Accordion Item #1
+                      </button>
+                    </h2>
+                    <div id={`collapse${i}`}  className="accordion-collapse collapse show my-2" data-bs-parent='#accordionExample'>
+                      <div  className="accordion-body">
+                        <p className='mb-3'>Tamaño del articulo:</p>
+                        <div className='row justify-content-between mx-2'>
+                          <input className={`col-8 variante-nombre variante-nombre-${i}`} type="text" placeholder='Tamaño...' />
+                          <input className={`col-3 variante-nombre variante-precio-${i}`} type="number" placeholder='Precio...' />
+                        </div>
+                            
+                        {/* Ingrediente adicional y precio segun el size */}
+                        <p className='mt-5 mb-3'>Ingrediente adicional y precio:</p>
+                        <div id={`variante-nombre-${i}`}>
+                          {adicionalesYPrecios.map((variantePrecio, i)=>(
+                            <div key={i} className='row justify-content-between m-2'>
+                              <input className={`col-6 adicional-nombre adicional-nombre-${i}`}  type="text" placeholder='Nombre...' />
+                              <input className={`col-3 adicional-precio adicional-precio-${i}`} type="text" placeholder='Precio...' />
+                              <div className="form-check form-switch col-1 d-flex justify-content-center align-items-center">
+                                <input className={`form-check-input adicional-isMiddle adicional-isMiddle-${i}`} type="checkbox" role="switch" id="flexSwitchCheckChecked"  />
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                        <div className=' d-flex justify-content-end gap-3 mt-4'>
+                          <GrSubtractCircle className='display-6' onClick={handleClickRemovePriceAdicional} />
+                          <BsPlusCircle className='display-6' onClick={handleClickAddPriceAdicional}/>
+                        </div>
+                        {/* <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. */}
                       </div>
-                      <div className=' d-flex justify-content-between mt-4'>
-                        <GrSubtractCircle className='display-6' onClick={handleClickRemovePriceAdicional} />
-                        <BsPlusCircle className='display-6' onClick={handleClickAddPriceAdicional}/>
-                      </div>
-                      {/* <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. */}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
-            : <></>
-          }
-  
-          { complejo ?
-              <div className='d-flex justify-content-between' >
-                <GrSubtractCircle className='display-3' onClick={handleClickRemoveVariante} />
-                <BsPlusCircle className='display-3' onClick={handleClickAddVariante}/>
-              </div> 
-            : <></>
-          }
+              ))
+              : <></>
+            }
+    
+            { complejo ?
+                <div className='d-flex justify-content-end gap-3' >
+                  <GrSubtractCircle className='display-3' onClick={handleClickRemoveVariante} />
+                  <BsPlusCircle className='display-3' onClick={handleClickAddVariante}/>
+                </div> 
+              : <></>
+            }
 
-          {/* Indicar si deseas que este articulo se use para una mitad de otro */}
-          { complejo
-            ? <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked1" checked={isMiddle} onChange={handleChangeIsMiddle} />
-                <label className="form-check-label" htmlFor="handleChangeChecked1">Deseas que este articulo se use para una mitad de otro articulo ?</label>
-              </div>
-          : <></>
-          }
-  
-          {/* Cambiar complejidad */}
-          <div className="form-check form-switch">
-            <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" checked={complejo} readOnly />
-            <label className="form-check-label" htmlFor="handleChangeChecked">No se puede cambiar la complejidad de un articulo.</label>
+            {/* Indicar si deseas que este articulo se use para una mitad de otro */}
+            { complejo
+              ? <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked1" checked={isMiddle} onChange={handleChangeIsMiddle} />
+                  <label className="form-check-label" htmlFor="handleChangeChecked1">Deseas que este articulo se use para una mitad de otro articulo ?</label>
+                </div>
+            : <></>
+            }
+    
+            {/* Cambiar complejidad */}
+            <div className="form-check form-switch">
+              <input className="form-check-input" type="checkbox" role="switch" id="handleChangeChecked" checked={complejo} readOnly />
+              <label className="form-check-label" htmlFor="handleChangeChecked">No se puede cambiar la complejidad de un articulo.</label>
+            </div>
+    
+            <div className='d-flex justify-content-center'>
+              <MdDeleteForever className='text-danger' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />
+            </div>
+
           </div>
   
-          <MdDeleteForever className='text-danger mt-0' style={{fontSize: 80}} onClick={handleClickDeleteArticle} />
-  
           
-          { !showBottonToBack
+          {/* { !showBottonToBack
             ? <input className='btn btn-success fs-3 rounded-0' type="button" value='Actualizar Articulo' onClick={handleClickActualizarArticulo}/>
             : <button className='btn btn-success fs-3 rounded-0' onClick={handleClickAtras}>Salir</button>
-          }
+          } */}
+
+          <div className='bg-white position-fixed vw-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            { !showBottonToBack
+              ? <input className='btn btn-success form-control fs-3 rounded-3' type="button" value='Actualizar Articulo' onClick={handleClickActualizarArticulo}/>
+              : <button className='btn btn-success form-control fs-3 rounded-3' onClick={handleClickAtras}>Salir</button>
+            }
+          </div>
   
         </section>
         <ToastContainer />

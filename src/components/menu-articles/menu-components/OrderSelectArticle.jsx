@@ -228,7 +228,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
           }
           
 
-          <p className='m-0 fs-4 fw-normal overflow-scroll' style={{maxHeight:'150px'}}>{articleSelected.subtitulo}</p>
+          <p className='m-0 fs-4 fw-normal overflow-scroll' style={{maxHeight: articleSelected.complex ?'150px': ''}}>{articleSelected.subtitulo}</p>
 
           { articleSelected.complex ?
             <div className="accordion my-4" id="accordionExample">
@@ -306,9 +306,9 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
             <p className='mb-2 display-4 fw-medium text-center'>{cantidadArticulo}</p>
             <BsPlusCircle className='display-6' onClick={handleClickAddCantidadArticulo} />
           </div>
-          <button className={`${!categorySelected.isCategoryOfPoints ? 'py-3' : 'py-0'}  btn ${color1.btn} d-flex justify-content-between align-items-center col-7`} onClick={handleClickAgregar}>
-            <p className='m-0 fs-3'>Agregar</p>
-            <p className='m-0 fs-3'>{!categorySelected.isCategoryOfPoints ? `${valorVariosArticulos} RD$` : `${valorPuntosVariosArticulos} puntos` } </p>
+          <button className={`${!categorySelected.isCategoryOfPoints ? 'py-3' : 'py-3'}  btn ${color1.btn} d-flex justify-content-between align-items-center col-7`} onClick={handleClickAgregar}>
+            <p className={`m-0 ${!categorySelected.isCategoryOfPoints ? 'fs-3' : 'fs-4'}`}>Agregar</p>
+            <p className={`m-0 ${!categorySelected.isCategoryOfPoints ? 'fs-3' : 'fs-4'}`}>{!categorySelected.isCategoryOfPoints ? `${valorVariosArticulos} RD$` : `${valorPuntosVariosArticulos} puntos` } </p>
           </button>
         </footer>
 

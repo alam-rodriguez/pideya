@@ -13,7 +13,7 @@ const Header = ({handleClickAtras}) => {
   const handleClickBack = () => handleClickAtras();
 
   return (
-    <header className='d-flex justify-content-between align-items-center my-4 mx-2'>
+    <header className='d-flex justify-content-between align-items-center my-4 mx-3'>
       <IoIosArrowBack className='display-4' onClick={handleClickBack} />
       { appInfo != null 
         ? <p className='m-0 fs-1 fw-bold'>{appInfo.nombre}</p>

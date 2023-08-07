@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -8,14 +8,58 @@ import Header from './estadisticas-app-components/Header';
 import ItemTableEstadisticas from './estadisticas-app-components/ItemTableEstadisticas';
 
 // Firebase
-import { getEveryStatistics } from '../../../firebase/firebaseFirestore';
+import { auth, getEveryStatistics, obtenerInfoApp } from '../../../firebase/firebaseFirestore';
 
 // Swal-alerts
 import Swal from 'sweetalert2';
+import { onAuthStateChanged } from 'firebase/auth';
+import { AppContext } from '../../../context/AppContext';
 
 const EstadisticasApp = () => {
 
   const navigate = useNavigate();
+
+  const { isAdmin, setEmail, setIsAdmin} = useContext(AppContext);
+
+  useEffect( () => {
+    if(isAdmin == ''){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null) {
+          navigate('/home'); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        let status = 'customer';
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/home'); 
+          return
+        }
+        if(appInfo.nombre == undefined){
+          alert('No hay datos de la app');
+          navigate('/home');
+          return; 
+        } 
+        if(appInfo.admin == emailUser) status = 'admin';
+        else {
+          if(appInfo.semisAdmins != undefined){
+            appInfo.semisAdmins.forEach( (semiAdmin) => {
+              if(semiAdmin == emailUser) status = 'semi-admin';
+              else status = 'customer';
+            });
+          }
+        }
+        setIsAdmin(status);
+        if(status != 'admin') navigate('/home');
+      }
+    }
+  }, [] );
 
   const alert = (text) => Swal.fire({
     icon: 'info',
@@ -182,9 +226,9 @@ const EstadisticasApp = () => {
   const handleClickAtras = () => navigate('/admin-options');
 
   return (
-    <main>
+    <main className='container'>
       <Header handleClickAtras={handleClickAtras}/>
-      <section className='mx-3'>
+      <section className='mx-3-'>
 
         <div className='row'>
 

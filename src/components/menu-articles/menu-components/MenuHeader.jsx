@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 // React Icons
 import { IoIosArrowBack } from 'react-icons/io'
@@ -10,10 +10,13 @@ import { useNavigate } from 'react-router-dom';
 // Context
 import { AppContext } from '../../../context/AppContext';
 
-const MenuHeader = ({viewMenu, setViewMenu, setArticlesOfCategorySelected}) => {
+// Firebase 
+import { getEstadisticas } from '../../../firebase/firebaseFirestore';
+
+const MenuHeader = ({viewSectionInHeader, text, viewMenu, setViewMenu, setArticlesOfCategorySelected}) => {
   const navigate = useNavigate();
 
-  const {setCategorySelected, setArticleSelected, amountPoints, setAmountPoints} = useContext(AppContext);
+  const {email, infoPointsUser, setCategorySelected, setArticleSelected, amountPoints, setAmountPoints, setInfoPointsUser} = useContext(AppContext);
 
   const handleClickBack = () => {
     setArticlesOfCategorySelected(null);
@@ -25,11 +28,28 @@ const MenuHeader = ({viewMenu, setViewMenu, setArticlesOfCategorySelected}) => {
     }
   }
 
+  // Obtener puntos del usuario
+  useEffect( () => {
+		if(email != null && infoPointsUser == null){
+			const f = async () => {
+				// const infoUser = await getPointsUser(email);
+				const pointsUser = await getEstadisticas(email);
+				if(pointsUser != 'no estadisticas' && pointsUser != false) {
+					setAmountPoints( Math.round(pointsUser.puntosRestantes) );
+					setInfoPointsUser(pointsUser);
+				}
+				console.log(pointsUser);
+			}
+			f();
+		}
+	}, [] );
+
   return (
-    <header className='d-flex justify-content-between py-4 '>
-      <IoIosArrowBack className='display-4 ' onClick={handleClickBack} /> 
+    <header className='d-flex justify-content-between py-4 position-relative' style={{height:'10vh'}}>
+      <IoIosArrowBack className='display-4' onClick={handleClickBack} /> 
+      <p className='fs-5 w-100 fw-medium position-absolute start-50 top-50 translate-middle text-center'>{viewSectionInHeader ? text : null}</p>
       <div className='d-flex me-4 align-items-center gap-2'>
-        <p className='m-0 fs-4'>{amountPoints}</p>
+        <p className='m-0 fw-medium fs-4'>{amountPoints}</p>
         <FaPizzaSlice className='fs-5' />
       </div>
     </header>

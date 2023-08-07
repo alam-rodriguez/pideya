@@ -45,7 +45,7 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
   const handleChangeComentario = (e) => setComentario(e.target.value);
 
   return (
-    <div className='border-0 border-bottom border-black '>
+    <div className='border-0 border-bottom- border-black '>
 
       <p className='fw-bold fs-3 my-5'>Por favor conplete la informacion y no cierre la app en el proceso!</p>
       <p className='fw-bold fs-3 my-5'>Precios con impuestos incluidos</p>

@@ -23,6 +23,8 @@ const SeeOrders = () => {
 
   const [dateToSearch, setDateToSearch] = useState('');
 
+  const [hayPedidos, setHayPedidos] = useState(false);
+
   const fecha = () => {
     const day = new Date();
     const hoy = `${day.getDate()}/${day.getMonth() + 1}/${day.getFullYear()}`;
@@ -36,12 +38,14 @@ const SeeOrders = () => {
     
     const orders = await orderOfToday(dateToSearch);
     
-    if(orders == 'no-hay-pedidos' ) {
+    if(orders == 'no-hay-pedidos') {
+      setHayPedidos(false);
       setOrders([]);
       return
     }
   
     if(orders != null && orders != 'no-hay-pedidos' && !viewSaved){
+      setHayPedidos(true);
       let res = [];
       orders.forEach( (order) => {
         if(!order.wasView){
@@ -59,6 +63,7 @@ const SeeOrders = () => {
     }
 
     if(orders != null && orders != 'no-hay-pedidos' && viewSaved) {
+      setHayPedidos(true);
       orders.sort((a, b) => parseFloat(`${b.horaPedido.hora}.${b.horaPedido.minuto}`) -  parseFloat(`${a.horaPedido.hora}.${a.horaPedido.minuto}`));
       setOrders(orders);
       return;
@@ -112,13 +117,12 @@ const SeeOrders = () => {
     setDateToSearch(hoy);
   }
 
-  const handleChangeSeeGuardados = (e) => {
-    setviewSaved(e.target.checked);
-    console.log(e.target.checked);
-  }
+  const handleChangeSeeGuardados = (e) => setviewSaved(e.target.checked);
+    
+  
 
   return (
-    <main className='overflow-hidden'>
+    <main className='overflow-scroll vh-100'>
       <Header />
 
       <section>
@@ -134,7 +138,7 @@ const SeeOrders = () => {
 
         { 
           (orders != null )
-            ? orders != 'no-hay-pedidos' && orders.length > 0 ?  
+            ? orders != 'no-hay-pedidos' && orders.length > 0 ?
               orders.map((orden)=>{
                 let total = 0;
                 orden.pedido.map( (item) => {
@@ -178,8 +182,6 @@ const SeeOrders = () => {
                         : <></>
                       }
 
-                      
-
                     </div>
 
                     <div className='d-flex justify-content-between border-top border-success p-3'>
@@ -190,10 +192,10 @@ const SeeOrders = () => {
                   </div>
                 );
               })
-            : (!viewSaved )
-              ? <p>Todos los pedidos estan guardados</p> 
-              : <p>No hay ningun pedido aun</p> 
-          : <p>Cargando pedidos...</p> 
+            : (!viewSaved && hayPedidos)
+              ? <p className='text-center fs-4 mt-5 fw-medium'>Todos los pedidos estan guardados.</p> 
+              : <p className='text-center fs-4 mt-5 fw-medium'>No hay ningun pedido aun.</p> 
+          : <p className='text-center fs-4 mt-5 fw-medium'>Cargando pedidos...</p> 
         }
 
       </section>
@@ -201,7 +203,7 @@ const SeeOrders = () => {
   )
 }
 
-export default SeeOrders
+export default SeeOrders;
 
 
 

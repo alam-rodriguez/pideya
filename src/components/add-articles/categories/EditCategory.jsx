@@ -62,7 +62,7 @@ const EditCategory = () => {
   const handleClickImg = () => document.querySelector('#select-img').click();
   const handleChangeSelectImg = (e) => setImgCategory(e.target.files[0]);
 
-  const [position, setPosition] = useState(categorySelected.position != undefined ? categorySelected.position : 1);
+  const [position, setPosition] = useState(categorySelected != null ? categorySelected.position : 1);
   const handleClickSubtractPosition = () => {
     if(position == 1) return;
     setPosition(position - 1);
@@ -175,8 +175,8 @@ const EditCategory = () => {
         <Header handleClickAtras={handleClickAtras} />
         {/* <Header path='/view-categories' whatReset='categorySelect' /> */}
   
-        <div className='my-5 mx-3'>
-          <div className='row mx-auto'>
+        <div className='mt-3 mb-5 mx-3-'>
+          <div className='row mx-auto gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
 
             <div>
               <p className='fs-3 fw-bold m-0 mb-2'>Titulo:</p>
@@ -229,14 +229,21 @@ const EditCategory = () => {
               <label className="form-check-label" htmlFor="handleChangeCheckedViewInMenu">Deseas que esta categoria se muestre en el menu de la app ?</label>
             </div>
 
-            <MdDeleteForever className='text-danger mt-4' style={{fontSize: 80}} onClick={handleClickDeleteCategory} />
+            <MdDeleteForever className='text-danger' style={{fontSize: 80}} onClick={handleClickDeleteCategory} />
   
           </div>
 
-          { !showBottonToBack 
+          {/* { !showBottonToBack 
             ? <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickActualizarCategory}>Actualizar Categoria</button>
             : <button className='btn form-control btn-success mt-5 p-2 fs-3' onClick={handleClickAtras}>Salir</button>
-          }
+          } */}
+
+          <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            { !showBottonToBack 
+              ? <button className='btn form-control btn-success fs-3' onClick={handleClickActualizarCategory}>Actualizar Categoria</button>
+              : <button className='btn form-control btn-success fs-3' onClick={handleClickAtras}>Salir</button>
+            }
+          </div>
           
         </div>
         <ToastContainer />

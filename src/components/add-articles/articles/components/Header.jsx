@@ -34,14 +34,14 @@ const Header = ({handleClickAtras, filter, allCategories, setCategorySelected}) 
     <header className='d-flex justify-content-between align-items-center my-4 mx-2'>
       <IoIosArrowBack className='display-4' onClick={handleClickBack} />
       { filter ? 
-        <select class="form-select w-75" aria-label="Default select example" onChange={handleChangeCategorySelected}>
+        <select className="form-select w-75" aria-label="Default select example" onChange={handleChangeCategorySelected}>
           { categorySelected != 'Todos los articulos' && categorySelected != null 
             ? <option value="Todos los articulos">Todos los articulos</option>
             : <></>
           }
-          <option value={categorySelected} selected>{categoryName}</option>
+          <option value={categorySelected} defaultValue>{categoryName}</option>
           {allCategories.map( (categoria) => ( 
-            <option value={categoria.id}>{categoria.nombre}</option> 
+            <option value={categoria.id} key={categoria.id}>{categoria.nombre}</option> 
           ))}
         </select>
         : appInfo != null 

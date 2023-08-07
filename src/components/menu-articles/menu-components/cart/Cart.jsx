@@ -508,19 +508,23 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
       {/* Header del cart */}
       <CartHeader handleClickBack={handleClickBack} />
 
-      <section className='w-100 vh-100 overflow-y-scroll px-4 pt-5' style={{paddingBottom:70}}>
+      <section className='w-100 vh-100 overflow-y-scroll pt-5' style={{paddingBottom:70}}>
 
-        {/* Info Deal */}
-        <CartInfoDeal setMetodoPago={setMetodoPago} setHoraQuierePedido={setHoraQuierePedido} />
+        <div className='px-4'>
 
-        {/* Articles view */}
-        <CartArticlesView handleClickBack={handleClickBack} />
+          {/* Info Deal */}
+          <CartInfoDeal setMetodoPago={setMetodoPago} setHoraQuierePedido={setHoraQuierePedido} />
 
-        {/* Btn para ir a menu */}
-        <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 my-5`} onClick={handleClickBack}>Agregar mas Articulo</button>
+          {/* Articles view */}
+          <CartArticlesView handleClickBack={handleClickBack} />
 
-        {/* Info Client */}
-        <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
+          {/* Btn para ir a menu */}
+          <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 my-5`} onClick={handleClickBack}>Agregar mas Articulo</button>
+
+          {/* Info Client */}
+          <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
+
+        </div>
 
         {/* Totales */}
         <CartTotal isDelivery={entrega} precioDelivey={lugarDelivery.costo} lugarDelivery={lugarDelivery} setPrecioTotal={setPrecioTotal} total={total} setTotal={setTotal} puntos={puntos} setPuntos={setPuntos} />

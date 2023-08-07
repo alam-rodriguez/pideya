@@ -25,7 +25,7 @@ const AppContextProvider = ({children}) => {
 
   const [viewMenu, setViewMenu] = useState(false);
 
-  const [isAdmin, setIsAdmin] = useState('customer');
+  const [isAdmin, setIsAdmin] = useState('');
 
   const [email, setEmail] = useState(null);
 

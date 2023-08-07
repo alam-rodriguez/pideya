@@ -30,7 +30,7 @@ const ViewArticlesPuntos = () => {
   useEffect( () => {
     const f = async () => { 
       const res = await getArticlesCategoryPoints(categorySelected.id);
-      console.log(res)
+      res.sort( (a, b) => a.position - b.position);
       setArticles(res);
     }
     f();
@@ -48,23 +48,29 @@ const ViewArticlesPuntos = () => {
 
   if(articles != null){
     return (
-      <main className='border-0 mx-3' >
+      <main className='border-0' >
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} />
   
-        <section className='d-flex flex-column gap-4'>
+        <section className=''>
   
-          { articles.length > 0 
-            ? articles.map((article)=>(
-              <div className='border-bottom py-3' key={article.id} onClick={ ()=>handleClickArticle(article) } >
-                <p className='m-0 fs-1 fw-medium'>{article.titulo}</p>
-              </div>
-            ))
-          : <p className='m-0 text-center fs-3 fw-medium mt-5'>No hay ningun articulo</p> 
-          }
+          <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height: '80vh'}}>
+            { articles.length > 0 
+              ? articles.map((article)=>(
+                <div className='border-bottom py-3' key={article.id} onClick={ ()=>handleClickArticle(article) } >
+                  <p className='m-0 fs-1 fw-medium'>{article.position} - {article.titulo}</p>
+                </div>
+              ))
+            : <p className='m-0 text-center fs-3 fw-medium mt-5'>No hay ningun articulo</p> 
+            }
+          </div>
   
-          <button className='btn form-control btn-success fs-3 position-absolute bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearArticulo}>Crear Articulo</button>
-  
+          {/* <button className='btn form-control btn-success fs-3 position-absolute bottom-0 start-50 mb-4 translate-middle rounded-0' onClick={handleClickCrearArticulo}>Crear Articulo</button> */}
+
+          <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            <button className='btn form-control btn-success fs-3 rounded-3' onClick={handleClickCrearArticulo}>Crear Nuevo Articulo</button>
+          </div>
+
         </section>
       </main>
     )

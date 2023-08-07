@@ -73,7 +73,7 @@ const OrderHistory = () => {
     );
   } else {
     return (
-      <main className='animate__animated animate__fadeIn container-fluid p-0 overflow-hidden'>
+      <main className='animate__animated animate__fadeIn container-fluid overflow-hidden-'>
     
         <MenuHeader text='Historial de Ordenes' />
     

@@ -68,7 +68,7 @@ const PedidoItem = ({orden}) => {
   }, [] ); 
 
   return (
-    <div className='animate__animated animate__slideInDown border m-4 shadow-lg rounded-5 border border-success'>
+    <div className='animate__animated animate__slideInDown border my-4 shadow-lg rounded-5 border border-success'>
 
       <p className='m-0 fw-bold fs-4 text-center py-2 border-bottom border-success'>{orden.user}</p>
       <div className='p-3'>

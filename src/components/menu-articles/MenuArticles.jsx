@@ -157,18 +157,32 @@ const MenuArticles = () => {
     navigate('/home');
   }
 
+
+  const [viewSectionInHeader, setViewSectionInHeader] = useState(false);
+  const handleScroll = (e) => {
+    const scrollTop = e.target.scrollTop;
+    if(scrollTop > 30) setViewSectionInHeader(true);
+    else setViewSectionInHeader(false);
+  };
+
+  
+
   if(categoriesOfMenu != null){
     return (
-      <main className={`overflow-scroll z-3 animate__animated animate__fadeIn px-3 vh-100 ${viewPreviewInfoArticle ? 'animate__animated animate__fadeIn z-0 bg-black bg-opacity-25' : ''}`} style={{paddingBottom:'70px'}}>
-        {/* <div className={`position-absolute px-3 vh-100 vw-100 p-0 m-0 start-0 animate__animated animate__fadeIn z-0${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}> */}
+      <main className={`overflow-scroll z-3 animate__animated animate__fadeIn px-3- vh-100 ${viewPreviewInfoArticle ? 'animate__animated animate__fadeIn z-0 bg-black bg-opacity-25' : ''}`} style={{paddingBottom:'00px'}}>
+        
+        <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected}/>
+        
+        <div className='overflow-scroll bg-danger- px-3 top-0 start-0' style={{height:'90vh', paddingBottom:60}} onScroll={handleScroll}>
+
+          {/* <div className={`position-absolute px-3 vh-100 vw-100 p-0 m-0 start-0 animate__animated animate__fadeIn z-0${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}> */}
           {/* Header */}
-          <MenuHeader className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected}/>
           
           { viewMenu == 0 ? 
             <>
               <h2 className='fs-1 fw-bold'>Menu</h2>
 
-              <div className='d-flex flex-wrap justify-content-around'>
+              <div className='d-flex flex-wrap justify-content-between'>
                 { categoriesOfMenu != null 
                   ? categoriesOfMenu.map((category)=>(
                     <MenuViewCategories
@@ -199,7 +213,7 @@ const MenuArticles = () => {
               <div >
                 <h2 className='fs-1 fw-bold '>{categorySelected.nombre}</h2>
                     
-                    <div className='d-flex flex-wrap justify-content-around'>
+                    <div className='d-flex flex-wrap justify-content-between'>
                       { articlesOfCategorySelected != null
                         ? articlesOfCategorySelected.map((articulo)=>(
                           <MenuViewArticles
@@ -228,9 +242,11 @@ const MenuArticles = () => {
             ? <Cart setViewCart={setViewCart} setViewMenu={setViewMenu} resetCart={resetCart} />
             : <></>
           }
-        {/* </div> */}
+          {/* </div> */}
 
-        <ToastContainer />
+          <ToastContainer />
+
+        </div>
 
       </main>
     );
