@@ -454,6 +454,7 @@ const givePointsToFriend = async (statistics) => {
         const estadisticas = await getEstadisticas(seletedOrder.email);
         const estadisticasAmigo = await getEstadisticas(referidoInfo1.email);
         
+        console.log(estadisticasAmigo);
         // if(estadisticas.dineroGastado > 500){
           // console.log('-----------------------------');
           const newStatistics = {
@@ -502,6 +503,7 @@ const givePointsToFriend = async (statistics) => {
         console.log('----------------------')
         const estadisticas = await getEstadisticas(seletedOrder.email);
         const estadisticasAmigo = await getEstadisticas(referidoInfo2.email);
+        console.log(estadisticasAmigo);
         // if(estadisticas.dineroGastado > infoPoints.minForSpend){
           const newStatistics = {
             nombre: estadisticasAmigo.nombre,
