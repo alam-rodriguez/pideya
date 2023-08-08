@@ -351,8 +351,8 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
           nombre: pedido.nombre,
           dineroGastado: estadisticas.dineroGastado + total,
           puntosGanados: estadisticas.puntosGanados + (total / infoPoints.eachPointValue),
-          puntosGastados: estadisticas.puntosGastados + puntos,
           pointsForInviteFriend: estadisticas.pointsForInviteFriend,
+          puntosGastados: estadisticas.puntosGastados + puntos,
         }
         console.log( newStatistics );
 
@@ -418,6 +418,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
         console.log(estadisticas.dineroGastado > 500);
         if(estadisticas.dineroGastado > 500){
           console.log('-----------------------------');
+          console.log(estadisticasAmigo)
           const newStatistics = {
             nombre: estadisticasAmigo.nombre,
             dineroGastado: estadisticasAmigo.dineroGastado,
@@ -452,6 +453,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
             pointsForInviteFriend: estadisticasAmigo.pointsForInviteFriend + pointsInfo.pointsForMinSpend, 
             puntosGastados: estadisticasAmigo.puntosGastados,
           }
+          console.log(estadisticasAmigo.nombre)
           const resEstadisticas = await editEstadistica(referidoInfo2.email, newStatistics);
           const info = {
             codeRef: referidoInfo2.codeRef,

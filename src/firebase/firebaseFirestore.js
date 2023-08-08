@@ -816,17 +816,36 @@ export const deleteEstadistica = async (email, estadisticaId) => {
 //   }
 // }
 
+// // create estadisticas del cliente
+// export const createEstadisticas = async (email, info) => {
+//   try {
+//     await setDoc(doc(db, 'estadisticas', `user-${email}`), {
+//       nombre: info.nombre,
+//       email: email,
+//       dineroGastado: info.dineroGastado,
+//       puntosGanados: info.puntosGanados,
+//       pointsForInviteFriend: info.pointsForInviteFriend,
+//       puntosGastados: info.puntosGastados,
+//       puntosRestantes: (info.puntosGanados + info.pointsForInviteFriend) - info.puntosGastados,
+//     });
+//     return true;
+//   } catch (e) {
+//     console.log(e);
+//     return false;
+//   }
+// }
+
 // create estadisticas del cliente
 export const createEstadisticas = async (email, info) => {
   try {
     await setDoc(doc(db, 'estadisticas', `user-${email}`), {
-      nombre: info.nombre,
+      nombre: '',
       email: email,
-      dineroGastado: info.dineroGastado,
-      puntosGanados: info.puntosGanados,
-      pointsForInviteFriend: info.pointsForInviteFriend,
-      puntosGastados: info.puntosGastados,
-      puntosRestantes: (info.puntosGanados + info.pointsForInviteFriend) - info.puntosGastados,
+      dineroGastado: 0,
+      puntosGanados: 0,
+      pointsForInviteFriend: 0,
+      puntosGastados: 0,
+      puntosRestantes: 0,
     });
     return true;
   } catch (e) {

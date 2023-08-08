@@ -1,7 +1,7 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
 
 // Firestore Service
-import { getInfoUser, guardarAdmin, saveInfoUser } from "./firebaseFirestore";
+import { createEstadisticas, getInfoUser, guardarAdmin, saveInfoUser } from "./firebaseFirestore";
 import { doc } from "firebase/firestore";
 
 export const auth = getAuth();
@@ -61,6 +61,7 @@ export const registrarUsuario = async () => {
       // codeRef: Number('0'.repeat(5)),
     }
     await saveInfoUser(infoUser);
+    await createEstadisticas(result.user.email);
     return result.user.email;
   } catch (e) {
     console.log(e);
