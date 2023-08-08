@@ -458,7 +458,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
           const info = {
             codeRef: referidoInfo2.codeRef,
             email: referidoInfo2.email,
-            givePointsForInviteFriend: referidoInfo.givePointsForInviteFriend,
+            givePointsForInviteFriend: referidoInfo2.givePointsForInviteFriend,
             givePointsForSpendMoney: true,
             nombre: referidoInfo2.nombre,
           }
