@@ -649,13 +649,13 @@ export const savePointsUser = async (email, newPoints) => {
 export const createCategoryPunto = async (info) => {
   try{
     await setDoc(doc(db, 'categorias', 'category-puntos'), {
-      id: info.id,
+      id: 'category-puntos',
       nombre: info.nombreCategoria,
       sizeView: info.sizeView,
       viewInHome: info.viewInHome,
       viewInMenu: info.viewInMenu,
       imgpath: info.imgpath,
-      isCategoryOfPoints: 'true',
+      isCategoryOfPoints: true,
       position: info.position,
     });
     return true;
@@ -670,6 +670,7 @@ export const updateCategoryPunto = async (info) => {
   try {
     const catRef = doc(db, 'categorias', 'category-puntos');
     await updateDoc(catRef, {
+      id: 'category-puntos',
       nombre: info.nombreCategoria,
       sizeView: info.sizeView,
       viewInHome: info.viewInHome,

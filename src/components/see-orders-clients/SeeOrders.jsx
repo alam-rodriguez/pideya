@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // Firebase
-import { getordersNotView, orderOfToday } from '../../firebase/firebaseFirestore';
+import { auth, getordersNotView, obtenerInfoApp, orderOfToday } from '../../firebase/firebaseFirestore';
 
 // Components
 import Header from './see-orders-clients-components/Header';
@@ -12,12 +12,53 @@ import { useNavigate } from 'react-router-dom';
 // Context
 import { AppContext } from '../../context/AppContext';
 import Swal from 'sweetalert2';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const SeeOrders = () => {
 
   const navigate = useNavigate();
 
-  const { SeletedOrder, setSeletedOrder, isAdmin } = useContext(AppContext);
+  const { SeletedOrder, setSeletedOrder, isAdmin, setIsAdmin, setEmail } = useContext(AppContext);
+
+  useEffect( () => {
+    if(isAdmin == ''){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null) {
+          navigate('/home'); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        let status = 'customer';
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/home'); 
+          return
+        }
+        if(appInfo.nombre == undefined){
+          alert('No hay datos de la app');
+          navigate('/home');
+          return; 
+        } 
+        if(appInfo.admin == emailUser) status = 'admin';
+        else {
+          if(appInfo.semisAdmins != undefined){
+            appInfo.semisAdmins.forEach( (semiAdmin) => {
+              if(semiAdmin == emailUser) status = 'semi-admin';
+              else status = 'customer';
+            });
+          }
+        }
+        setIsAdmin(status);
+        if(status != 'admin') navigate('/home');
+      }
+    }
+  }, [] );
 
   const [orders, setOrders] = useState(null);
 
@@ -122,15 +163,15 @@ const SeeOrders = () => {
   
 
   return (
-    <main className='overflow-scroll vh-100'>
+    <main className='overflow-scroll container vh-100'>
       <Header />
 
       <section>
 
-        <div className='row'>
-          <input className='col-6' type="date" onChange={handleClickChangeDate} />
+        <div className='d-flex align-items-center m-2 gap-3'>
+          <input className='w-50 border-black border' type="date" style={{height:30}} onChange={handleClickChangeDate} />
 
-          <div className="form-check form-switch col-6">
+          <div className="d-flex gap-3 align-items-center justify-content-center form-check form-switch w-50">
             <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" onChange={handleChangeSeeGuardados} />
             <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Ver todos los pedidos</label>
           </div>

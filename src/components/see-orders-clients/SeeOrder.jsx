@@ -273,7 +273,7 @@ const handleClickGuardar = async () => {
     if(paid){
       const visita = {
         id: seletedOrder.id,
-        fecha: `${seletedOrder.dia} ${seletedOrder.hora}`,
+        fecha: `${seletedOrder.dia}`,
         gastado: seletedOrder.total,
         puntosGastados: seletedOrder.puntosGastados,
         puntosGenerados: givePoints ? puntos : 0,
@@ -573,7 +573,9 @@ const givePointsToFriend = async (statistics) => {
   
         <section className=''>
          
-          <div key={seletedOrder.id} className='border m-4 shadow-lg rounded-5 border border-success'>
+          <div className='d-flex flex-column gap-4 overflow-scroll px-3' style={{height:'80vh'}}>
+
+          <div key={seletedOrder.id} className='border my-4 shadow-lg rounded-5 border border-success'>
   
             <p className='m-0 fw-bold fs-3 text-center py-2 border-bottom border-success'>{seletedOrder.user}</p>
             <div className='p-3'>
@@ -594,7 +596,7 @@ const givePointsToFriend = async (statistics) => {
               />  
 
               { seletedOrder.deliveryInfo != null ?
-               (seletedOrder.deliveryInfo.costo > 0) ? 
+              (seletedOrder.deliveryInfo.costo > 0) ? 
                 <ItemList 
                   clave='Ubicacion:' 
                   valor={`${seletedOrder.deliveryInfo.lugar}: ${seletedOrder.direccion}`}
@@ -602,7 +604,7 @@ const givePointsToFriend = async (statistics) => {
                 : <></> 
                 : <></>
               }        
-  
+
               <div className='py-2'>
                 { seletedOrder.pedido.length > 0 ? 
                   <>
@@ -626,7 +628,7 @@ const givePointsToFriend = async (statistics) => {
                           ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Mitad: <span className='fw-bold text-black fst-italic'>{article.mitad}</span></p>
                           : <></>
                         }
-    
+
                         <p className='m-0 fw-medium fs-5 text-center text-secondary'>Precio: <span className='fw-bold text-black fst-italic'>{article.precioVariosArticles}</span></p>
                         <br />
                       </div>
@@ -688,7 +690,7 @@ const givePointsToFriend = async (statistics) => {
                           ? <p className='m-0 fw-medium fs-5 text-center text-secondary'>Mitad: <span className='fw-bold text-black fst-italic'>{article.mitad}</span></p>
                           : <></>
                         }
-    
+
                         <p className='m-0 fw-medium fs-5 text-center text-secondary'>Puntos: <span className='fw-bold text-black fst-italic'>{article.PuntosVariosArticles}</span></p>
                       </div>
                     ))}
@@ -712,7 +714,7 @@ const givePointsToFriend = async (statistics) => {
               }
 
               { puntosGastados > 0 ?
-                 <ItemList 
+                <ItemList 
                   clave='Puntos Gastados:' 
                   valor={puntosGastados}
                 />
@@ -734,7 +736,7 @@ const givePointsToFriend = async (statistics) => {
                 </div>
               : <></>
               } */}
-  
+
               {
                 (seletedOrder.comentario.length > 0) ? 
                   <ItemList 
@@ -743,7 +745,7 @@ const givePointsToFriend = async (statistics) => {
                   />
                 : <></>
               }
-  
+
               </div>
 
               
@@ -783,13 +785,25 @@ const givePointsToFriend = async (statistics) => {
             : <></>
             }
 
-            { (!isSaving && !isSaved )
+            {/* { (!isSaving && !isSaved )
                 ? <button className='btn btn-success form-control fs-3 mt-5 p-2' onClick={handleClickGuardar}>Guardar</button>
                 : (isSaving && !isSaved) 
                   ? <button className='btn btn-success form-control fs-3 mt-5 p-2'>Guardando...</button>
                   : <button className='btn btn-success form-control fs-3 mt-5 p-2' onClick={handleClickVolver}>Volver</button>
-            }
+            } */}
 
+
+
+</div>
+
+          </div>
+          <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+            { (!isSaving && !isSaved )
+                ? <button className='btn form-control btn-success fs-3 rounded-3' onClick={handleClickGuardar}>Guardar</button>
+                : (isSaving && !isSaved) 
+                  ? <button className='btn form-control btn-success fs-3 rounded-3'>Guardando...</button>
+                  : <button className='btn form-control btn-success fs-3 rounded-3' onClick={handleClickVolver}>Volver</button>
+            }
           </div>
   
         </section>

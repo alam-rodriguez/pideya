@@ -5,18 +5,60 @@ import Header from './ajustes-puntos-componentes/Header';
 import AjustesPuntosCodigoRef from './AjustesPuntosCodigoRef';
 
 // Firebase
-import { addInfoPoints, obtenerInfoApp } from '../../../firebase/firebaseFirestore';
+import { addInfoPoints, auth, obtenerInfoApp } from '../../../firebase/firebaseFirestore';
 
 // Context
 import { AppContext } from '../../../context/AppContext';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const AjustesPuntos = () => {
+
   const navigate = useNavigate();
 
-  const { email } = useContext(AppContext);
+  const { isAdmin, setIsAdmin, email, setEmail } = useContext(AppContext);
+
+  useEffect( () => {
+    if(isAdmin == ''){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null) {
+          navigate('/home'); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        let status = 'customer';
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/home'); 
+          return
+        }
+        if(appInfo.nombre == undefined){
+          alert('No hay datos de la app');
+          navigate('/home');
+          return; 
+        } 
+        if(appInfo.admin == emailUser) status = 'admin';
+        else {
+          if(appInfo.semisAdmins != undefined){
+            appInfo.semisAdmins.forEach( (semiAdmin) => {
+              if(semiAdmin == emailUser) status = 'semi-admin';
+              else status = 'customer';
+            });
+          }
+        }
+        setIsAdmin(status);
+        if(status != 'admin') navigate('/home');
+      }
+    }
+  }, [] );
 
   const [configCodeRef, setConfigCodeRef] = useState({
     refFriendGenerate: 10,

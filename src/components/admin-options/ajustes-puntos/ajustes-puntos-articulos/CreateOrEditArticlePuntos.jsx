@@ -30,7 +30,13 @@ const CreateOrEditArticlePuntos = () => {
   
   const navigate = useNavigate();
 
-  const { categorySelected, articleSelected, setArticleSelected } = useContext(AppContext);
+  const { isAdmin, categorySelected, articleSelected, setArticleSelected } = useContext(AppContext);
+
+  useEffect( () => {
+
+    if(isAdmin != 'admin') navigate('/admin-options/ajustes-puntos/view-articles');
+
+  }, [] );
 
   useEffect( () => {
     if(articleSelected != null){

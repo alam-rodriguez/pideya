@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // Firebase
-import { getCategoryPoints } from '../../../../firebase/firebaseFirestore';
+import { auth, getCategoryPoints, obtenerInfoApp } from '../../../../firebase/firebaseFirestore';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -11,13 +11,55 @@ import Header from '../ajustes-puntos-componentes/Header'
 
 // Context
 import { AppContext } from '../../../../context/AppContext';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const ViewCategoryPuntos = () => {
 
   const navigate = useNavigate();
 
+  const { isAdmin, setCategorySelected, email, setEmail, setIsAdmin } = useContext(AppContext);
+
+  useEffect( () => {
+    if(isAdmin == ''){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null) {
+          navigate('/home'); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        let status = 'customer';
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/home'); 
+          return
+        }
+        if(appInfo.nombre == undefined){
+          alert('No hay datos de la app');
+          navigate('/home');
+          return; 
+        } 
+        if(appInfo.admin == emailUser) status = 'admin';
+        else {
+          if(appInfo.semisAdmins != undefined){
+            appInfo.semisAdmins.forEach( (semiAdmin) => {
+              if(semiAdmin == emailUser) status = 'semi-admin';
+              else status = 'customer';
+            });
+          }
+        }
+        setIsAdmin(status);
+        if(status != 'admin') navigate('/home');
+      }
+    }
+  }, [] );
+
   // States
-  const { setCategorySelected, email } = useContext(AppContext);
   const [categoryPuntos, setCategoryPuntos] = useState(null);
 
   // Effects

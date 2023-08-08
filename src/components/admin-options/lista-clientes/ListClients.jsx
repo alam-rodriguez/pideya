@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 // Header
 import Header from './list-clients-components/Header';
@@ -10,9 +10,55 @@ import { useNavigate } from 'react-router-dom';
 import ItemClientList from './ItemClientList';
 
 // Firebase
-import { getAllStatistics } from '../../../firebase/firebaseFirestore';
+import { auth, getAllStatistics, obtenerInfoApp } from '../../../firebase/firebaseFirestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { AppContext } from '../../../context/AppContext';
 
 const ListClients = () => {
+
+  const navigate = useNavigate();
+
+  const { isAdmin, setIsAdmin, setEmail } = useContext(AppContext);
+
+  useEffect( () => {
+    if(isAdmin == ''){
+      // logear usuario automaticamente
+      onAuthStateChanged(auth, (user) => {
+        if(user == null) {
+          navigate('/home'); 
+        }else {
+          getData(user.email);
+          console.log(user.email);
+          setEmail(user.email);
+        }
+      });
+      // obtener info de la app y compruebo si es admin
+      const getData = async (emailUser) => {
+        let status = 'customer';
+        const appInfo = await obtenerInfoApp();
+        if(appInfo == 'no hay datos de esta app'){
+          navigate('/home'); 
+          return
+        }
+        if(appInfo.nombre == undefined){
+          alert('No hay datos de la app');
+          navigate('/home');
+          return; 
+        } 
+        if(appInfo.admin == emailUser) status = 'admin';
+        else {
+          if(appInfo.semisAdmins != undefined){
+            appInfo.semisAdmins.forEach( (semiAdmin) => {
+              if(semiAdmin == emailUser) status = 'semi-admin';
+              else status = 'customer';
+            });
+          }
+        }
+        setIsAdmin(status);
+        if(status != 'admin') navigate('/home');
+      }
+    }
+  }, [] );
 
   const [listUsers, setListUsers] = useState([]);
   
@@ -53,7 +99,6 @@ const ListClients = () => {
   }, [selectValue] );
 
 
-  const navigate = useNavigate();
 
   const handleClickAtras = () => navigate('/admin-options');
   return (

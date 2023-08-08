@@ -29,7 +29,7 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
         <h3 className='fw-bold fs-4'>{category.nombre}</h3>
           <p className={`p-0 fs-6 fw-normal ${color1.textColor}`}>TODO</p>
         </div>
-        <div className='d-flex flex-nowrap overflow-x-scroll'>
+        <div className={`d-flex flex-nowrap ${articlesOfThisMenu != null ? 'overflow-x-scroll': 'overflow-hidden'}`}>
 
         { articlesOfThisMenu != null 
           ? articlesOfThisMenu.map((article)=>(
@@ -45,7 +45,18 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
               // id='345678' 
             />
           ))
-          : <></>
+          : <>
+              <ArticleCard
+                key={0}
+                size={'normal'}
+                setViewArticleSelected={() => {}}
+              />
+              <ArticleCard
+                key={1}
+                size={'normal'}
+                setViewArticleSelected={() => {}}
+              />
+            </>
         }
 
       </div>

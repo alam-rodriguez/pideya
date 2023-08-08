@@ -171,7 +171,7 @@ const EstadisticasApp = () => {
         const fechaStatistcs = statistics.fecha.split('/');
         const anioStatistics = fechaStatistcs[2];
         console.log(anioStatistics);
-        if(anioStatistics == yearSelect){
+        if(`${anioStatistics[0]}${anioStatistics[1]}${anioStatistics[2]}${anioStatistics[3]}` == yearSelect){
           res.push(statistics);
           console.log(statistics);
         }
