@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
 import { createCategoryPunto, updateCategoryPunto } from '../../../../firebase/firebaseFirestore';
-import { getUrlImage, uploadImage } from '../../../../firebase/firebaseStorage';
+import { getUrlImage, uploadImage, uploadImageCategory } from '../../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -89,7 +89,7 @@ const CreateCategory = () => {
         sizeView: sizeView,
         viewInHome: viewInHome, 
         viewInMenu:viewInMenu,
-        imgpath: `imagenes/${id}`,
+        imgpath: `imagenes-categorias/${id}`,
         isCategoryOfPoints: true,
         position: 0,
       }
@@ -98,7 +98,7 @@ const CreateCategory = () => {
       const createArticlePromise = new Promise( async (resolve, reject) => {
 
         const res = await createCategoryPunto(categoryInfo);
-        const resImg = await uploadImage(id, imgCategory);
+        const resImg = await uploadImageCategory(id, imgCategory);
         if(res && resImg){
           resolve();
           setShowBottonToBack(true);
@@ -152,7 +152,7 @@ const CreateCategory = () => {
         
         const res = await updateCategoryPunto(categoryInfo);
         let resImg = true;
-        if(imgCategory != null) resImg = await uploadImage(categorySelected.id, imgCategory);
+        if(imgCategory != null) resImg = await uploadImageCategory(categorySelected.id, imgCategory);
         if(res && resImg) {
           resolve();
           setShowBottonToBack(true);

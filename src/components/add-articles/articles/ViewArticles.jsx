@@ -32,7 +32,7 @@ const ViewArticles = () => {
   const [articles, setArticles] = useState(null);
   const [articlesFilted, setArticlesFilted] = useState(null);
 
-  const [allCategories, setAllCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState(null);
   
   useEffect( () => {
     if(isAdmin == ''){
@@ -87,12 +87,34 @@ const ViewArticles = () => {
   }, [] );
   
   useEffect( () => {  
-    console.log(articles);
+    if(articles == null || allCategories == null) return;
+    
+    console.log(categorySelected);
     if(categorySelected == 'Todos los articulos' || categorySelected == null) {
       setArticlesFilted(articles);
       console.log(articles);
       return;
     }
+
+    if(categorySelected == 'sin-categoria'){
+      let articlesSinCategory = [];
+      console.log(allCategories);
+      articles.forEach( article => {
+        let articleCategoryId = article.categoria;
+        let isSinCategory = true;
+        allCategories.map( (category) => {
+          if(articleCategoryId == category.id) {
+            isSinCategory = false;
+            return;
+          }
+        });
+        if(isSinCategory) articlesSinCategory.push(article);
+      });
+      console.log(articlesSinCategory);
+      setArticlesFilted(articlesSinCategory);
+      return;
+    }
+
     if(articles != null){
       let articlesOfCategorySelected = [];
       articles.forEach( article => {
@@ -100,8 +122,9 @@ const ViewArticles = () => {
       });
       articlesOfCategorySelected.sort((a,b) => a.position - b.position)
       setArticlesFilted(articlesOfCategorySelected);
+      return;
     }
-  }, [categorySelected, articles] );
+  }, [categorySelected, articles, allCategories] );
   
   // handles
   const handleClickArticle = (article) => {
@@ -117,7 +140,7 @@ const ViewArticles = () => {
     return (
       <main className='border-0'>
         {/* Header */}
-        <Header handleClickAtras={handleClickAtras} filter={true} allCategories={allCategories} setCategorySelected={setCategorySelected} />
+        <Header handleClickAtras={handleClickAtras} filter={true} allCategories={allCategories ?? []} setCategorySelected={setCategorySelected} />
   
         <section className='' style={{height:''}}>
   
@@ -126,7 +149,7 @@ const ViewArticles = () => {
               ? articlesFilted.length > 0 
                 ? articlesFilted.map((article)=>(
                   <div className='border-bottom py-2' key={article.id} onClick={()=>handleClickArticle(article)}>
-                      <p className='m-0 fs-1 fw-medium'>{categorySelected != 'Todos los articulos' && categorySelected != null ? `${article.position} - ${article.titulo}` : article.titulo}</p>
+                      <p className='m-0 fs-1 fw-medium'>{categorySelected != 'Todos los articulos' && categorySelected != null && categorySelected != 'sin-categoria' ? `${article.position} - ${article.titulo}` : article.titulo}</p>
                     </div>
                   ))
                 : <p className='m-0 fs-1 fw-medium text-center'>No hay articulos</p>

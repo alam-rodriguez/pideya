@@ -12,7 +12,8 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
   const [articlesOfThisMenu, setArticlesOfThisMenu] = useState(null);
 
   useEffect( () => {
-    // console.log(category.sizeView);
+    console.log('first')
+    console.log(category);
     const f = async () => {
       const res = await getArticlesByCategory(category.id);
       res.sort( (a,b) => a.position - b.position);
@@ -29,7 +30,7 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
         <h3 className='fw-bold fs-4'>{category.nombre}</h3>
           <p className={`p-0 fs-6 fw-normal ${color1.textColor}`}>TODO</p>
         </div>
-        <div className={`d-flex flex-nowrap ${articlesOfThisMenu != null ? 'overflow-x-scroll': 'overflow-hidden'}`}>
+        <div className={`d-flex flex-nowrap ${articlesOfThisMenu != null ? 'overflow-x-scroll': ''}`}>
 
         { articlesOfThisMenu != null 
           ? articlesOfThisMenu.map((article)=>(

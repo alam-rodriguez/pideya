@@ -12,12 +12,20 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 // React-Icons
 import { FaPizzaSlice } from 'react-icons/fa';
 
+// images
+import imgGris from '../../../images/home/gris.jpg'
+
 const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id, setViewArticleSelected }) => {
+
   const navigate = useNavigate();
 
   const [imgUrl, setImgUrl] = useState(null);
 
   useEffect( () => {
+    if(img == null) {
+      setImgUrl(imgGris);
+      return;
+    }
     console.log( isCategoryOfPoints );
     const f = async () => {
       const res = await getUrlImage(img);

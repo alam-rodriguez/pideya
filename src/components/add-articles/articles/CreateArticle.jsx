@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
 import { createArticle, getCategories } from '../../../firebase/firebaseFirestore';
-import { uploadImage } from '../../../firebase/firebaseStorage';
+import { uploadImage, uploadImageArticle } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -196,7 +196,7 @@ const CreateArticle = () => {
         titulo: titulo,
         subtitulo: subtitulo,
         categoria: articuloCategoria,
-        img: `imagenes/${id}`,
+        img: `imagenes-articulos/${id}`,
         disponible: true,
         complex: complejo,
         precios: complejo ? infoArticleComplex : precio,
@@ -207,7 +207,7 @@ const CreateArticle = () => {
       const createArticlePromise = new Promise( async (resolve, reject) => {
         console.log(info);
         const res = await createArticle(id, info);
-        const resImg = await uploadImage(id, img);
+        const resImg = await uploadImageArticle(id, img);
         if(res && resImg){
           resolve();
           setShowBottonToBack(true);

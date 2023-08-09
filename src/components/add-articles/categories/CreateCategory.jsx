@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
 import { createCategories } from '../../../firebase/firebaseFirestore';
-import { uploadImage } from '../../../firebase/firebaseStorage';
+import { uploadImage, uploadImageCategory } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -84,7 +84,7 @@ const CreateCategory = () => {
       sizeView: sizeView,
       viewInHome: viewInHome, 
       viewInMenu:viewInMenu,
-      imgpath: `imagenes/${id}`,
+      imgpath: `imagenes-categorias/${id}`,
       isCategoryOfPoints: false, 
       position: position,
     }
@@ -92,7 +92,7 @@ const CreateCategory = () => {
     const createCategoryPromise = new Promise( async (resolve, reject) => {
       console.log('-----');
       const res = await createCategories(categoryInfo);
-      const resImg = await uploadImage(id, imgCategory);
+      const resImg = await uploadImageCategory(id, imgCategory);
       if(res == true && resImg == true) {
         resolve('bien');
         setShowBottonToBack(true);

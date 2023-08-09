@@ -7,7 +7,7 @@ import { MdDeleteForever } from 'react-icons/md';
 
 // Firebase
 import { deleteArticle, getCategories, updateArticle } from '../../../firebase/firebaseFirestore';
-import { deleteImage, getUrlImage, uploadImage } from '../../../firebase/firebaseStorage';
+import { deleteImage, deleteImageArticle, getUrlImage, uploadImage, uploadImageArticle } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -46,6 +46,7 @@ const EditArticle = () => {
     const f = async () => {
       // Obtener categorias
       const res = await getCategories();
+      res.sort( (a,b) => a.position - b.position);
       setCategories(res);
       res.map( (category) => {
         if(category.id == articleSelected.categoria){
@@ -154,7 +155,7 @@ const EditArticle = () => {
   const handleClickImg = () => document.querySelector('#select-img').click();  
   const handleChangeSelectImg = (e) => setImg(e.target.files[0]);
 
-  const [position, setPosition] = useState(articleSelected != null ? articleSelected.position : 1);
+  const [position, setPosition] = useState(articleSelected.position != undefined ? articleSelected.position : 1);
   const handleClickSubtractPosition = () => {
     if(position == 1) return;
     setPosition(position - 1);
@@ -263,7 +264,7 @@ const EditArticle = () => {
         const res = await updateArticle(articleSelected.id, articleUpdated);
         let resImg = true;
         if(img != articleSelected.imgpath){
-          resImg = await uploadImage(articleSelected.id, img);
+          resImg = await uploadImageArticle(articleSelected.id, img);
         }
         if(res && resImg) {
           resolve();
@@ -331,7 +332,7 @@ const EditArticle = () => {
       const deleteArticlePromise = new Promise( async (resolve, reject) => {
   
         const resArticle = await deleteArticle(articleSelected.id);
-        const resImg = await deleteImage(articleSelected.id);
+        const resImg = await deleteImageArticle(articleSelected.id);
         if(resArticle && resImg){
           resolve();
           setShowBottonToBack(true);
@@ -367,7 +368,7 @@ const EditArticle = () => {
 
   if( articleSelected != null ){
     return (
-      <main className='border-0 border-bottom border-top mx-3 col-11 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
+      <main className='border-0 border-bottom border-top mx-3 col-12 col-sm-8 col-md-6 col-lg-6 mx-auto' style={{}} >
         {/* Header */}
         <Header handleClickAtras={handleClickAtras} path='/view-articles' />
   

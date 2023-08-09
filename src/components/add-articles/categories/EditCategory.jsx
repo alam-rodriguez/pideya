@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 
 // Firebase
 import { ACtualizarCategory, deleteCategory } from '../../../firebase/firebaseFirestore';
-import { deleteImage, getUrlImage, uploadImage } from '../../../firebase/firebaseStorage';
+import { deleteImage, deleteImageCategory, getUrlImage, uploadImage, uploadImageCategory } from '../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -87,7 +87,7 @@ const EditCategory = () => {
       const DeleteCategoryPromise = new Promise( async (resolve, reject) => {
 
         const res1 = await deleteCategory(categorySelected.id);
-        const res2 = await deleteImage(categorySelected.id);
+        const res2 = await deleteImageCategory(categorySelected.id);
         if(res1 && res2){
           resolve();
           setShowBottonToBack(true);
@@ -136,7 +136,7 @@ const EditCategory = () => {
     const editCategoryPromise = new Promise( async (resolve, reject) => {
       const res = await ACtualizarCategory(categorySelected.id, newInfo);
       let resImg = true;
-      if(imgCategory != categorySelected.imgpath) resImg = await uploadImage(categorySelected.id, imgCategory);  
+      if(imgCategory != categorySelected.imgpath) resImg = await uploadImageCategory(categorySelected.id, imgCategory);  
       if(res && resImg) {
         resolve();
         setShowBottonToBack(true);

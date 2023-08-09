@@ -97,6 +97,7 @@ const Home = () => {
         let categoryiesOfHome = [];
         let categoriesOfMenu = [];
         const categories = await getAllCategories('viewInHome');
+        console.log(categories)
         
         categories.forEach( (categoria) => {
           if(categoria.viewInHome) categoryiesOfHome.push(categoria);
