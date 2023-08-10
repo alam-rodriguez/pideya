@@ -19,13 +19,13 @@ const CartArticleView = ({article, index}) => {
   const [isArticleOfPoints, setIsArticleOfPoints] = useState(false);
 
   useEffect( () => {
+    console.log(article);
     let adicionales = '';
     article.ingredientesAdicionales.map((adicional)=>{
       adicionales += adicional.adicional + ',';
       // console.log(adicional.adicional);
     });
     setAdicionales(adicionales);
-    console.log(article);
     if(article.precioVariosArticles == undefined) setIsArticleOfPoints(true);
   }, [] );
 
@@ -92,15 +92,15 @@ const CartArticleView = ({article, index}) => {
   
         <div className='col-7'>
           { article.complex 
-            ? <p className='m-0 fw-bold fs-4 mb-1'>{article.ingredientePrincipal} - {article.size}"</p> 
-            : <p className='m-0 fw-bold fs-4 mb-1'>{article.ingredientePrincipal}</p>
+            ? <p className='m-0 fw-bold fs-5 mb-1'>{article.ingredientePrincipal} - {article.size}"</p> 
+            : <p className='m-0 fw-bold fs-5 mb-1'>{article.ingredientePrincipal}</p>
           }
           { article.mitad != '' 
-            ? <p className='m-0 fs-5 fw-medium'>Mitad: <span className='fw-bold'>{article.mitad}</span></p>
+            ? <p className='m-0 fs-6 fw-medium'>Mitad: <span className='fw-bold'>{article.mitad.ingredienteNombre}</span></p>
             : <></>
           }
           { article.ingredientesAdicionales.length > 0 
-            ? <p className='m-0 fs-5 fw-medium'>Adicionales: <span className='fw-bold'>{adicionales}</span></p>
+            ? <p className='m-0 fs-6 fw-medium'>Adicionales: <span className='fw-bold'>{adicionales}</span></p>
             : <></>
           }
           

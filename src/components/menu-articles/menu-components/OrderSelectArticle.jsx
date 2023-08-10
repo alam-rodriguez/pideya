@@ -219,7 +219,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
             </div> 
         }
       </section>
-      <section className='bg-white rounded-5 shadow-lg rounded-bottom-0 w-100 position-relative p-4 d-flex flex-column justify-content-between overflow-scroll' style={{height:'77.3%', bottom:19}}>
+      <section className='bg-white rounded-5 shadow-lg rounded-bottom-0 w-100 position-relative p-4 d-flex flex-column justify-content-between overflow-y-scroll' style={{height:'77.3%', bottom:19}}>
 
         <div>
           { articleSelected.complex 
