@@ -87,7 +87,7 @@ const CartArticleView = ({article, index}) => {
 
   if(!isArticleOfPoints){
     return (
-      <div className='row position-relative mt-5'>
+      <div className='row position-relative mt-2 pb-2 border-bottom'>
         <img src={article.imgArticlePath} className='col-3 object-fit-cover rounded-5 mt-3' style={{height:60}} />
   
         <div className='col-7'>
@@ -95,8 +95,9 @@ const CartArticleView = ({article, index}) => {
             ? <p className='m-0 fw-bold fs-5 mb-1'>{article.ingredientePrincipal} - {article.size}"</p> 
             : <p className='m-0 fw-bold fs-5 mb-1'>{article.ingredientePrincipal}</p>
           }
-          { article.mitad != null 
-            ? <p className='m-0 fs-6 fw-medium'>Mitad: <span className='fw-bold'>{article.mitad.ingredienteNombre}</span></p>
+          { article.mitad != null
+            ? article.mitad != '' ? <p className='m-0 fs-6 fw-medium'>Mitad: <span className='fw-bold'>{article.mitad.ingredienteNombre}</span></p>
+            : <></>
             : <></>
           }
           { article.ingredientesAdicionales.length > 0 

@@ -94,7 +94,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
     );
   }else if(size == 'big'){
     return (
-      <div className='animate__animated animate__fadeInLeft me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:150, width:230, minWidth:230}} onClick={handleClick}>
+      <div className='animate__animated animate__fadeInLeft me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border' style={{height:200, width:350, minWidth:350}} onClick={handleClick}>
         { imgUrl == null ? 
           <div className="spinner-border text-success fs-1" style={{height:50, width:50}} role="status">
             <span className="visually-hidden">Loading...</span>

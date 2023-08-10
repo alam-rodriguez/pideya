@@ -16,16 +16,16 @@ const CartInfoDeal = ({setMetodoPago, setHoraQuierePedido}) => {
     <div className='my-0'>
 
       <div className='mt-5'>
-        <p className='mb-1 fs-4 fw-bold'>Direccion</p>
+        <p className='mb-1 fs-5 fw-bold'>Direccion</p>
         <div className='border-0 border-bottom'>
-          <p className='mb-2 fs-4 fw-normal'>Guerra, frente al parque.</p>
+          <p className='mb-2 fs-5 fw-normal'>Guerra, frente al parque.</p>
         </div>
       </div>
 
       <div className='mt-5'>
-        <p className='mb-1 fs-4 fw-bold'>Hora de pedido</p>
+        <p className='mb-1 fs-5 fw-bold'>Hora de pedido</p>
         <div className='border-0 border-bottom'>
-          <select className='w-100 border-0 fs-4 rounded-0' onChange={handleChangeHoraPedido}>
+          <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent border-bottom' onChange={handleChangeHoraPedido}>
             <option value='ahora mismo'>Ahora mismo</option>
             <option value="4:30">4:30</option>
             <option value="4:30">4:45</option>
@@ -57,9 +57,9 @@ const CartInfoDeal = ({setMetodoPago, setHoraQuierePedido}) => {
       </div>
 
       <div className='mt-5'>
-        <p className='mb-1 fs-4 fw-bold'>Metodos de pago</p>
+        <p className='mb-1 fs-5 fw-bold'>Metodos de pago</p>
         <div className='border-0 border-bottom'>
-          <select className='w-100 border-0 fs-4 rounded-0' onChange={handleChangeMetodoPago}>
+          <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent border-bottom' onChange={handleChangeMetodoPago}>
             <option value="efectivo">Efectivo</option>
             <option value="transferencia">Transferencia</option>
           </select>

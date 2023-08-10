@@ -123,7 +123,7 @@ const MenuArticles = () => {
           if(categoria.viewInMenu) categoriesOfMenu.push(categoria);
         });
 
-        categoryiesOfHome.sort((a, b) => a.position - b.position);
+        categoryiesOfHome.sort((a, b) => b.position - a.position);
         categoriesOfMenu.sort((a, b) => a.position - b.position);
         setCategories(categoryiesOfHome);
         setCategoriesOfMenu(categoriesOfMenu);

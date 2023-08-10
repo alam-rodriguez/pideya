@@ -528,7 +528,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
           <CartArticlesView handleClickBack={handleClickBack} />
 
           {/* Btn para ir a menu */}
-          <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 my-5`} onClick={handleClickBack}>Agregar mas Articulo</button>
+          <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 mt-5`} onClick={handleClickBack}>Agregar mas Articulo</button>
 
           {/* Info Client */}
           <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />

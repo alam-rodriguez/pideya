@@ -17,7 +17,7 @@ const CartArticlesView = ({handleClickBack}) => {
   }, [cart, cartOfCategoryPoints] );
 
   return (
-    <section className='overflow-hidden'>
+    <section className='overflow-hidden mt-5 mb-4'>
 
       { cart.map( (article, i) => (
           <CartArticleView key={i} index={i} article={article} />

@@ -68,8 +68,8 @@ export default CartTotal;
 const CartTotalItem = ({keyItem, value}) => {
   return (
     <div className='d-flex justify-content-between my-3'>
-      <p className='m-0 fs-4 fw-bold'>{keyItem}</p>
-      <p className='m-0 fs-4'>{value}</p>
+      <p className='m-0 fs-5 fw-bold'>{keyItem}</p>
+      <p className='m-0 fs-5'>{value}</p>
     </div>
   );
 }
