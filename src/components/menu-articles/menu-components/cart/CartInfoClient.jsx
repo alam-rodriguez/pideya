@@ -68,7 +68,7 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
       <div className='mt-5'>
         <p className='mb-0 fs-4 fw-semibold'>Entrega:</p>
         <div className='border-0 border-bottom'>
-          <select className='w-100 border-0 fs-4' onChange={handleChangeEntrega}>
+          <select className='w-100 border-0 fs-4 rounded-0' onChange={handleChangeEntrega}>
             <option value=""></option>
             <option value="ire a recogerla">Ire a recogerla</option>
             <option value="quiero delivery">Quiero Delivery</option>
@@ -81,7 +81,7 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
         ? <div className='mt-5'>
             <p className='mb-0 fs-3 fw-semibold'>Lugar:</p>
             <div className='border-0 border-bottom'>
-              <select className='w-100 border-0 fs-3' onChange={handleChangeLugarDelivey}>
+              <select className='w-100 border-0 fs-3 rounded-0' onChange={handleChangeLugarDelivey}>
                 <option value='guerra'>Guerra $50</option>
                 <option value='reforma'>La Reforma $200</option>
                 <option value="fao">El Fao $100</option>

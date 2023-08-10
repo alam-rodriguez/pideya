@@ -95,7 +95,7 @@ const CartArticleView = ({article, index}) => {
             ? <p className='m-0 fw-bold fs-5 mb-1'>{article.ingredientePrincipal} - {article.size}"</p> 
             : <p className='m-0 fw-bold fs-5 mb-1'>{article.ingredientePrincipal}</p>
           }
-          { article.mitad != '' 
+          { article.mitad != null 
             ? <p className='m-0 fs-6 fw-medium'>Mitad: <span className='fw-bold'>{article.mitad.ingredienteNombre}</span></p>
             : <></>
           }

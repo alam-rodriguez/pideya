@@ -369,9 +369,11 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
         let res = true;
         let infoUser = true;
         // TODO: si existe la info del user, en la funcion de ff usar updateDoc y no setDoc
-        if(stateUserInfo == 'no-exist') infoUser = await saveInfoUser(pedido);
-        else infoUser = updateInfoUser(pedido);
+        // if(stateUserInfo == 'no-exist') infoUser = await saveInfoUser(pedido);
+        // else infoUser = updateInfoUser(pedido);
+        infoUser = updateInfoUser(pedido);
           
+
         // if( res == true){
           let res2 = false
     
@@ -474,7 +476,8 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
   const handleClickRegistrarse = async () => {
 
-    const userEmail = await registrarUsuarioAgain();
+    // const userEmail = await registrarUsuarioAgain();
+    const userEmail = await registrarUsuario();
     if(userEmail != false) {
 
       setExistUser(true);
