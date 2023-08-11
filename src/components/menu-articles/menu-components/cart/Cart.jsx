@@ -501,23 +501,30 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     else alert('error');
   }
 
+  const handleClickAddMoreArticles = () => {
+    setViewMenu(0);
+    setClose(true);
+    setTimeout(() => {
+      setViewCart(false);
+    }, 1000);
+  }
+
   const handleClickBack = () => {
     setClose(true);
     setTimeout(() => {
       setViewCart(false);
-      setViewMenu(0);
     }, 1000);
   }
 
   const [close, setClose] = useState(false);
 
   return (
-    <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute top-0 start-0 bg-white z-1`}>
+    <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute top-0 start-0 bg-white overflow-hidden z-1`}>
 
       {/* Header del cart */}
       <CartHeader handleClickBack={handleClickBack} />
 
-      <section className='w-100 vh-100 overflow-y-scroll pt-5' style={{paddingBottom:70}}>
+      <section className='w-100 vh-100 overflow-y-scroll pt-5' style={{paddingBottom:100}}>
 
         <div className='px-4'>
 
@@ -528,7 +535,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
           <CartArticlesView handleClickBack={handleClickBack} />
 
           {/* Btn para ir a menu */}
-          <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 mt-5`} onClick={handleClickBack}>Agregar mas Articulo</button>
+          <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 mt-5`} onClick={handleClickAddMoreArticles}>Agregar mas Articulo</button>
 
           {/* Info Client */}
           <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
@@ -541,7 +548,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
       </section>
 
       {/* Btn para ordenar */}
-      <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100' style={{}}>
+      <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100 shadow-lg border-top' style={{}}>
         { existUser && !isOrdenando
           ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickOrdenar}>Ordenar</button>
             : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>

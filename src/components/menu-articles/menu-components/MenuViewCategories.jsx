@@ -69,4 +69,4 @@ const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
   );
 }
 
-export default MenuViewCategories
+export default MenuViewCategories;

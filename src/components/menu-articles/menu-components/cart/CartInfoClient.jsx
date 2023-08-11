@@ -47,28 +47,28 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
   return (
     <div className='border-0 border-bottom- border-black '>
 
-      <p className='fw-bold fs-5 my-5'>Por favor conplete la informacion y no cierre la app en el proceso!</p>
-      <p className='fw-bold fs-5 my-5'>Precios con impuestos incluidos</p>
+    
+      <p className='fw-bold fs-5 mt-5'>Por favor conplete la informacion y no cierre la app en el proceso! <br /> Precios con impuestos incluidos</p>
 
       <div className='mb-5'>
         <p className='m-0 fs-5 fw-semibold'>Nombre:</p>
-        <input className='ps-0 form-control border-0 border-bottom fs-5' type="text" placeholder='Tu nombre' value={nombre} onChange={handleChangeNombre} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="text" placeholder='Tu nombre' value={nombre} onChange={handleChangeNombre} />
       </div>
 
       <div className='mb-5'>
         <p className='m-0 fs-5 fw-semibold'>Dirrecion:</p>
-        <input className='ps-0 form-control border-0 border-bottom fs-5' type="text" placeholder='Tu Direccion' value={direccion} onChange={handleChangeDireccion} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="text" placeholder='Tu Direccion' value={direccion} onChange={handleChangeDireccion} />
       </div>
 
       <div className='mb-5'>
         <p className='m-0 fs-5 fw-semibold'>Numero de telefono:</p>
-        <input className='ps-0 form-control border-0 border-bottom fs-5' type="number" placeholder='Tu numero' value={telefono} onChange={handleChangeDirrecion} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="number" placeholder='Tu numero' value={telefono} onChange={handleChangeDirrecion} />
       </div>
 
       <div className='mt-5'>
         <p className='mb-0 fs-5 fw-semibold'>Entrega:</p>
         <div className='border-0 border-bottom'>
-          <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent border-bottom' onChange={handleChangeEntrega}>
+          <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent' onChange={handleChangeEntrega}>
             <option value=""></option>
             <option value="ire a recogerla">Ire a recogerla</option>
             <option value="quiero delivery">Quiero Delivery</option>
@@ -81,7 +81,7 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
         ? <div className='mt-5'>
             <p className='mb-0 fs-5 fw-semibold'>Lugar:</p>
             <div className='border-0 border-bottom'>
-              <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent border-bottom' onChange={handleChangeLugarDelivey}>
+              <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent' onChange={handleChangeLugarDelivey}>
                 <option value='guerra'>Guerra $50</option>
                 <option value='reforma'>La Reforma $200</option>
                 <option value="fao">El Fao $100</option>
@@ -94,11 +94,11 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
         : <></>
       }
 
-      <p className='fw-bold fs-5 mt-4'>Completar el numero de telefono es obligatorio para que pueda hacer la orden.</p>        
+      <p className='fw-bold fs-5 mt-5'>Completar el numero de telefono es obligatorio para que pueda hacer la orden.</p>        
 
       <div className='my-5'>
         <p className='m-0 fs-5 fw-semibold'>Comentario</p>
-        <input className='ps-0 form-control border-0 border-bottom fs-5' type="text" placeholder='Tu comentario' onChange={handleChangeComentario} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="text" placeholder='Tu comentario' onChange={handleChangeComentario} />
       </div>
 
     </div>

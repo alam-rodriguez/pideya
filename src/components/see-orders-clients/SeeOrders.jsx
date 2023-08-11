@@ -159,8 +159,6 @@ const SeeOrders = () => {
   }
 
   const handleChangeSeeGuardados = (e) => setviewSaved(e.target.checked);
-    
-  
 
   return (
     <main className='overflow-scroll container vh-100'>
@@ -168,8 +166,8 @@ const SeeOrders = () => {
 
       <section>
 
-        <div className='d-flex align-items-center m-2 gap-3'>
-          <input className='w-50 border-black border' type="date" style={{height:30}} onChange={handleClickChangeDate} />
+        <div className='d-flex align-items-center m-2 gap-3 justify-content-center'>
+          <input className='w-50 border-black border text-black bg-transparent rounded-3 border p-3' type="date" style={{height:30}} onChange={handleClickChangeDate} />
 
           <div className="d-flex gap-3 align-items-center justify-content-center form-check form-switch w-50">
             <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" onChange={handleChangeSeeGuardados} />

@@ -154,15 +154,15 @@ const PedidoItem = ({orden}) => {
                   
                   { 
                     (article.ingredientesAdicionales.length > 0)
-                    ? <p className='m-0 fw-medium fs-6 text-center text-secondary'>Adicional: {article.ingredientesAdicionales.map((adicional)=>(
-                        <span className='fw-bold text-black fst-italic'>{adicional.adicional},</span>
+                    ? <p className='m-0 fw-medium fs-6 text-center text-secondary'>Adicional: {article.ingredientesAdicionales.map((adicional, i)=>(
+                        <span key={i} className='fw-bold text-black fst-italic'>{adicional.adicional},</span>
                       ))}</p>
                     : <></>
                   }
                   
                   { 
-                    (article.mitad != '')
-                    ? <p className='m-0 fw-medium fs-6 text-center text-secondary'>Mitad: <span className='fw-bold text-black fst-italic'>{article.mitad}</span></p>
+                    (article.mitad != null)
+                    ? <p className='m-0 fw-medium fs-6 text-center text-secondary'>Mitad: <span className='fw-bold text-black fst-italic'>{article.mitad.ingredienteNombre}</span></p>
                     : <></>
                   }
 

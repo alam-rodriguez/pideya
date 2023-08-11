@@ -797,7 +797,8 @@ const givePointsToFriend = async (statistics) => {
 </div>
 
           </div>
-          <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4' style={{height: '10vh'}}>
+          
+          <div className='bg-white position-fixed w-100 bottom-0 start-0 rounded-0 p-4 border-top shadow' style={{height: '10vh'}}>
             { (!isSaving && !isSaved )
                 ? <button className='btn form-control btn-success fs-3 rounded-3' onClick={handleClickGuardar}>Guardar</button>
                 : (isSaving && !isSaved) 
