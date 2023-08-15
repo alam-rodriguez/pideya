@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Firebase
 import { createArticleOfPoints, deleteArticle, deleteArticleOfPoints, updateArticleOfPoints } from '../../../../firebase/firebaseFirestore';
-import { deleteImage, uploadImage } from '../../../../firebase/firebaseStorage';
+import { deleteImage, uploadImage, uploadImageArticle } from '../../../../firebase/firebaseStorage';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
@@ -110,7 +110,7 @@ const CreateOrEditArticlePuntos = () => {
         
         console.log(info)
         const res = await createArticleOfPoints(id, info);      
-        const resImg = await uploadImage(id, img);
+        const resImg = await uploadImageArticle(id, img);
         if(res && resImg) {
           resolve();
           setShowBottonToBack(true);
@@ -168,7 +168,7 @@ const CreateOrEditArticlePuntos = () => {
       console.log(info)
       const res = await updateArticleOfPoints(info);
       if(img != null){
-        const resImg = await uploadImage(info.id, img);
+        const resImg = await uploadImageArticle(info.id, img);
         if(res == true && resImg == true) navigate('/admin-options/ajustes-puntos/view-articles');
       }
       if(res == true) navigate('/admin-options/ajustes-puntos/view-articles');

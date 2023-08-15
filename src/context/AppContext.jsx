@@ -59,6 +59,18 @@ const AppContextProvider = ({children}) => {
 
   const [estadisticasUser, setEstadisticasUser] = useState(null);
 
+  const [articlesOfHome, setArticlesOfHome] = useState(null);
+
+  const [imagenesCategorias, setImagenesCategorias] = useState(null);
+
+  const [imagenesArticulos, setImagenesArticulos] = useState(null);
+
+  const [haEstadoEnHome, sethaEstadoEnHome] = useState(false);
+
+  const [haEstadoEnMenu, setHaEstadoEnMenu] = useState(false);
+
+  const [adminsTokens, setAdminsTokens] = useState([]);
+
   return(
     <AppContext.Provider 
       value={{
@@ -84,6 +96,12 @@ const AppContextProvider = ({children}) => {
         amountPoints, setAmountPoints,
         codeUser, setCodeUser,
         estadisticasUser, setEstadisticasUser,
+        articlesOfHome, setArticlesOfHome,
+        imagenesCategorias, setImagenesCategorias,
+        imagenesArticulos, setImagenesArticulos,
+        haEstadoEnHome, sethaEstadoEnHome,
+        haEstadoEnMenu, setHaEstadoEnMenu,
+        adminsTokens, setAdminsTokens,
       }}
     >
       {children}

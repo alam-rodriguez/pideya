@@ -22,20 +22,30 @@ import PrevieCodeUser from './home/show-code-user/PrevieCodeUser';
 import TemporizadorLastOrder from './home/preview-orders/TemporizadorLastOrder';
 
 // Firebase 
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, getAllCategories, getCategories, getCategoriesFilted, getPedidosByClient, obtenerInfoApp, orderOfToday } from '../firebase/firebaseFirestore';
+import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { auth, getAllCategories, getArticlesByCategory, getCategories, getCategoriesFilted, getPedidosByClient, obtenerInfoApp, orderOfToday } from '../firebase/firebaseFirestore';
+import { getMessaging, getToken, onMessage} from 'firebase/messaging';
+import { messaging, suscribirToAdmin } from '../firebase/firebaseConfig';
+import 'firebase/messaging';
 
 // Toaster
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Swal from 'sweetalert2';
+import { getImagesFromFolder, getImagesFromFolderForHome } from '../firebase/firebaseStorage';
+import { enviarNotis } from '../firebase/firebaseNotifications';
 
 // Temporizador
 // import Temporizador from './home/temporizador/Temporizador';
 
+// import '../firebase/firebaseConfig';
+// import '../firebase-messaging-sw';
+
 const Home = () => {
   const navigate = useNavigate();
 
-  const { color1, categories, setCategories, viewMenu, setViewMenu, articleSeleted, setArticleSeleted, email, setEmail, appInfo, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories,  infoPoints, setInfoPoints, clientOrders, setClientOrders, categoriesOfMenu, setCategoriesOfMenu } = useContext(AppContext);
+  const { color1, categories, setCategories, viewMenu, setViewMenu, articleSeleted, setArticleSeleted, email, setEmail, appInfo, setAppInfo, isAdmin, setIsAdmin, goToHome, setGoToHome, appCategories, setAppCategories,  infoPoints, setInfoPoints, clientOrders, setClientOrders, categoriesOfMenu, setCategoriesOfMenu, imagenesCategorias, setImagenesCategorias, imagenesArticulos, setImagenesArticulos, articlesOfHome, setArticlesOfHome, haEstadoEnHome, sethaEstadoEnHome } = useContext(AppContext);
 
   // const [infoPoints, setInfoPoints] = useState(null);
 
@@ -53,8 +63,16 @@ const Home = () => {
           getData(''); 
         }else {
           getData(user.email);
-          console.log(user.email);
+          console.warn(user);
           setEmail(user.email);
+
+          // requestPermission();
+          // user.getIdToken().then(token => {
+          //   console.log('Token de autenticación:', token);
+          //   // Aquí puedes usar el token para acceder a los servicios de Firebase
+          // }).catch(error => {
+          //   console.error('Error al generar el token:', error);
+          // });
         }
       });
       // obtener info de la app y compruebo si es admin
@@ -92,12 +110,12 @@ const Home = () => {
 
   // Obtener categorias
   useEffect( () => {
-    if(categories == null || categoriesOfMenu == null){
+    if(categories == null && categoriesOfMenu == null && articlesOfHome == null){
       const getInfo = async () => {
+
         let categoryiesOfHome = [];
         let categoriesOfMenu = [];
         const categories = await getAllCategories('viewInHome');
-        console.log(categories)
         
         categories.forEach( (categoria) => {
           if(categoria.viewInHome) categoryiesOfHome.push(categoria);
@@ -108,9 +126,65 @@ const Home = () => {
         categoriesOfMenu.sort((a, b) => a.position - b.position);
         setCategories(categoryiesOfHome);
         setCategoriesOfMenu(categoriesOfMenu);
+    
+
+        let articles = [];
+        await Promise.all(categoryiesOfHome.map(async (category) => {
+          let articlesOfCategory = await getArticlesByCategory(category.id);
+          articlesOfCategory.forEach((article) => {
+            articles.push(article.id);
+          });
+        }));
+        let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
+        setImagenesArticulos(articlesOfHome);
+        
+        console.log(articlesOfHome);
+        console.warn('Debe de verse');
+
+  
+        const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
+        setImagenesCategorias(imagesOfCategories);
+        console.warn('Cargaron categorias'); 
+        
+        sethaEstadoEnHome(true);
+        
       }
       getInfo();
+      
     }
+  }, [] );
+
+  // useEffect(() => {
+  //   if(imagenesArticulos != null && categories == null) return; 
+  //   const f = async () => {
+  //     let articles = [];
+  
+  //       await Promise.all(categories.map(async (category) => {
+  //         let articlesOfCategory = await getArticlesByCategory(category.id);
+          
+  //         articlesOfCategory.forEach((article) => {
+  //           articles.push(article.id);
+  //         });
+  //       }));
+        
+  //       let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
+        
+  //       console.log(articlesOfHome);
+  //       setImagenesArticulos(articlesOfHome);
+  //       console.warn('Debe de verse');
+  //   }
+  //   f();
+  // }, [categories] );
+
+  useEffect(() => {
+    const f = async () => {
+      // const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
+      // setImagenesCategorias(imagesOfCategories);
+
+      // const imagesOfArticles = await getImagesFromFolder('imagenes-articulos');
+      // setImagenesArticulos(imagesOfArticles);
+    }
+    f();
   }, [] );
   
   // Obtener pedidos de usuario
@@ -149,13 +223,13 @@ const Home = () => {
     }
   }
   
-  useEffect( () => {
-    viewOders();
-    const timeInterval = setInterval(viewOders,60000);
-    return () => {
-      clearInterval(timeInterval);
-    }
-  }, [isAdmin] );
+  // useEffect( () => {
+  //   viewOders();
+  //   const timeInterval = setInterval(viewOders,60000);
+  //   return () => {
+  //     clearInterval(timeInterval);
+  //   }
+  // }, [isAdmin] );
 
   // // obtener info de la app y compruebo si es admin
   //   const getData = useCallback(async (emailUser) => {
@@ -186,9 +260,96 @@ const Home = () => {
 
   const [viewCodeUser, setViewCodeUser] = useState('no');
 
+  // const loguearse = () => {
+  //   signInAnonymously(getAuth()).then(usuario => console.log(usuario));
+  // }
+
+  const activarMensajes = async () => {
+    // onAuthStateChanged(auth, (user) => {
+    //   if(user == null && goToHome == true) {
+        
+    //   }else if(user == null && goToHome == false){
+
+    //   }else {
+    //     setEmail(user.email);
+    //   }
+    // });
+    const token = await getToken(messaging, {
+      vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+    }).catch(error => console.log('Tuviste un erroor al generar el toke, papa'));
+
+    if(token) console.log('tu token:', token);
+    if(!token) console.log('no tienes token, rey');
+
+    // suscribirToAdmin();
+
+
+    
+
+    // Create a list containing up to 500 registration tokens.
+    // These registration tokens come from the client FCM SDKs.
+
+    // const registrationTokens = [
+    //   'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
+    //   // 'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
+    // ];
+
+    // const message = {
+    //   data: {score: '850', time: '2:45'},
+    //   tokens: registrationTokens,
+    // };
+
+    // getMessaging.sendMulticast
+
+    
+
+    // getMessaging().sendMulticast(message)
+    //   .then((response) => {
+    //     console.log(response.successCount + ' messages were sent successfully');
+    //   }).catch((e) => console.log(e))
+
+  }
+
+  // useEffect( () => {
+  //   onMessage(messaging, message => {
+  //     console.log('tu mensaje:', message);
+  //     toast(message.notification.title);
+  //   });
+  // }, [] );
+
+  useEffect( () => {
+    onMessage(messaging, message => {
+      console.log('tu mensaje:', message);
+      toast(message.notification.title);
+      viewOders();
+    })
+  }, [] );
+
+
+  // useEffect( () => {
+    
+  //   getToken(messaging, {vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu"});
+
+  //   // const messaging = getMessaging();
+  //   getToken(messaging, { vapidKey: '<YOUR_PUBLIC_VAPID_KEY_HERE>' }).then((currentToken) => {
+  //     if (currentToken) {
+  //       console.log(currentToken);
+  //       // Send the token to your server and update the UI if necessary
+  //       // ...
+  //     } else {
+  //       // Show permission request UI
+  //       console.log('No registration token available. Request permission to generate one.');
+  //       // ...
+  //     }
+  //   }).catch((err) => {
+  //     console.log('An error occurred while retrieving token. ', err);
+  //     // ...
+  //   });
+  // }, [] );
+
   if(categories != null){
     return(
-      <div className={` ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} animate__animated animate__fadeIn container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
+      <div className={` ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
         
         {/* Menu  */}
         <Menu />
@@ -201,6 +362,11 @@ const Home = () => {
             
             {/* Order Section */}
             <OrderSection />
+
+            {/* <h1>Wenas</h1> */}
+            {/* <button onClick={loguearse}>Loguearse</button> */}
+            {/* <button onClick={activarMensajes}>Generar token</button> */}
+            
     
             {/* Use Code Section */}
             <UseCode viewSearchCode={viewSearchCode} setViewSearchCode={setViewSearchCode} />

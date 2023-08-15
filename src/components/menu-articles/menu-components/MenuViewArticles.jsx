@@ -11,15 +11,23 @@ import { AppContext } from '../../../context/AppContext';
 // React Router Dom
 import { useNavigate } from 'react-router-dom';
 
-const MenuViewArticles = ({id, titulo, imgpath, articulo, setViewPreviewInfoArticle }) => {
+const MenuViewArticles = ({id, titulo, img, articulo, setViewPreviewInfoArticle }) => {
   const navigate = useNavigate();
 
-  const { email, color1, articleSelected, setArticleSelected, cart, infoPointsUser, setInfoPointsUser} = useContext(AppContext);
+  const { email, color1, articleSelected, setArticleSelected, cart, infoPointsUser, setInfoPointsUser, imagenesArticulos, setImagenesArticulos} = useContext(AppContext);
 
   // // const [categories, setCategories] = useState(null);
-  const [img, setImg] = useState(null);
+  // const [img, setImg] = useState(null);
 
   const [countItem, setCountItem] = useState(0);
+
+  // const [realPath, setRealPath] = useState(null);
+
+  useEffect( () => {
+    // setRealPath(imgpath.split('/')[1]);
+    // console.log(imagenesArticulos);
+    // console.log(imgpath.split('/')[1]);
+  }, [] );
 
   // Obtener puntos del usuario
   useEffect( () => {
@@ -48,8 +56,8 @@ const MenuViewArticles = ({id, titulo, imgpath, articulo, setViewPreviewInfoArti
   useEffect( () => {
     // console.log(titulo)
     const f = async () => {
-      const img = await getUrlImage(imgpath);
-      setImg(img);
+      // const img = await getUrlImage(imgpath);
+      // setImg(img);
     }
     f();
   }, [] );
@@ -63,21 +71,35 @@ const MenuViewArticles = ({id, titulo, imgpath, articulo, setViewPreviewInfoArti
   }, [cart] );
 
   return (
-    <div className='animate__animated animate__fadeInLeft d-flex flex-column justify-content-center border rounded-3 overflow-hidden position-relative z-0 m-2' style={{height:190, width:160}} onClick={handleClick}>
+    <div className='animate__animated animate__fadeIn d-flex flex-column justify-content-center border rounded-3 overflow-hidden position-relative z-0 m-2' style={{height:190, width:160}} onClick={handleClick}>
       { countItem > 0 
         ? <div className={`${color1.bgColor} rounded-circle position-absolute top-0 end-0 m-3 shadow  d-flex justify-content-center align-content-center `} style={{height:30, width:30}}>
             <p className='fs-5 text-white' >{countItem}</p>
           </div>
         : <></>
       }
-      { img != null
+      {/* { img != null
         ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
         : <div className='d-flex justify-content-center' style={{height:'65%'}}>
             <div className="spinner-border text-success fs-2 align-self-center" role="status" style={{height:50, width:50}}>
               <span className="visually-hidden">Loading...</span>
             </div> 
           </div>
+      } */}
+      {/* { img != null 
+        ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
+        : <></>
+      } */}
+      
+      { img != null
+        ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
+        : <div className='d-flex justify-content-center' style={{height:'65%'}}>
+            <div className="spinner-border text-success fs-5 align-self-center" role="status" style={{height:40, width:40}}>
+              <span className="visually-hidden">Loading...</span>
+            </div> 
+          </div>
       }
+
       <p className='m-0 fs-5 fw-semibold px-2' style={{height:'35%'}}>{titulo}</p>
     </div>
   );

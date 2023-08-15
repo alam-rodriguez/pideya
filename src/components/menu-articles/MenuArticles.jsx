@@ -21,12 +21,13 @@ import { ToastContainer } from 'react-toastify';
 
 // React-Router-Dom
 import { useNavigate } from 'react-router-dom';
+import { getImagesFromFolder, getImagesFromFolderForHome } from '../../firebase/firebaseStorage';
 
 const MenuArticles = () => {
 
   const navigate = useNavigate();
 
-  const { email, categories, setCategories, categoriesOfMenu, setCategoriesOfMenu, setEmail, categorySelected, cart, setCart, cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, setInfoPointsUser, amountPoints, setAmountPoints, infoPoints, setInfoPoints, estadisticasUser, setEstadisticasUser, setClientOrders } = useContext(AppContext)
+  const { email, categories, setCategories, categoriesOfMenu, setCategoriesOfMenu, setEmail, categorySelected, cart, setCart, cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, setInfoPointsUser, amountPoints, setAmountPoints, infoPoints, setInfoPoints, estadisticasUser, setEstadisticasUser, setClientOrders, imagenesCategorias, setImagenesCategorias, imagenesArticulos, setImagenesArticulos, articlesOfHome, haEstadoEnMenu, setHaEstadoEnMenu, adminsTokens, setAdminsTokens } = useContext(AppContext)
 
   const [articlesOfCategorySelected, setArticlesOfCategorySelected] = useState(null);
 
@@ -40,10 +41,11 @@ const MenuArticles = () => {
 
   useEffect( () => {
     const f = async () => {
-      if(infoPoints == null){
-        const infoPointsApp = await obtenerInfoApp();
-        console.log(infoPointsApp.infoPoints);
-        setInfoPoints(infoPointsApp.infoPoints);
+      if(infoPoints == null || adminsTokens.length == 0){
+        const infoApp = await obtenerInfoApp();
+        console.log(infoApp);
+        setInfoPoints(infoApp.infoPoints);
+        setAdminsTokens(infoApp.adminsTokens);
       }
     }
     f();
@@ -112,7 +114,7 @@ const MenuArticles = () => {
 
   // Obtener categorias
   useEffect( () => {
-    if(categories == null || categoriesOfMenu == null){
+    if(categories == null && categoriesOfMenu == null && articlesOfHome == null){
       const getInfo = async () => {
         let categoryiesOfHome = [];
         let categoriesOfMenu = [];
@@ -127,6 +129,27 @@ const MenuArticles = () => {
         categoriesOfMenu.sort((a, b) => a.position - b.position);
         setCategories(categoryiesOfHome);
         setCategoriesOfMenu(categoriesOfMenu);
+
+
+        const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
+        setImagenesCategorias(imagesOfCategories);
+        console.warn('Cargaron categorias');  
+
+
+        let articles = [];
+        await Promise.all(categoryiesOfHome.map(async (category) => {
+          let articlesOfCategory = await getArticlesByCategory(category.id);
+          articlesOfCategory.forEach((article) => {
+            articles.push(article.id);
+          });
+        }));
+        let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
+        setImagenesArticulos(articlesOfHome);
+        
+        console.log(articlesOfHome);
+        console.warn('Debe de verse');
+
+        
       }
       getInfo();
     }
@@ -165,11 +188,32 @@ const MenuArticles = () => {
     else setViewSectionInHeader(false);
   };
 
+  // Obtiene imagenes de articulos que no tengo
+  useEffect(() => {
+    if(categorySelected == null || articlesOfCategorySelected == null || imagenesArticulos == null) return;
+    const f = async () => {
+      let articlesSinImagenes = [];
+      articlesOfCategorySelected.forEach( (article) => {
+        let imgPath = article.imgpath.split('/')[1];
+        if(!imagenesArticulos.hasOwnProperty(imgPath)) articlesSinImagenes.push(imgPath);
+      });
+      if(articlesSinImagenes.length == 0) return;
+
+      let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articlesSinImagenes);
+      setImagenesArticulos(state => ({...state, ...articlesOfHome}));
+    }
+    f();
+    
+  }, [categorySelected, articlesOfCategorySelected]);
+
+  
+  
+
   
 
   if(categoriesOfMenu != null){
     return (
-      <main className={`overflow-scroll z-3 animate__animated animate__fadeIn px-3- vh-100 ${viewPreviewInfoArticle ? 'animate__animated animate__fadeIn z-0 bg-black bg-opacity-25' : ''}`} style={{paddingBottom:'00px'}}>
+      <main className={`${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} overflow-scroll z-3 px-3- vh-100 ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25' : ''}`} style={{paddingBottom:'00px'}}>
         
         <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected}/>
         
@@ -183,16 +227,17 @@ const MenuArticles = () => {
               <h2 className='fs-1 fw-bold'>Menu</h2>
 
               <div className='d-flex flex-wrap justify-content-between'>
-                { categoriesOfMenu != null 
-                  ? categoriesOfMenu.map((category)=>(
-                    <MenuViewCategories
+                { categoriesOfMenu != null
+                  ? categoriesOfMenu.map((category)=>{
+                    const path = category.imgpath.split('/')[1]; 
+                    return <MenuViewCategories
                       key={category.id}
                       nombre={category.nombre}
-                      imgpath={category.imgpath}
+                      img={imagenesCategorias != null ? imagenesCategorias[path] : null}
                       category={category}
                       setViewMenu={setViewMenu}
                     />
-                  ))
+                  })
                   : <></>
                 }
               </div>
@@ -207,7 +252,7 @@ const MenuArticles = () => {
                 : <></> 
               }
               { viewOrderSelectArticle
-                ? <OrderSelectArticle setViewOrderSelectArticle={setViewOrderSelectArticle} articlesOfCategorySelected={articlesOfCategorySelected} />
+                ? <OrderSelectArticle setViewMenu={setViewMenu} setViewOrderSelectArticle={setViewOrderSelectArticle} articlesOfCategorySelected={articlesOfCategorySelected} />
                 : <></>
               }
               <div >
@@ -215,16 +260,17 @@ const MenuArticles = () => {
                     
                     <div className='d-flex flex-wrap justify-content-between'>
                       { articlesOfCategorySelected != null
-                        ? articlesOfCategorySelected.map((articulo)=>(
-                          <MenuViewArticles
+                        ? articlesOfCategorySelected.map((articulo)=>{
+                          const path = articulo.imgpath.split('/')[1];
+                          return <MenuViewArticles
                             key={articulo.id}
                             id={articulo.id}
                             titulo={articulo.titulo}
-                            imgpath={articulo.imgpath}
+                            img={imagenesArticulos != null ? imagenesArticulos[path] : null}
                             articulo={articulo}
                             setViewPreviewInfoArticle={setViewPreviewInfoArticle}
                           />
-                        ))
+                        })
                       : <></>
                       }
                 </div>

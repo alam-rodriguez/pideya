@@ -32,7 +32,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
   const navigate = useNavigate();
 
-  const { color1, cart, setCart, email, setEmail, categorySelected, cartOfCategoryPoints, setCartOfCategoryPoints, amountPoints, setAmountPoints, infoPoints, setInfoPoints, estadisticasUser, setEstadisticasUser } = useContext(AppContext);
+  const { color1, cart, setCart, email, setEmail, categorySelected, cartOfCategoryPoints, setCartOfCategoryPoints, amountPoints, setAmountPoints, infoPoints, setInfoPoints, estadisticasUser, setEstadisticasUser, adminsTokens } = useContext(AppContext);
 
   const [total, setTotal] = useState(0);
   const [puntos, setPuntos] = useState(0);
@@ -57,6 +57,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
   const [stateUserInfo, setStateUserInfo] = useState(null);
 
   useEffect( () => {
+    console.log(adminsTokens);
     if(stateUserInfo == null){
       const f = async () => {
         const infoUser = await getInfoUser(email);
@@ -246,6 +247,45 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
   const [isOrdenando, setIsOrdenando] = useState(false);
   const [isOrded, setIsOrded] = useState(false);
 
+  const enviarNotificacionDePedido = () => {
+
+    adminsTokens.forEach( (adminToken) => {
+    
+      
+      const notificationData = {
+      notification: {
+        title: "Hay un nuevo pedido",
+        body: "Hay un nuevo pedido tienes que entrar a la app",
+        click_action : "https://example.com/URL-de-tu-sitio",
+      },
+      to : adminToken,
+    };
+
+   
+     
+    const headers = {
+      'Authorization': `Bearer AAAAQzkXViU:APA91bF3r-zFyoUMjw2mn5oQSbpCSF-bSakDFQ_a8avWBeul37SqSxE551h5wNnsSvzsdK6nv0XZXUWQvcn-Z-EyKBbj9v9i8PlC4vxmsCcUNBotjd2RfrSKqqmUTTxSbMZAGmP0tAiw`,
+      'Content-Type': 'application/json',
+    };
+    
+    fetch('https://fcm.googleapis.com/fcm/send', {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(notificationData),
+    })
+    .then(response => response.json())
+    .then(data => {
+     console.log('Respuesta de la API:', data);
+   })
+   .catch(error => {
+     console.error('Error:', error);
+    });
+    
+    
+  });
+    
+  }
+
   const handleClickOrdenar = async () => {
 
     if( nombre.length < 3) {
@@ -381,6 +421,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
             // console.log(pointsInfo);
             givePointsToFriendWhoInviteMe(pedido.email);
             if(guardarEstadisca && resPedido && infoUser) {
+              enviarNotificacionDePedido();
               resolve('bien');
               setIsOrded(true);
               setTimeout(() => {

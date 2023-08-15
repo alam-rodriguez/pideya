@@ -21,6 +21,8 @@ import { existAdmin, guardarSemisAdmins, obtenerInfoApp, obtenerSemiAdmids } fro
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
 import { ToastContainer, toast } from 'react-toastify';
+import { getToken } from 'firebase/messaging';
+import { messaging } from '../../../../firebase/firebaseConfig';
 
 const SignInLikeSemiAdmin = () => {
 
@@ -52,11 +54,20 @@ const SignInLikeSemiAdmin = () => {
 
       let admin = true;
       let saveAdminBD = true;
+
+      const token = await getToken(messaging, {
+        vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+      }).catch(e => console.log(e));
+      console.log(token);
   
       if(semiAdmins.semisAdmins == undefined){
+
+
         admin = await registrarSemiAdmin();
         const admins = [ admin ];
-        saveAdminBD = await guardarSemisAdmins( admins );
+        const adminsTokens = [ ...semiAdmins.adminsTokens, token];
+        
+        saveAdminBD = await guardarSemisAdmins( admins, adminsTokens );
         // if(saveAdminBD) navigate('/home');
         // else console.log('ha ocurrido un error');
       } else if(semiAdmins.semisAdmins.length <= 5){
@@ -69,9 +80,13 @@ const SignInLikeSemiAdmin = () => {
           }
         });
         if(createAdmin){
+          
           console.log([...semiAdmins.semisAdmins, admin]);
+          
           const admins = [...semiAdmins.semisAdmins, admin];
-          saveAdminBD = await guardarSemisAdmins( admins );
+          const adminsTokens = [ ...semiAdmins.adminsTokens, token];
+
+          saveAdminBD = await guardarSemisAdmins( admins, adminsTokens );
         }else {
           alert('Ya esta cuenta esta registrada como semi admin');
         }

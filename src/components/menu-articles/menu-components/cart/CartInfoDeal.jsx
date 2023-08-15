@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
+
+import { useNavigate, Link } from 'react-router-dom';
 
 const CartInfoDeal = ({setMetodoPago, setHoraQuierePedido}) => {
+
+  const navigate = useNavigate();
 
   useEffect( () => {
     // const fecha = new Date();
@@ -17,9 +21,11 @@ const CartInfoDeal = ({setMetodoPago, setHoraQuierePedido}) => {
 
       <div className='mt-5'>
         <p className='mb-1 fs-5 fw-bold'>Direccion</p>
-        <div className='border-0 border-bottom'>
-          <p className='mb-2 fs-5 fw-normal'>Guerra, frente al parque.</p>
-        </div>
+        <Link className='text-black text-decoration-none' target='_blank' to='https://www.google.com/maps/place/Pizza+mia.+Suc,+guerra./@18.5672077,-69.7116289,14.92z/data=!4m6!3m5!1s0x8eaf8244725a6e4d:0x758a34e58d802ccd!8m2!3d18.558281!4d-69.6995147!16s%2Fg%2F11cns76ywy?entry=ttu'>
+          <div className='border-0 border-bottom'>
+            <p className='mb-2 fs-5 fw-normal'>Guerra, frente al parque.</p>
+          </div>
+        </Link>
       </div>
 
       <div className='mt-5'>

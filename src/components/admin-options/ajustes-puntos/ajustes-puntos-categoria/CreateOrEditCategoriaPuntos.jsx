@@ -84,12 +84,12 @@ const CreateCategory = () => {
 
       const id = uuidv4();
       const categoryInfo = {
-        id: id, 
+        id: 'category-puntos', 
         nombreCategoria: nombreCategoria, 
         sizeView: sizeView,
         viewInHome: viewInHome, 
         viewInMenu:viewInMenu,
-        imgpath: `imagenes-categorias/${id}`,
+        imgpath: `imagenes-categorias/category-puntos`,
         isCategoryOfPoints: true,
         position: 0,
       }
@@ -140,12 +140,14 @@ const CreateCategory = () => {
     });
     else{
       const categoryInfo = {
-        id: categorySelected.id, 
+        // id: categorySelected.id,
+        id: 'category-puntos',
         nombreCategoria: nombreCategoria, 
         sizeView: sizeView,
         viewInHome: viewInHome, 
         viewInMenu: viewInMenu,
-        imgpath: categorySelected.imgpath,
+        // imgpath: categorySelected.imgpath,category-puntos
+        imgpath: `imagenes/category-puntos`,
         isCategoryOfPoints: true,
       }
       const updateCategoryPromise = new Promise( async (resolve, reject) => {

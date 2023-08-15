@@ -8,30 +8,49 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 // Context
 import { AppContext } from '../../../context/AppContext';
 
-const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
+const MenuViewCategories = ({nombre, img, category, setViewMenu}) => {
 
-  const {categorySelected, setCategorySelected, cart, color1} = useContext(AppContext);
+  const {categorySelected, setCategorySelected, cart, color1, imagenesCategorias, setImagenesCategorias, imagenesArticulos, setHaEstadoEnMenu} = useContext(AppContext);
 
   // const [categorySelect, setCategorySelect] = useState(null);
-  const [img, setImg] = useState('');
+  // const [img, setImg] = useState('');
 
   const [countItem, setCountItem] = useState(0);
 
   const handleClick = () => {
-    // console.log(category);
+    console.log(category);
+    // console.log(imgpath.split('/')[1]);
+    // console.log( imagenesCategorias[realPath] );
+
     setCategorySelected(category);
     setViewMenu(1);
     // console.log(categorySelect);
     // setCategoriesSelected(categorySelect);
   }
 
+  const [realPath, setrealPath] = useState(null);
+
   useEffect( () => {
-    // console.log(category.position);
+    setHaEstadoEnMenu(true);
+    // console.log(imagenesCategorias);
+    // setrealPath(imgpath.split('/')[1]);
+
+
+    // console.log(imagenesCategorias[realPath]);
+
+    // console.log( imagenesCategorias[imgpath.split('/')[1]] );
+
+    
+    // // console.log(category.position);
+    // imagenesCategorias.forEach( img => {
+    //   console.log(img)
+    // });
     const f = async () => {
+      
       // console.log(category);
       // const res = await getArticlesByCategory(id);
-      const img = await getUrlImage(imgpath);
-      setImg(img);
+      // const img = await getUrlImage('');
+      // setImg(img);
       // setCategorySelect(res);
     }
     f();
@@ -48,17 +67,26 @@ const MenuViewCategories = ({nombre, imgpath, category, setViewMenu}) => {
   }, [cart] );
 
   return (
-    <div className='animate__animated animate__fadeInLeft d-flex flex-column border rounded-3 overflow-hidden position-relative my-2' style={{height:190, width:170}} onClick={handleClick}>
+    <div className='animate__animated-animate__fadeIn d-flex flex-column border rounded-3 overflow-hidden position-relative my-2' style={{height:190, width:170}} onClick={handleClick}>
       { countItem > 0 
         ? <div className={`${color1.bgColor} rounded-circle position-absolute top-0 end-0 m-3 shadow  d-flex justify-content-center align-content-center `} style={{height:30, width:30}}>
             <p className='fs-3 text-white' >{countItem}</p>
           </div>
         : <></>
       }
-      { img != null 
+      {/* { img != null 
         ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
         : <div className='d-flex justify-content-center' style={{height:'65%'}}>
             <div className="spinner-border text-success fs-2 align-self-center" role="status" style={{height:50, width:50}}>
+              <span className="visually-hidden">Loading...</span>
+            </div> 
+          </div>
+      } */}
+
+      { img != null
+        ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
+        : <div className='d-flex justify-content-center' style={{height:'65%'}}>
+            <div className="spinner-border text-success fs-5 align-self-center" role="status" style={{height:40, width:40}}>
               <span className="visually-hidden">Loading...</span>
             </div> 
           </div>

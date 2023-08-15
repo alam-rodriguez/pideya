@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage';
 
 const storage = getStorage();
 
@@ -84,3 +84,94 @@ export const deleteImage = async (id) => {
      return false;
   }
  }
+
+//  Obtener todas las imagenes de las categorias
+// export const getAllImages = async () => {
+//   const folderRef = ref(storage, 'imagenes-categorias');
+
+//   try {
+//     const result = await listAll(folderRef);
+//     const imageUrls = [];
+
+//     for (const itemRef of result.items) {
+//       const url = await getDownloadURL(itemRef);
+//       imageUrls.push(url);
+//     }
+
+//     return imageUrls;
+//   } catch (error) {
+//     throw new Error("Error al obtener las imágenes: " + error.message);
+//   }
+
+// }
+export async function getImagesFromFolder(folderPath) {
+  const folderRef = ref(storage, folderPath);
+
+  try {
+    const result = await listAll(folderRef);
+    const imageUrls = {};
+
+    for (const itemRef of result.items) {
+      const url = await getDownloadURL(itemRef);
+      imageUrls[itemRef.name] = url;
+      // imageUrls.push({[itemRef.name]:url});
+    }
+
+    console.log(imageUrls);
+    return imageUrls;
+  } catch (error) {
+    throw new Error("Error al obtener las imágenes: " + error.message);
+  }
+}
+
+export async function getImagesFromFolderForHome(folderPath, ids) {
+  const folderRef = ref(storage, folderPath);
+
+  try {
+    const result = await listAll(folderRef);
+    const imageUrls = {};
+
+    for (const itemRef of result.items) {
+
+      console.log( itemRef.name );
+      if(ids.includes(itemRef.name)){
+        const url = await getDownloadURL(itemRef);
+        imageUrls[itemRef.name] = url;
+      }
+      // ids.forEach( async (id) => {
+      //   if(id == itemRef.name){
+      //     // return;
+      //   }
+      // });
+      
+      // console.log(itemRef.name);
+      // if(ids.includes(itemRef.name)) {
+      //   const url = await getDownloadURL(itemRef);
+      //   imageUrls[itemRef.name] = url;
+        
+      //   // console.log(imageUrls[itemRef.name] = url);
+      // }
+
+      // imageUrls.push({[itemRef.name]:url});
+    }
+
+    // console.warn('----------------------------------------------');
+    console.log(imageUrls);
+    // console.warn('----------------------------------------------');
+
+    return imageUrls;
+  } catch (error) {
+    throw new Error("Error al obtener las imágenes: " + error.message);
+  }
+}
+
+// (async () => {
+//   const folderPath = "imagenes-categorias";
+
+//   try {
+//     const imageUrls = await getImagesFromFolder(folderPath);
+//     console.log("URLs de imágenes:", imageUrls);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// })();

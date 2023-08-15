@@ -22,7 +22,7 @@ const Article = ({viewArticleSelected, setViewArticleSelected}) => {
     return (
       <main className={`animate__animated ${viewArticleSelected=='abrir' ? 'animate__slideInRight' : viewArticleSelected=='cerrar' ? 'animate__slideOutRight' : ''}  container-fluid p-0 position-fixed start-0 top-0 vh-100 vw-100 bg-light z-3`}>
         <ImCancelCircle className=' position-absolute text-white display-3' style={{top:20, left:20}} onClick={handleClickBack} />
-        <img className='w-100 object-fit-cover'  src={articleSeleted.imgUrl} style={{height:'78%'}} />
+        <img className='w-100 object-fit-cover' src={articleSeleted.img} style={{height:'78%'}} />
         <div className='d-flex flex-column justify-content-between h-25 bg-white rounded-5 position-absolute bottom-0 w-100 p-4 pt-0 shadow-lg'>
             <div className='align-self-center mt-2 bg-secondary rounded-5' style={{height:4, width:40}}></div>
             <h3 className='fw-bold fs-2 mt-3'>{articleSeleted.title}</h3>

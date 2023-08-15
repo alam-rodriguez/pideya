@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // Componentes
 // import LoNuevoItem from '../section-lo-nuevo/LoNuevoItem';
@@ -7,7 +7,12 @@ import ArticleCard from './ArticleCard';
 // Firebase
 import { getArticlesByCategory } from '../../../firebase/firebaseFirestore';
 
+// Context
+import { AppContext } from '../../../context/AppContext';
+
 const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
+
+  const { imagenesArticulos, setImagenesArticulos, articlesOfHome, setArticlesOfHome } = useContext(AppContext);
 
   const [articlesOfThisMenu, setArticlesOfThisMenu] = useState(null);
 
@@ -32,20 +37,24 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
         </div>
         <div className={`d-flex flex-nowrap ${articlesOfThisMenu != null ? 'overflow-x-scroll': ''}`}>
 
-        { articlesOfThisMenu != null 
-          ? articlesOfThisMenu.map((article)=>(
-            <ArticleCard
+        { articlesOfThisMenu != null && imagenesArticulos != null
+          ? articlesOfThisMenu.map( (article) => {
+            let imgId = article.imgpath.split('/')[1];
+            // console.log(imgId);
+            // console.log(imagenesArticulos)
+            // console.log(imagenesArticulos[imgId])
+            return <ArticleCard
               key={article.id}
               title={article.titulo} 
               subTitle={article.subtitulo} 
               price={article.puntos}
-              img={article.imgpath}
+              img={imagenesArticulos[imgId]}
               size={category.sizeView}
               isCategoryOfPoints={category.isCategoryOfPoints}
               setViewArticleSelected={setViewArticleSelected}
               // id='345678' 
             />
-          ))
+          })
           : <>
               <ArticleCard
                 key={0}

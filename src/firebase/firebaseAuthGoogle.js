@@ -9,10 +9,10 @@ export const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
 // Registro de usuario como admin
-export const registrarAdmin = async () => {
+export const registrarAdmin = async (token) => {
   try {
     const result = await signInWithPopup(auth, provider);
-    await guardarAdmin(result.user.email);
+    await guardarAdmin(result.user.email, token);
     return result.user.email;
   } catch (e) {
     console.log(e);

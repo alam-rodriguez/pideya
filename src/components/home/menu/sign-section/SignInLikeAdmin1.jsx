@@ -20,8 +20,11 @@ import { existAdmin } from '../../../../firebase/firebaseFirestore';
 
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
+import { messaging } from '../../../../firebase/firebaseConfig';
+import { getToken } from 'firebase/messaging';
 
 const SignInLikeAdmin1 = () => {
+
   const navigate = useNavigate();
 
   const { isAdmin } = useContext(AppContext); 
@@ -41,8 +44,13 @@ const SignInLikeAdmin1 = () => {
   const logUserAdmin = async () => {
     
     const res = await existAdmin();
-    if( res == false){
-      await registrarAdmin();
+    if(res == false){
+      const token = await getToken(messaging, {
+        vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+      }).catch(e => console.log(e));
+      console.log(token);
+
+      await registrarAdmin(token);
       navigate('/registro-like-admin/details-app');
     }else {
       console.log('Lo siento pero no se puede cambiar el admin de la app una vez creado, para mas informacion comuniquese con el desarrollador');

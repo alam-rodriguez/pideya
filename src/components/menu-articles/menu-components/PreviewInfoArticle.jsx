@@ -7,6 +7,7 @@ const PreviewInfoArticle = ({setViewPreviewInfoArticle, setViewOrderSelectArticl
   const {color1, articleSelected, setArticleSelected, precioArticleSelected, setPrecioArticleSelected} = useContext(AppContext);
 
   useEffect( () => {
+    if(articleSelected.precios.length == 1) handleClickPrecio(articleSelected.precios[0]);
     console.log(articleSelected.complex);
     if(!articleSelected.complex){
       // console.log(precio);
@@ -25,16 +26,19 @@ const PreviewInfoArticle = ({setViewPreviewInfoArticle, setViewOrderSelectArticl
 
   const [close, setClose] = useState(false);
   const handleClickCancelar = () => {
+    // if(precioArticleSelected == false) return;
+    console.log('aqui');
     setClose(true);
     setTimeout(() => {
-      setArticleSelected(null);
+      console.log(precioArticleSelected);
+      // setArticleSelected(null);
       setViewPreviewInfoArticle(false);
     }, 400);
   }
 
   if( articleSelected.complex ){
     return (
-      <div className={`d-flex justify-content-center align-items-end z-2 animate__animated ${!close ? 'animate__fadeInUp' : 'animate__fadeOutDown'} vw-100 vh-100 position-fixed position-sticky- start-0 top-0`}>
+      <div className={`d-flex justify-content-center align-items-end z-2 animate__animated ${!close ? 'animate__fadeInUp' : 'animate__fadeOutDown'} vw-100 vh-100 position-fixed position-sticky- start-0 top-0`} onClick={handleClickCancelar}>
         
         <div className='animate__animated animate__fadeInUp z-3 bg-white overflow-y-scroll border mb-3 rounded-3 shadow p-4 d-flex flex-column justify-content-between' style={{width:'95%', height:'52%'}}>
             <div className=''>

@@ -15,11 +15,11 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
-const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelected}) => {
+const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfCategorySelected}) => {
 
-  const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart,  cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser} = useContext(AppContext);
+  const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart,  cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, imagenesArticulos} = useContext(AppContext);
 
-  const [img, setImg] = useState(null);
+  // const [img, setImg] = useState(null);
   
   // pedido
   const [valorArticulo, setValorArticulo] = useState(0);
@@ -65,12 +65,12 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
 
   useEffect( () => {
 
-    console.log(articlesOfCategorySelected);
+    console.log(categorySelected);
 
     // Obtiene img del articulo
     const f = async () => {
-      const res = await getUrlImage(articleSelected.imgpath);
-      setImg(res);
+      // const res = await getUrlImage(articleSelected.imgpath);
+      // setImg(res);
       // console.log(precioArticleSelected);
       // console.log(articleSelected);
       
@@ -131,6 +131,22 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
     setCantidadArticulo(cantidadArticulo - 1);
   };
 
+  const goToBack = () => {
+    Swal.fire({
+      icon: 'warning',
+      title: 'No puedes',
+      text: 'No puedes seleccionar este articulo porque no tienes sufientes puntos',
+    });
+    setTimeout(() => {
+      setViewMenu(0);
+      setClose(true);
+      setArticleSelected(null);
+      setPrecioArticleSelected(null);
+      setViewOrderSelectArticle(false);
+    }, 5000);
+
+  }
+
   const handleClickAgregar = () => {
 
     if(!categorySelected.isCategoryOfPoints){
@@ -142,7 +158,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
         precio: valorArticulo,
         precioVariosArticles: valorVariosArticulos,
         size: articleSelected.complex ? precioArticleSelected.sizeArticle : '',
-        imgArticlePath: img,
+        imgArticlePath: imagenesArticulos[articleSelected.imgpath.split('/')[1]],
         id: articleSelected.id,
         categoria: categorySelected,
         complex: articleSelected.complex,
@@ -151,6 +167,10 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
       handleClickBack();
       console.log(pedido);
     }else if(categorySelected.isCategoryOfPoints){
+      if(infoPointsUser == null){
+        goToBack();
+        return;
+      }
       console.log(infoPointsUser)
       const pointsUser = infoPointsUser.puntosRestantes;
       let pointsMakeOrder = Number(valorPuntosVariosArticulos);
@@ -158,11 +178,8 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
         pointsMakeOrder += element.PuntosVariosArticles;
       });
       if(pointsUser < pointsMakeOrder){
-        Swal.fire({
-          icon: 'warning',
-          title: 'No puedes',
-          text: 'No puedes seleccionar este articulo porque no tienes sufientes puntos',
-        });
+        goToBack();
+        return;
         // toast.warn('No puedes seleccionar este articulo porque no tienes sufientes puntos', {
         //   position: "bottom-center",
         //   autoClose: 5000,
@@ -173,7 +190,6 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
         //   progress: undefined,
         //   theme: "light",
         // });
-        return;
       }
       const pedido = {
         ingredientePrincipal: articleSelected.titulo,
@@ -183,7 +199,7 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
         puntos: valorPuntosArticulo,
         PuntosVariosArticles: valorPuntosVariosArticulos,
         size: articleSelected.complex ? precioArticleSelected.sizeArticle : '',
-        imgArticlePath: img,
+        imgArticlePath: imagenesArticulos[articleSelected.imgpath.split('/')[1]],
         id: articleSelected.id,
         categoria: categorySelected,
         complex: articleSelected.complex,
@@ -212,8 +228,8 @@ const OrderSelectArticle = ({setViewOrderSelectArticle, articlesOfCategorySelect
         <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
           <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
         </div>
-        { img != null
-          ? <img src={img} className='w-100 object-fit-cover ' style={{height:'100%'}} />
+        { imagenesArticulos != null
+          ? <img src={imagenesArticulos[articleSelected.imgpath.split('/')[1]]} className='w-100 object-fit-cover ' style={{height:'100%'}} />
           : <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
               <span className="visually-hidden">Loading...</span>
             </div> 

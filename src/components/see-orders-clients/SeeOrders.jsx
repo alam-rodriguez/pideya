@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
 import Swal from 'sweetalert2';
 import { onAuthStateChanged } from 'firebase/auth';
+import { onMessage } from 'firebase/messaging';
+import { toast, ToastContainer } from 'react-toastify';
+import { messaging } from '../../firebase/firebaseConfig';
 
 const SeeOrders = () => {
 
@@ -116,11 +119,19 @@ const SeeOrders = () => {
 
   useEffect( () => {
     viewNewOrders();
-    const timeInterval = setInterval(viewNewOrders, 60000);
-    return () => {
-      clearInterval(timeInterval);
-    }
+    // const timeInterval = setInterval(viewNewOrders, 60000);
+    // return () => {
+    //   clearInterval(timeInterval);
+    // }
   }, [dateToSearch, viewSaved] );
+
+  useEffect( () => {
+    onMessage(messaging, message => {
+      console.log('tu mensaje:', message);
+      toast(message.notification.title);
+      viewNewOrders();
+    })
+  }, [] );
 
   // const viewOders = async () => {
   //   if(isAdmin == 'admin' || isAdmin == 'semi-admin'){
@@ -238,6 +249,7 @@ const SeeOrders = () => {
         }
 
       </section>
+      <ToastContainer />
     </main>
   )
 }

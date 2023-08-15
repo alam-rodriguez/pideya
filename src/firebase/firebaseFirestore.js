@@ -16,7 +16,8 @@ export const existAdmin = async () => {
     if( docSnap.exists()) return true;
     else return false;
   }catch(e){
-    return e;
+    console.log(e);
+    return true;
   }
 }
 
@@ -36,10 +37,11 @@ export const existAdmin = async () => {
 // }
 
 // Guardar el admin
-export const guardarAdmin = async (admin) => {
+export const guardarAdmin = async (admin, token) => {
   try{
     await setDoc(doc(db, 'app', 'app-info'), {
       admin: admin,
+      adminsTokens: [token],
     });
     return true;
   }catch(e){
@@ -48,10 +50,11 @@ export const guardarAdmin = async (admin) => {
 }
 
 // Guardar el admin
-export const guardarSemisAdmins = async (admins) => {
+export const guardarSemisAdmins = async (admins, adminsTokens) => {
   try{
     await updateDoc(doc(db, 'app', 'app-info'), {
       semisAdmins: admins,
+      adminsTokens: adminsTokens,
     });
     return true;
   }catch(e){
@@ -225,7 +228,7 @@ export const getArticlesByCategory = async (categoriaId) => {
     return data;
   }catch(e){
     console.log(e);
-    return e.message;
+    return false;
   }
 }
 
@@ -649,7 +652,7 @@ export const savePointsUser = async (email, newPoints) => {
 export const createCategoryPunto = async (info) => {
   try{
     await setDoc(doc(db, 'categorias', 'category-puntos'), {
-      id: 'category-puntos',
+      id: info.id,
       nombre: info.nombreCategoria,
       sizeView: info.sizeView,
       viewInHome: info.viewInHome,
@@ -670,12 +673,15 @@ export const updateCategoryPunto = async (info) => {
   try {
     const catRef = doc(db, 'categorias', 'category-puntos');
     await updateDoc(catRef, {
-      id: 'category-puntos',
+      id: info.id,
       nombre: info.nombreCategoria,
       sizeView: info.sizeView,
       viewInHome: info.viewInHome,
       viewInMenu: info.viewInMenu,
       isCategoryOfPoints: true,
+
+      imgpath: info.imgpath,
+
     });
     return true;
   } catch (e) {

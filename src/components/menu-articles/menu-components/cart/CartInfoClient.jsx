@@ -4,7 +4,11 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
 
   const handleChangeNombre = (e) => setNombre(e.target.value);
   const handleChangeDireccion = (e) => setDireccion(e.target.value);
-  const handleChangeDirrecion = (e) => setTelefono(e.target.value);
+  const handleChangeTelefono = (e) => {
+    const lS = e.target.value[e.target.value.length - 1];
+    if(lS != 0 && lS != 1 &&  lS != 2 && lS != 3 && lS != 4 && lS != 5 && lS != 6 && lS != 7 && lS != 8 && lS != 9) return;
+    setTelefono(e.target.value);
+  }
   const handleChangeEntrega = (e) => setEntrega(e.target.value);
   const handleChangeLugarDelivey = (e) => {
     const value = e.target.value;
@@ -47,7 +51,6 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
   return (
     <div className='border-0 border-bottom- border-black '>
 
-    
       <p className='fw-bold fs-5 mt-5'>Por favor conplete la informacion y no cierre la app en el proceso! <br /> Precios con impuestos incluidos</p>
 
       <div className='mb-5'>
@@ -62,7 +65,7 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
 
       <div className='mb-5'>
         <p className='m-0 fs-5 fw-semibold'>Numero de telefono:</p>
-        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="number" placeholder='Tu numero' value={telefono} onChange={handleChangeDirrecion} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="number" placeholder='Tu numero' value={telefono} onChange={handleChangeTelefono} />
       </div>
 
       <div className='mt-5'>
