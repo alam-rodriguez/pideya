@@ -126,23 +126,23 @@ const Home = () => {
         setCategoriesOfMenu(categoriesOfMenu);
     
 
-        // let articles = [];
-        // await Promise.all(categoryiesOfHome.map(async (category) => {
-        //   let articlesOfCategory = await getArticlesByCategory(category.id);
-        //   articlesOfCategory.forEach((article) => {
-        //     articles.push(article.id);
-        //   });
-        // }));
-        // let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
-        // setImagenesArticulos(articlesOfHome);
+        let articles = [];
+        await Promise.all(categoryiesOfHome.map(async (category) => {
+          let articlesOfCategory = await getArticlesByCategory(category.id);
+          articlesOfCategory.forEach((article) => {
+            articles.push(article.id);
+          });
+        }));
+        let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
+        setImagenesArticulos(articlesOfHome);
         
-        // console.log(articlesOfHome);
-        // console.warn('Debe de verse');
+        console.log(articlesOfHome);
+        console.warn('Debe de verse');
 
   
-        // const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
-        // setImagenesCategorias(imagesOfCategories);
-        // console.warn('Cargaron categorias'); 
+        const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
+        setImagenesCategorias(imagesOfCategories);
+        console.warn('Cargaron categorias'); 
         
         sethaEstadoEnHome(true);
         
@@ -212,14 +212,14 @@ const Home = () => {
             {/* Use Code Section */}
             <UseCode viewSearchCode={viewSearchCode} setViewSearchCode={setViewSearchCode} />
     
-            {/* { (categories != null)
+            { (categories != null)
               ? categories.map( (category) => (
                   <CategoryMenu key={category.id} category={category} color1={color1} setViewArticleSelected={setViewArticleSelected} />
                 ))
               : <></>
             }
 
-            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} /> */}
+            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
 
             {/* Seccion para mostrar codigo de usuario */}
             <PrevieCodeUser viewCodeUser={viewCodeUser} setViewCodeUser={setViewCodeUser} />
