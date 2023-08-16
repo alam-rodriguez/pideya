@@ -22,24 +22,48 @@ export const analytics = getAnalytics(app);
 export const messaging = getMessaging(app);
 
 
-export const suscribirToAdmin = () => {
+// export const suscribirToAdmin = () => {
   
-  const registrationTokens = [
-    'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
-    'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
-  ];
+//   const registrationTokens = [
+//     'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
+//     'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
+//   ];
   
-  const message = {
-    data: {score: '850', time: '2:45'},
-    tokens: registrationTokens,
-  };
+//   const message = {
+//     data: {score: '850', time: '2:45'},
+//     tokens: registrationTokens,
+//   };
   
-  getMessaging().sendMulticast(message)
-    .then((response) => {
-      console.log(response.successCount + ' messages were sent successfully');
-    });
+//   getMessaging().sendMulticast(message)
+//     .then((response) => {
+//       console.log(response.successCount + ' messages were sent successfully');
+//     });
 
-}
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // export function requestPermission() {

@@ -1,35 +1,71 @@
-importScripts("https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/10.1.0/firebase-messaging-compat.js");
+// importScripts("https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js");
+// importScripts("https://www.gstatic.com/firebasejs/10.1.0/firebase-messaging-compat.js");
 
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBT8qzZZQmmh0e6cgneR-c0dPNag_jI6_Y",
-  authDomain: "tutorial-push-web-25a39.firebaseapp.com",
-  projectId: "tutorial-push-web-25a39",
-  storageBucket: "tutorial-push-web-25a39.appspot.com",
-  messagingSenderId: "947571596751",
-  appId: "1:947571596751:web:afbf2e599a7276c60586ba",
-  measurementId: "G-YM4BKFR0RL"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBT8qzZZQmmh0e6cgneR-c0dPNag_jI6_Y",
+//   authDomain: "tutorial-push-web-25a39.firebaseapp.com",
+//   projectId: "tutorial-push-web-25a39",
+//   storageBucket: "tutorial-push-web-25a39.appspot.com",
+//   messagingSenderId: "947571596751",
+//   appId: "1:947571596751:web:afbf2e599a7276c60586ba",
+//   measurementId: "G-YM4BKFR0RL"
+// };
 
-const app = firebase.initializeApp(firebaseConfig);
-const messaging = firebase.messaging(app);
+// const app = firebase.initializeApp(firebaseConfig);
+// const messaging = firebase.messaging(app);
 
-messaging.onBackgroundMessage(payload => {
-  console.log('Recibiste mensaje mientras estabas ausente');
+// messaging.onBackgroundMessage(payload => {
+//   console.log('Recibiste mensaje mientras estabas ausente');
 
-  // previo a mostrar notificacion
-  const notificationTitle = payload.notification.title;
-  const notificatioOptions = {
-    body: payload.notification.body,
-    icon: '/logo192.png'
-  }
+//   // previo a mostrar notificacion
+//   const notificationTitle = payload.notification.title;
+//   const notificatioOptions = {
+//     body: payload.notification.body,
+//     icon: '/logo192.png'
+//   }
 
-  return self.registration.showNotification(
-    notificationTitle,
-    notificatioOptions
-  )
-});
+//   return self.registration.showNotification(
+//     notificationTitle,
+//     notificatioOptions
+//   )
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import { initializeApp } from "firebase/app";
 // import { getMessaging, getToken } from "firebase/messaging";
 
