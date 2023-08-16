@@ -126,23 +126,23 @@ const Home = () => {
         setCategoriesOfMenu(categoriesOfMenu);
     
 
-        let articles = [];
-        await Promise.all(categoryiesOfHome.map(async (category) => {
-          let articlesOfCategory = await getArticlesByCategory(category.id);
-          articlesOfCategory.forEach((article) => {
-            articles.push(article.id);
-          });
-        }));
-        let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
-        setImagenesArticulos(articlesOfHome);
+        // let articles = [];
+        // await Promise.all(categoryiesOfHome.map(async (category) => {
+        //   let articlesOfCategory = await getArticlesByCategory(category.id);
+        //   articlesOfCategory.forEach((article) => {
+        //     articles.push(article.id);
+        //   });
+        // }));
+        // let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
+        // setImagenesArticulos(articlesOfHome);
         
-        console.log(articlesOfHome);
-        console.warn('Debe de verse');
+        // console.log(articlesOfHome);
+        // console.warn('Debe de verse');
 
   
-        const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
-        setImagenesCategorias(imagesOfCategories);
-        console.warn('Cargaron categorias'); 
+        // const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
+        // setImagenesCategorias(imagesOfCategories);
+        // console.warn('Cargaron categorias'); 
         
         sethaEstadoEnHome(true);
         
