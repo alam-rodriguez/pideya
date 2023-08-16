@@ -72,7 +72,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
           <div className='d-flex justify-content-center align-items-center position-relative' style={{height:'65%'}}  onClick={handleClick}>
             
             { img != null 
-              ? <img className='w-100 h-100 object-fit-cover animate__animated animate__fadeIn' src={img} alt="" />
+              ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
               : <></>
             }
 
@@ -90,7 +90,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
       return (
         <div className={`${!haEstadoEnHome ? 'animate__animated...animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:190, width:160, minWidth:160}} onClick={handleClick}>
         { img != null 
-          ? <img className='w-100 h-100 object-fit-cover animate__animated animate__fadeIn' src={img} alt="" />
+          ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
           : <></>
         }
       </div>
@@ -100,7 +100,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
     return (
       <div className={`${!haEstadoEnHome ? 'animate__animated...animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:160, width:240, minWidth:240}} onClick={handleClick}>
         { img != null 
-          ? <img className='w-100 h-100 object-fit-cover animate__animated animate__fadeIn' src={img} alt="" />
+          ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
           : <></>
         }
       </div>
@@ -119,7 +119,7 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
           : <></>
         } */}
         { img != null 
-          ? <img className='w-100 h-100 object-fit-cover animate__animated animate__fadeIn' src={img} alt="" />
+          ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
           : <></>
         }
       </div>

@@ -17,7 +17,7 @@
   box-shadow: none;
   border: none;
   padding: 0;
-  margin: 0;
+  margin: auto;
   position: relative;
   left: 0;
   transition: all 0.45s ease-out;

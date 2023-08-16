@@ -22,10 +22,10 @@ import PrevieCodeUser from './home/show-code-user/PrevieCodeUser';
 import TemporizadorLastOrder from './home/preview-orders/TemporizadorLastOrder';
 
 // Firebase 
-import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth, getAllCategories, getArticlesByCategory, getCategories, getCategoriesFilted, getPedidosByClient, obtenerInfoApp, orderOfToday } from '../firebase/firebaseFirestore';
-import { getMessaging, getToken, onMessage} from 'firebase/messaging';
-import { messaging, suscribirToAdmin } from '../firebase/firebaseConfig';
+import { onMessage} from 'firebase/messaging';
+import { messaging } from '../firebase/firebaseConfig';
 import 'firebase/messaging';
 
 // Toaster
@@ -33,14 +33,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Swal from 'sweetalert2';
+
 import { getImagesFromFolder, getImagesFromFolderForHome } from '../firebase/firebaseStorage';
-import { enviarNotis } from '../firebase/firebaseNotifications';
 
 // Temporizador
 // import Temporizador from './home/temporizador/Temporizador';
 
-// import '../firebase/firebaseConfig';
-// import '../firebase-messaging-sw';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -152,51 +150,7 @@ const Home = () => {
       getInfo();
       
     }
-  }, [] );
-
-  // useEffect(() => {
-  //   if(imagenesArticulos != null && categories == null) return; 
-  //   const f = async () => {
-  //     let articles = [];
-  
-  //       await Promise.all(categories.map(async (category) => {
-  //         let articlesOfCategory = await getArticlesByCategory(category.id);
-          
-  //         articlesOfCategory.forEach((article) => {
-  //           articles.push(article.id);
-  //         });
-  //       }));
-        
-  //       let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
-        
-  //       console.log(articlesOfHome);
-  //       setImagenesArticulos(articlesOfHome);
-  //       console.warn('Debe de verse');
-  //   }
-  //   f();
-  // }, [categories] );
-
-  useEffect(() => {
-    const f = async () => {
-      // const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
-      // setImagenesCategorias(imagesOfCategories);
-
-      // const imagesOfArticles = await getImagesFromFolder('imagenes-articulos');
-      // setImagenesArticulos(imagesOfArticles);
-    }
-    f();
-  }, [] );
-  
-  // Obtener pedidos de usuario
-  // useEffect(()=>{
-  //   if(email != null && clientOrders == null){
-  //     const f = async () => {
-  //       const pedidosClient = await getPedidosByClient( email );
-  //       setClientOrders(pedidosClient);
-  //     }
-  //     f();
-  //   }
-  // }, [clientOrders] );
+  }, [] );  
 
   const handleClickMain = () => {
     if(viewMenu) setViewMenu(false);
@@ -223,99 +177,12 @@ const Home = () => {
     }
   }
   
-  // useEffect( () => {
-  //   viewOders();
-  //   const timeInterval = setInterval(viewOders,60000);
-  //   return () => {
-  //     clearInterval(timeInterval);
-  //   }
-  // }, [isAdmin] );
-
-  // // obtener info de la app y compruebo si es admin
-  //   const getData = useCallback(async (emailUser) => {
-  //     const appInfo = await obtenerInfoApp();
-  //     if(appInfo == 'no hay datos de esta app'){
-  //       navigate('/registro-like-admin');
-  //     }else {
-  //       if(appInfo.nombre == undefined){
-  //         navigate('/registro-like-admin/details-app');
-  //       } else {
-  //         setAppInfo(appInfo);
-  //         if(appInfo.admin == emailUser) setIsAdmin(true);
-  //         setAppCategories(await getCategories());
-  //       }
-  //     }
-  //   }, [] );
-
-  // obtiene categorias y articulos para renderizar
-    // const getInfo = useCallback(async () => {
-    //   const res = await getCategoriesFilted('viewInHome');
-    //   setCategories(res);
-    //   console.log(res);
-    // }, [] );
 
   const [viewSearchCode, setViewSearchCode] = useState('nada');
 
   const [viewArticleSelected, setViewArticleSelected] = useState('no');
 
   const [viewCodeUser, setViewCodeUser] = useState('no');
-
-  // const loguearse = () => {
-  //   signInAnonymously(getAuth()).then(usuario => console.log(usuario));
-  // }
-
-  const activarMensajes = async () => {
-    // onAuthStateChanged(auth, (user) => {
-    //   if(user == null && goToHome == true) {
-        
-    //   }else if(user == null && goToHome == false){
-
-    //   }else {
-    //     setEmail(user.email);
-    //   }
-    // });
-    const token = await getToken(messaging, {
-      vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
-    }).catch(error => console.log('Tuviste un erroor al generar el toke, papa'));
-
-    if(token) console.log('tu token:', token);
-    if(!token) console.log('no tienes token, rey');
-
-    // suscribirToAdmin();
-
-
-    
-
-    // Create a list containing up to 500 registration tokens.
-    // These registration tokens come from the client FCM SDKs.
-
-    // const registrationTokens = [
-    //   'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
-    //   // 'cnuHf2SI_-9hNF5yS_e7f7:APA91bF_DT501yiLakxFrRK4qYp0r-9n1qldvUVsxpbHqqDAad0ORBmhudXVlmyC5pFXmGJRTbkJZHDnGiBvcb-JgswXP9BKRWKOt1ROSjXAvmAUj37h_uF59PRxjKfc3oIVpkoiNcD4',
-    // ];
-
-    // const message = {
-    //   data: {score: '850', time: '2:45'},
-    //   tokens: registrationTokens,
-    // };
-
-    // getMessaging.sendMulticast
-
-    
-
-    // getMessaging().sendMulticast(message)
-    //   .then((response) => {
-    //     console.log(response.successCount + ' messages were sent successfully');
-    //   }).catch((e) => console.log(e))
-
-  }
-
-  // useEffect( () => {
-  //   onMessage(messaging, message => {
-  //     console.log('tu mensaje:', message);
-  //     toast(message.notification.title);
-  //   });
-  // }, [] );
 
   useEffect( () => {
     onMessage(messaging, message => {
@@ -326,59 +193,33 @@ const Home = () => {
   }, [] );
 
 
-  // useEffect( () => {
-    
-  //   getToken(messaging, {vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu"});
-
-  //   // const messaging = getMessaging();
-  //   getToken(messaging, { vapidKey: '<YOUR_PUBLIC_VAPID_KEY_HERE>' }).then((currentToken) => {
-  //     if (currentToken) {
-  //       console.log(currentToken);
-  //       // Send the token to your server and update the UI if necessary
-  //       // ...
-  //     } else {
-  //       // Show permission request UI
-  //       console.log('No registration token available. Request permission to generate one.');
-  //       // ...
-  //     }
-  //   }).catch((err) => {
-  //     console.log('An error occurred while retrieving token. ', err);
-  //     // ...
-  //   });
-  // }, [] );
-
   if(categories != null){
     return(
-      <div className={` ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
+      <div className={`col-12 col-md-6 mx-auto ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
         
         {/* Menu  */}
         <Menu />
   
         <div className={`container-sm main px-4 z-3 ${viewMenu ? 'border border-secondary shadow-lg overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '' : ''}} onClick={handleClickMain}>
-          <main className={`${viewMenu ? 'position-absolute w-100': ''} `}>
+          <main className={`mx-auto ${viewMenu ? 'position-absolute w-100': ''} `}>
 
             {/* Header */}
             <Header className='' />
             
             {/* Order Section */}
-            <OrderSection />
-
-            {/* <h1>Wenas</h1> */}
-            {/* <button onClick={loguearse}>Loguearse</button> */}
-            {/* <button onClick={activarMensajes}>Generar token</button> */}
-            
+            <OrderSection />            
     
             {/* Use Code Section */}
             <UseCode viewSearchCode={viewSearchCode} setViewSearchCode={setViewSearchCode} />
     
-            { (categories != null)
+            {/* { (categories != null)
               ? categories.map( (category) => (
                   <CategoryMenu key={category.id} category={category} color1={color1} setViewArticleSelected={setViewArticleSelected} />
                 ))
               : <></>
             }
 
-            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
+            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} /> */}
 
             {/* Seccion para mostrar codigo de usuario */}
             <PrevieCodeUser viewCodeUser={viewCodeUser} setViewCodeUser={setViewCodeUser} />
