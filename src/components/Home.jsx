@@ -213,6 +213,8 @@ const Home = () => {
   //   requestPermission();
   // }, [] );
 
+  
+
   if(categories != null){
     return(
       <div className={`col-12 col-md-6 mx-auto ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} container-fluid vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
