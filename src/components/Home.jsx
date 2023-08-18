@@ -218,10 +218,10 @@ const Home = () => {
   if(categories != null){
     return(
       <main>
-        <div className={`col-12 col-md-6 mx-auto ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} container-fluid h-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
+        {/* <div className={`col-12 col-md-6 mx-auto ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} container-fluid h-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}> */}
         
         {/* Menu  */}
-        <Menu />
+        {/* <Menu /> */}
   
         <div className={`container-sm main px-4 z-3 ${viewMenu ? 'border border-secondary shadow-lg overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '' : ''}} onClick={handleClickMain} >
           <div className={`mx-auto ${viewMenu ? 'position-absolute w-100': ''} `}>
@@ -267,7 +267,7 @@ const Home = () => {
         <ContactDev />
 
         <ToastContainer />
-      </div>
+      {/* </div> */}
       </main>
     );
   }else {
