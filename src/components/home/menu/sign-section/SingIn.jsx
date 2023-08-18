@@ -33,6 +33,7 @@ const SingIn = () => {
 
   const [appName, setAppName] = useState('');
 	useEffect(()=>{
+    console.log(appInfo);
 		if(appInfo != null)setAppName(appInfo.nombre);
     else handleClickBack();
 	});
@@ -43,7 +44,7 @@ const SingIn = () => {
 
     const iniciarSesionPromise = new Promise( async (resolve, reject) => {
       
-      const res = await registrarUsuario();
+      const res = await registrarUsuario(appInfo.admin, appInfo.adminsTokens);
 
       if(res == 'usuario-registrado'){
         resolve();

@@ -249,44 +249,53 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
   const enviarNotificacionDePedido = () => {
 
-    adminsTokens.forEach( (adminToken) => {
+    for (const key in adminsTokens) {
+      // console.log(key, adminsTokens[key]);
+
+      const notificationData = {
+        notification: {
+          title: "Hay un nuevo pedido",
+          body: "Hay un nuevo pedido tienes que entrar a la app",
+          click_action : "https://example.com/URL-de-tu-sitio",
+        },
+        to : adminsTokens[key],
+      };   
+       
+      const headers = {
+        'Authorization': `Bearer AAAAQzkXViU:APA91bF3r-zFyoUMjw2mn5oQSbpCSF-bSakDFQ_a8avWBeul37SqSxE551h5wNnsSvzsdK6nv0XZXUWQvcn-Z-EyKBbj9v9i8PlC4vxmsCcUNBotjd2RfrSKqqmUTTxSbMZAGmP0tAiw`,
+        'Content-Type': 'application/json',
+      };
+      
+      fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(notificationData),
+      })
+      .then(response => response.json())
+      .then(data => {
+       console.log('Respuesta de la API:', data);
+     })
+     .catch(error => {
+       console.error('Error:', error);
+      });
+
+
+    }
+    
+
+    // adminsTokens.forEach( (adminToken) => {
     
       
-      const notificationData = {
-      notification: {
-        title: "Hay un nuevo pedido",
-        body: "Hay un nuevo pedido tienes que entrar a la app",
-        click_action : "https://example.com/URL-de-tu-sitio",
-      },
-      to : adminToken,
-    };
-
-   
-     
-    const headers = {
-      'Authorization': `Bearer AAAAQzkXViU:APA91bF3r-zFyoUMjw2mn5oQSbpCSF-bSakDFQ_a8avWBeul37SqSxE551h5wNnsSvzsdK6nv0XZXUWQvcn-Z-EyKBbj9v9i8PlC4vxmsCcUNBotjd2RfrSKqqmUTTxSbMZAGmP0tAiw`,
-      'Content-Type': 'application/json',
-    };
-    
-    fetch('https://fcm.googleapis.com/fcm/send', {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(notificationData),
-    })
-    .then(response => response.json())
-    .then(data => {
-     console.log('Respuesta de la API:', data);
-   })
-   .catch(error => {
-     console.error('Error:', error);
-    });
+      
     
     
-  });
+  // });
     
   }
 
-  const handleClickOrdenar = async () => {
+  const handleClickOrdenar = async (e) => {
+
+    e.preventDefault();
 
     if( nombre.length < 3) {
       notificacion('El nombre debe de tener por lo menos 3 caracteres');
@@ -562,41 +571,44 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
   return (
     <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute top-0 start-0 bg-white overflow-hidden z-1`}>
 
-      {/* Header del cart */}
+      <form onSubmit={handleClickOrdenar}>
+        {/* Header del cart */}
       <CartHeader handleClickBack={handleClickBack} />
 
-      <section className='w-100 vh-100 overflow-y-scroll pt-5' style={{paddingBottom:100}}>
+        <section className='w-100 vh-100 overflow-y-scroll pt-5' style={{paddingBottom:100}}>
 
-        <div className='px-4'>
+          <div className='px-4'>
 
-          {/* Info Deal */}
-          <CartInfoDeal setMetodoPago={setMetodoPago} setHoraQuierePedido={setHoraQuierePedido} />
+            {/* Info Deal */}
+            <CartInfoDeal setMetodoPago={setMetodoPago} setHoraQuierePedido={setHoraQuierePedido} />
 
-          {/* Articles view */}
-          <CartArticlesView handleClickBack={handleClickBack} />
+            {/* Articles view */}
+            <CartArticlesView handleClickBack={handleClickBack} />
 
-          {/* Btn para ir a menu */}
-          <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 mt-5`} onClick={handleClickAddMoreArticles}>Agregar mas Articulo</button>
+            {/* Btn para ir a menu */}
+            <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 mt-5`} onClick={handleClickAddMoreArticles}>Agregar mas Articulo</button>
 
-          {/* Info Client */}
-          <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
+            {/* Info Client */}
+            <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
 
+          </div>
+
+          {/* Totales */}
+          <CartTotal isDelivery={entrega} precioDelivey={lugarDelivery.costo} lugarDelivery={lugarDelivery} setPrecioTotal={setPrecioTotal} total={total} setTotal={setTotal} puntos={puntos} setPuntos={setPuntos} />
+
+        </section>
+
+        {/* Btn para ordenar */}
+        {/* <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100 shadow-lg border-top' style={{}}> */}
+        <div className='p-4 bg-white position-fixed bottom-0 w-100 shadow-lg border-top' style={{}}>
+          { existUser && !isOrdenando
+            ? <button type='submit' className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Ordenar</button>
+              : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>
+              : isOrdenando && isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickVolver}>Volver</button>
+            : <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickRegistrarse}>Registrarse</button>
+          }
         </div>
-
-        {/* Totales */}
-        <CartTotal isDelivery={entrega} precioDelivey={lugarDelivery.costo} lugarDelivery={lugarDelivery} setPrecioTotal={setPrecioTotal} total={total} setTotal={setTotal} puntos={puntos} setPuntos={setPuntos} />
-
-      </section>
-
-      {/* Btn para ordenar */}
-      <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100 shadow-lg border-top' style={{}}>
-        { existUser && !isOrdenando
-          ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickOrdenar}>Ordenar</button>
-            : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>
-            : isOrdenando && isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickVolver}>Volver</button>
-          : <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickRegistrarse}>Registrarse</button>
-        }
-      </div>
+      </form>
       <ToastContainer />
     </div>
   );

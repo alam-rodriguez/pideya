@@ -131,23 +131,23 @@ const MenuArticles = () => {
         setCategoriesOfMenu(categoriesOfMenu);
 
 
-        const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
-        setImagenesCategorias(imagesOfCategories);
-        console.warn('Cargaron categorias');  
+        // const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
+        // setImagenesCategorias(imagesOfCategories);
+        // console.warn('Cargaron categorias');  
 
 
-        let articles = [];
-        await Promise.all(categoryiesOfHome.map(async (category) => {
-          let articlesOfCategory = await getArticlesByCategory(category.id);
-          articlesOfCategory.forEach((article) => {
-            articles.push(article.id);
-          });
-        }));
-        let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
-        setImagenesArticulos(articlesOfHome);
+        // let articles = [];
+        // await Promise.all(categoryiesOfHome.map(async (category) => {
+        //   let articlesOfCategory = await getArticlesByCategory(category.id);
+        //   articlesOfCategory.forEach((article) => {
+        //     articles.push(article.id);
+        //   });
+        // }));
+        // let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
+        // setImagenesArticulos(articlesOfHome);
         
-        console.log(articlesOfHome);
-        console.warn('Debe de verse');
+        // console.log(articlesOfHome);
+        // console.warn('Debe de verse');
 
         
       }
@@ -189,22 +189,22 @@ const MenuArticles = () => {
   };
 
   // Obtiene imagenes de articulos que no tengo
-  useEffect(() => {
-    if(categorySelected == null || articlesOfCategorySelected == null || imagenesArticulos == null) return;
-    const f = async () => {
-      let articlesSinImagenes = [];
-      articlesOfCategorySelected.forEach( (article) => {
-        let imgPath = article.imgpath.split('/')[1];
-        if(!imagenesArticulos.hasOwnProperty(imgPath)) articlesSinImagenes.push(imgPath);
-      });
-      if(articlesSinImagenes.length == 0) return;
+  // useEffect(() => {
+  //   if(categorySelected == null || articlesOfCategorySelected == null || imagenesArticulos == null) return;
+  //   const f = async () => {
+  //     let articlesSinImagenes = [];
+  //     articlesOfCategorySelected.forEach( (article) => {
+  //       let imgPath = article.imgpath.split('/')[1];
+  //       if(!imagenesArticulos.hasOwnProperty(imgPath)) articlesSinImagenes.push(imgPath);
+  //     });
+  //     if(articlesSinImagenes.length == 0) return;
 
-      let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articlesSinImagenes);
-      setImagenesArticulos(state => ({...state, ...articlesOfHome}));
-    }
-    f();
+  //     let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articlesSinImagenes);
+  //     setImagenesArticulos(state => ({...state, ...articlesOfHome}));
+  //   }
+  //   f();
     
-  }, [categorySelected, articlesOfCategorySelected]);
+  // }, [categorySelected, articlesOfCategorySelected]);
 
   
   
@@ -229,11 +229,11 @@ const MenuArticles = () => {
               <div className='d-flex flex-wrap justify-content-between'>
                 { categoriesOfMenu != null
                   ? categoriesOfMenu.map((category)=>{
-                    const path = category.imgpath.split('/')[1]; 
+                    // const path = category.imgpath.split('/')[1]; 
                     return <MenuViewCategories
                       key={category.id}
                       nombre={category.nombre}
-                      img={imagenesCategorias != null ? imagenesCategorias[path] : null}
+                      imgPath={category.imgpath}
                       category={category}
                       setViewMenu={setViewMenu}
                     />
@@ -266,7 +266,7 @@ const MenuArticles = () => {
                             key={articulo.id}
                             id={articulo.id}
                             titulo={articulo.titulo}
-                            img={imagenesArticulos != null ? imagenesArticulos[path] : null}
+                            imgPath={articulo.imgpath}
                             articulo={articulo}
                             setViewPreviewInfoArticle={setViewPreviewInfoArticle}
                           />

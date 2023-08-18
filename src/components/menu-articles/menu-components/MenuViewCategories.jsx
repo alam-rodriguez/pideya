@@ -8,14 +8,31 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 // Context
 import { AppContext } from '../../../context/AppContext';
 
-const MenuViewCategories = ({nombre, img, category, setViewMenu}) => {
+const MenuViewCategories = ({nombre, imgPath, category, setViewMenu}) => {
 
   const {categorySelected, setCategorySelected, cart, color1, imagenesCategorias, setImagenesCategorias, imagenesArticulos, setHaEstadoEnMenu} = useContext(AppContext);
 
   // const [categorySelect, setCategorySelect] = useState(null);
   // const [img, setImg] = useState('');
 
+  const [imgUrl, setImgUrl] = useState(null);
+
   const [countItem, setCountItem] = useState(0);
+
+  useEffect( () => {
+    let imgId = imgPath.split('/')[1];
+    if(imagenesCategorias[imgId]) {
+      setImgUrl(imagenesCategorias[imgId]);
+      return;
+    }
+    console.log('--------------');
+    const f = async () => {
+      const imgRes = await getUrlImage(imgPath);
+      setImgUrl(imgRes);
+      setImagenesCategorias(state => ({...state, [imgId]:imgRes}));
+    }
+    f();
+  }, [] )
 
   const handleClick = () => {
     console.log(category);
@@ -83,8 +100,8 @@ const MenuViewCategories = ({nombre, img, category, setViewMenu}) => {
           </div>
       } */}
 
-      { img != null
-        ? <img className='object-fit-cover' style={{height:'65%'}} src={img} alt="" />
+      { imgUrl != null
+        ? <img className='object-fit-cover' style={{height:'65%'}} src={imgUrl} alt="" />
         : <div className='d-flex justify-content-center' style={{height:'65%'}}>
             <div className="spinner-border text-success fs-5 align-self-center" role="status" style={{height:40, width:40}}>
               <span className="visually-hidden">Loading...</span>

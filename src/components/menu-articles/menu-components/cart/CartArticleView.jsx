@@ -8,9 +8,12 @@ import { AiOutlinePlusCircle } from 'react-icons/ai';
 // Context
 import { AppContext } from '../../../../context/AppContext';
 
+// Firebase
+import { getUrlImage } from '../../../../firebase/firebaseStorage';
+
 const CartArticleView = ({article, index}) => {
 
-  const { cart, setCart, cartOfCategoryPoints, setCartOfCategoryPoints } = useContext(AppContext);
+  const { cart, setCart, cartOfCategoryPoints, setCartOfCategoryPoints, imagenesArticulos, setImagenesArticulos } = useContext(AppContext);
 
   // const [pricioOriginal, setPricioOriginal] = useState(cart[index].precio);
 
@@ -18,8 +21,26 @@ const CartArticleView = ({article, index}) => {
 
   const [isArticleOfPoints, setIsArticleOfPoints] = useState(false);
 
+  const [imgUrl, setImgUrl] = useState(null);
+
   useEffect( () => {
     console.log(article);
+    const imgId = article.imgPath.split('/')[1];
+    if(imagenesArticulos[imgId]) {
+      setImgUrl(imagenesArticulos[imgId]);
+      return
+    }
+    console.log('--------------');
+    const f = async () => {
+      const imgRes = await getUrlImage(article.imgPath);
+      setImgUrl(imgRes);
+      setImagenesArticulos(state => ({...state, [imgId]:imgRes}));
+    }
+    f();
+
+  }, [] );
+
+  useEffect( () => {
     let adicionales = '';
     article.ingredientesAdicionales.map((adicional)=>{
       adicionales += adicional.adicional + ',';
@@ -88,7 +109,10 @@ const CartArticleView = ({article, index}) => {
   if(!isArticleOfPoints){
     return (
       <div className='row position-relative mt-2 pb-2 border-bottom'>
-        <img src={article.imgArticlePath} className='col-3 object-fit-cover rounded-5 mt-3' style={{height:60}} />
+        { imgUrl != null
+          ? <img src={imgUrl} className='col-3 object-fit-cover rounded-5 mt-3' style={{height:60}} />
+          : <></>
+        }
   
         <div className='col-7'>
           { article.complex 

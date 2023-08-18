@@ -37,9 +37,9 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
         </div>
         <div className={`d-flex flex-nowrap ${articlesOfThisMenu != null ? 'overflow-x-scroll': ''}`}>
 
-        { articlesOfThisMenu != null && imagenesArticulos != null
+        { articlesOfThisMenu != null
           ? articlesOfThisMenu.map( (article) => {
-            let imgId = article.imgpath.split('/')[1];
+            // let imgId = article.imgpath.split('/')[1];
             // console.log(imgId);
             // console.log(imagenesArticulos)
             // console.log(imagenesArticulos[imgId])
@@ -48,7 +48,7 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
               title={article.titulo} 
               subTitle={article.subtitulo} 
               price={article.puntos}
-              img={imagenesArticulos[imgId]}
+              imgPath={article.imgpath}
               size={category.sizeView}
               isCategoryOfPoints={category.isCategoryOfPoints}
               setViewArticleSelected={setViewArticleSelected}
@@ -57,13 +57,15 @@ const CategoryMenu = ({category, color1, setViewArticleSelected}) => {
           })
           : <>
               <ArticleCard
+                toCharge={true}
                 key={0}
-                size={'normal'}
+                size={category.sizeView}
                 setViewArticleSelected={() => {}}
               />
               <ArticleCard
+                toCharge={true}
                 key={1}
-                size={'normal'}
+                size={category.sizeView}
                 setViewArticleSelected={() => {}}
               />
             </>

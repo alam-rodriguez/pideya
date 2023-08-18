@@ -21,7 +21,7 @@ import { existAdmin, guardarSemisAdmins, obtenerInfoApp, obtenerSemiAdmids } fro
 // Contetx
 import { AppContext } from '../../../../context/AppContext';
 import { ToastContainer, toast } from 'react-toastify';
-import { getToken } from 'firebase/messaging';
+import { getMessaging, getToken } from 'firebase/messaging';
 import { messaging } from '../../../../firebase/firebaseConfig';
 
 const SignInLikeSemiAdmin = () => {
@@ -46,31 +46,65 @@ const SignInLikeSemiAdmin = () => {
     }
   }, [] );
 
+  const genearToken = () => {
+    const messaging = getMessaging();
+    getToken(messaging, { vapidKey: '<YOUR_PUBLIC_VAPID_KEY_HERE>' }).then((currentToken) => {
+      if (currentToken) {
+        return currentToken;
+      } else {
+        function requestPermission() {
+          console.log('Requesting permission...');
+          Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+              console.log('Notification permission granted.');
+            }
+          })
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+      // ...
+    });
+  }
+
   const logUserAdmin = async () => {
 
     const createSemiAdminPromise = new Promise( async (resolve, reject) => {
 
       const semiAdmins = await obtenerInfoApp();
 
-      let admin = true;
+      let admin = undefined;
       let saveAdminBD = true;
 
-      const token = await getToken(messaging, {
-        vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
-      }).catch(e => console.log(e));
-      console.log(token);
+      // const token = await getToken(messaging, {
+      //   vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+      // }).catch(e => console.log(e));
+      // console.log(token);
   
       if(semiAdmins.semisAdmins == undefined){
 
-
         admin = await registrarSemiAdmin();
+
+        const token = await getToken(messaging, {
+          vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+        }).catch(e => console.log(e));
+        console.log(token);
+
         const admins = [ admin ];
-        const adminsTokens = [ ...semiAdmins.adminsTokens, token];
+        const newAdminsTokens = {...semiAdmins.adminsTokens};
+        newAdminsTokens[admin] = token;
+        // const adminsTokens = {...semiAdmins.adminsTokens, admin:token};
         
-        saveAdminBD = await guardarSemisAdmins( admins, adminsTokens );
+        if(admin != false) saveAdminBD = await guardarSemisAdmins( admins, newAdminsTokens );
         // if(saveAdminBD) navigate('/home');
         // else console.log('ha ocurrido un error');
       } else if(semiAdmins.semisAdmins.length <= 5){
+
+        const token = await getToken(messaging, {
+          vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+        }).catch(e => console.log(e));
+        console.log(token); 
+
         let createAdmin = true;
         admin = await registrarSemiAdmin();
         semiAdmins.semisAdmins.forEach( adminApp => {
@@ -81,13 +115,29 @@ const SignInLikeSemiAdmin = () => {
         });
         if(createAdmin){
           
-          console.log([...semiAdmins.semisAdmins, admin]);
+          // console.log([...semiAdmins.semisAdmins, admin]);
           
           const admins = [...semiAdmins.semisAdmins, admin];
-          const adminsTokens = [ ...semiAdmins.adminsTokens, token];
-
-          saveAdminBD = await guardarSemisAdmins( admins, adminsTokens );
+          const newAdminsTokens = {...semiAdmins.adminsTokens};
+          // const adminsTokens =  {...semiAdmins.adminsTokens, admin:token};
+          newAdminsTokens[admin] = token;
+          console.log( admin );
+          if(admin != false) saveAdminBD = await guardarSemisAdmins( admins, newAdminsTokens );
         }else {
+
+          const admin = registrarSemiAdmin();
+          console.log(admin)
+
+          const token = await getToken(messaging, {
+            vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+          }).catch(e => console.log(e));
+          console.log(token);
+          console.log(admin);
+
+          let newAdminsTokens = {...semiAdmins.adminsTokens};
+          newAdminsTokens[admin] = token;
+          // const adminsTokens =  {...semiAdmins.adminsTokens, admin:token};
+          if(admin != false) saveAdminBD = await guardarSemisAdmins( semiAdmins.admins, newAdminsTokens );
           alert('Ya esta cuenta esta registrada como semi admin');
         }
         // if(saveAdminBD) navigate('/home');

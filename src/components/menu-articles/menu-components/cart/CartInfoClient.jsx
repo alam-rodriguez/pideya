@@ -5,9 +5,17 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
   const handleChangeNombre = (e) => setNombre(e.target.value);
   const handleChangeDireccion = (e) => setDireccion(e.target.value);
   const handleChangeTelefono = (e) => {
+    console.log(e.target.value)
     const lS = e.target.value[e.target.value.length - 1];
+    console.log(lS);
+    // if(lS == '') return;
+    if(e.target.value.length < telefono.length){
+      setTelefono(e.target.value );
+      return;
+    }
     if(lS != 0 && lS != 1 &&  lS != 2 && lS != 3 && lS != 4 && lS != 5 && lS != 6 && lS != 7 && lS != 8 && lS != 9) return;
-    setTelefono(e.target.value);
+    console.log(telefono.length, e.target.value.length)
+    setTelefono(e.target.value );
   }
   const handleChangeEntrega = (e) => setEntrega(e.target.value);
   const handleChangeLugarDelivey = (e) => {
@@ -55,23 +63,23 @@ const CartInfoClient = ({nombre, setNombre, direccion, setDireccion, telefono, s
 
       <div className='mb-5'>
         <p className='m-0 fs-5 fw-semibold'>Nombre:</p>
-        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="text" placeholder='Tu nombre' value={nombre} onChange={handleChangeNombre} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="text" placeholder='Tu nombre' value={nombre} required minLength={3} onChange={handleChangeNombre} />
       </div>
 
       <div className='mb-5'>
         <p className='m-0 fs-5 fw-semibold'>Dirrecion:</p>
-        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="text" placeholder='Tu Direccion' value={direccion} onChange={handleChangeDireccion} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="text" placeholder='Tu Direccion' value={direccion} required minLength={3} onChange={handleChangeDireccion} />
       </div>
 
       <div className='mb-5'>
         <p className='m-0 fs-5 fw-semibold'>Numero de telefono:</p>
-        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="number" placeholder='Tu numero' value={telefono} onChange={handleChangeTelefono} />
+        <input className='ps-0 form-control border-0 rounded-0 border-bottom fs-5' type="tel" placeholder='Tu numero' value={telefono} required minLength={9} onChange={handleChangeTelefono} />
       </div>
 
       <div className='mt-5'>
         <p className='mb-0 fs-5 fw-semibold'>Entrega:</p>
         <div className='border-0 border-bottom'>
-          <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent' onChange={handleChangeEntrega}>
+          <select className='w-100 border-0 fs-5 rounded-3 text-black bg-transparent' required onChange={handleChangeEntrega}>
             <option value=""></option>
             <option value="ire a recogerla">Ire a recogerla</option>
             <option value="quiero delivery">Quiero Delivery</option>

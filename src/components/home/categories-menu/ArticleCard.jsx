@@ -15,7 +15,7 @@ import { FaPizzaSlice } from 'react-icons/fa';
 // images
 import imgGris from '../../../images/home/gris.jpg'
 
-const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id, setViewArticleSelected }) => {
+const ArticleCard = ({title, subTitle, price, imgPath, size, isCategoryOfPoints, id, setViewArticleSelected, toCharge }) => {
 
   const navigate = useNavigate();
 
@@ -26,30 +26,48 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
   const [realPath, setRealPath] = useState(null);
 
   useEffect(() => {
-    // console.log(img)
-    if(img != undefined) setRealPath(img.split('/')[1]);
-  }, [img] );
-
-  useEffect( () => {
-    // console.log(img)
-    if(img == null) {
-      setImgUrl(imgGris);
+    if(toCharge) return;
+    let imgId = imgPath.split('/')[1];
+    // console.log(imagenesArticulos);
+    if(imagenesArticulos[imgId]) {
+      setImgUrl(imagenesArticulos[imgId]);
       return;
-    }
-    // console.log( isCategoryOfPoints );
+    };
     const f = async () => {
-      const res = await getUrlImage(img);
-      // setImgUrl(res);
+      console.warn('-----------------------------------------')
+      const res = await getUrlImage(imgPath);
+      setImgUrl(res);
+      setImagenesArticulos(state => ({...state, [imgId]: res}));
+      // const newArrayImg = {...imagenesArticulos};
+      // newArrayImg[imgId] = res;
+      // setImagenesArticulos(newArrayImg);
     }
     f();
+    // if(img == null) setRealPath(img.split('/')[1]);
+
   }, [] );
+
+  // useEffect( () => {
+  //   // console.log(img)
+  //   if(img == null) {
+  //     setImgUrl(imgGris);
+  //     return;
+  //   }
+  //   // console.log( isCategoryOfPoints );
+  //   const f = async () => {
+  //     const res = await getUrlImage(img);
+  //     // setImgUrl(res);
+  //   }
+  //   f();
+  // }, [] );
 
   const handleClick = () => {
     // console.log(imgs.split('/')[1])
+    // setArticleSeleted(null);
 
     if(viewMenu) return;
     setArticleSeleted({
-      img, 
+      imgPath, 
       title, 
       subTitle, 
       id,
@@ -68,11 +86,11 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
   if(size == 'small'){
     if(isCategoryOfPoints){
       return (
-        <div className={`${!haEstadoEnHome ? 'animate__animated....animate__fadeIn' : ''}  me-4 rounded-5 overflow-hidden d-flex flex-column`} style={{height:190, width:160, minWidth:160}}>
+        <div className={`${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}  me-4 rounded-5 overflow-hidden d-flex flex-column`} style={{height:190, width:160, minWidth:160}}>
           <div className='d-flex justify-content-center align-items-center position-relative' style={{height:'65%'}}  onClick={handleClick}>
             
-            { img != null 
-              ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
+            { imgUrl != null
+              ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
               : <></>
             }
 
@@ -89,8 +107,8 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
     }else{
       return (
         <div className={`${!haEstadoEnHome ? 'animate__animated...animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:190, width:160, minWidth:160}} onClick={handleClick}>
-        { img != null 
-          ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
+        { setImgUrl != null
+          ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
           : <></>
         }
       </div>
@@ -99,8 +117,8 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
   }else if(size == 'normal'){
     return (
       <div className={`${!haEstadoEnHome ? 'animate__animated...animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:160, width:240, minWidth:240}} onClick={handleClick}>
-        { img != null 
-          ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
+        { setImgUrl != null
+          ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
           : <></>
         }
       </div>
@@ -118,8 +136,8 @@ const ArticleCard = ({title, subTitle, price, img, size, isCategoryOfPoints, id,
           ? <img className='w-100 h-100 object-fit-cover' src={img} alt="" />
           : <></>
         } */}
-        { img != null 
-          ? <img className='w-100 h-100 object-fit-cover animate__animated-animate__fadeIn' src={img} alt="" />
+        { setImgUrl != null
+          ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
           : <></>
         }
       </div>

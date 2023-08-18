@@ -7,7 +7,9 @@ const PreviewInfoArticle = ({setViewPreviewInfoArticle, setViewOrderSelectArticl
   const {color1, articleSelected, setArticleSelected, precioArticleSelected, setPrecioArticleSelected} = useContext(AppContext);
 
   useEffect( () => {
-    if(articleSelected.precios.length == 1) handleClickPrecio(articleSelected.precios[0]);
+    if(articleSelected.precios != undefined){
+      if(articleSelected.precios.length == 1) handleClickPrecio(articleSelected.precios[0]);
+    }
     console.log(articleSelected.complex);
     if(!articleSelected.complex){
       // console.log(precio);

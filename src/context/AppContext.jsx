@@ -61,9 +61,9 @@ const AppContextProvider = ({children}) => {
 
   const [articlesOfHome, setArticlesOfHome] = useState(null);
 
-  const [imagenesCategorias, setImagenesCategorias] = useState(null);
+  const [imagenesCategorias, setImagenesCategorias] = useState({});
 
-  const [imagenesArticulos, setImagenesArticulos] = useState(null);
+  const [imagenesArticulos, setImagenesArticulos] = useState({});
 
   const [haEstadoEnHome, sethaEstadoEnHome] = useState(false);
 

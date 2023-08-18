@@ -147,7 +147,7 @@ const CreateCategory = () => {
         viewInHome: viewInHome, 
         viewInMenu: viewInMenu,
         // imgpath: categorySelected.imgpath,category-puntos
-        imgpath: `imagenes/category-puntos`,
+        imgpath: `imagenes-categorias/category-puntos`,
         isCategoryOfPoints: true,
       }
       const updateCategoryPromise = new Promise( async (resolve, reject) => {

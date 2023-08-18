@@ -1,8 +1,10 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
 
 // Firestore Service
-import { createEstadisticas, getInfoUser, guardarAdmin, saveInfoUser } from "./firebaseFirestore";
+import { actualizarTokensAdmins, createEstadisticas, getInfoUser, guardarAdmin, saveInfoUser } from "./firebaseFirestore";
 import { doc } from "firebase/firestore";
+import { getToken } from "firebase/messaging";
+import { messaging } from "./firebaseConfig";
 
 export const auth = getAuth();
 
@@ -46,10 +48,48 @@ export const registrarSemiAdmin = async () => {
 // }
 
 // Registrar usuario normal 
-export const registrarUsuario = async () => {
+export const registrarUsuario = async (admin, adminsTokens) => {
   try {
     const result = await signInWithPopup(auth, provider);
     const exitsUser = await getInfoUser(result.user.email);
+
+    
+    if(result.user.email == admin){
+      
+      
+      console.log('si');
+
+
+      // const messaging = getMessaging();
+      getToken(messaging, { vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co' }).then( (currentToken) => {
+        if (currentToken) {
+        
+          console.log('Si hay token', currentToken)
+          // Send the token to your server and update the UI if necessary
+          // ...
+          console.log(currentToken);
+
+          const newAdminsTokens = {...adminsTokens};
+          newAdminsTokens[admin] = currentToken; 
+
+          actualizarTokensAdmins(newAdminsTokens);
+        } else {
+          // Show permission request UI
+          console.log('No registration token available. Request permission to generate one.');
+          // ...
+
+        }
+      }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+        // ...
+      });
+
+      
+
+      
+      return;
+    }
+    
     if(exitsUser != 'no-exist'){
       return 'usuario-registrado';
     }
@@ -57,7 +97,7 @@ export const registrarUsuario = async () => {
       email: result.user.email,
       nombre: '',
       direccion: '',
-      telefono: Number('0'.repeat(8)),
+      telefono: '',
       // codeRef: Number('0'.repeat(5)),
     }
     await saveInfoUser(infoUser);

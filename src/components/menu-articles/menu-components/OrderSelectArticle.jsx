@@ -17,9 +17,27 @@ import Swal from 'sweetalert2';
 
 const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfCategorySelected}) => {
 
-  const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart,  cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, imagenesArticulos} = useContext(AppContext);
+  const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart,  cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, imagenesArticulos, setImagenesArticulos} = useContext(AppContext);
 
   // const [img, setImg] = useState(null);
+
+  const [imgUrl, setImgUrl] = useState(null);
+
+  useEffect( () => {
+    console.log(articleSelected);
+    const imgId = articleSelected.imgpath.split('/')[1];
+    if(imagenesArticulos[imgId]){
+      setImgUrl(imagenesArticulos[imgId]);
+      return;
+    }
+    console.warn('--------------------');
+    const f = async () => {
+      const imgRes = await getUrlImage(articleSelected.imgPath);
+      setImgUrl(imgRes);
+      setImagenesArticulos(state => ({...state, [imgId]:imgRes}))
+    }
+    f();
+  }, [] );
   
   // pedido
   const [valorArticulo, setValorArticulo] = useState(0);
@@ -158,7 +176,8 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
         precio: valorArticulo,
         precioVariosArticles: valorVariosArticulos,
         size: articleSelected.complex ? precioArticleSelected.sizeArticle : '',
-        imgArticlePath: imagenesArticulos[articleSelected.imgpath.split('/')[1]],
+        // imgArticlePath: imagenesArticulos[articleSelected.imgpath.split('/')[1]],
+        imgPath: articleSelected.imgpath,
         id: articleSelected.id,
         categoria: categorySelected,
         complex: articleSelected.complex,
@@ -237,7 +256,7 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
       </section>
       <section className='bg-white rounded-5 shadow-lg rounded-bottom-0 w-100 position-relative p-4 d-flex flex-column justify-content-between overflow-y-scroll' style={{height:'77.3%', bottom:19}}>
 
-        <div>
+        <div className='' style={{marginBottom:80}}>
           { articleSelected.complex 
             ? <h2 className='fs-1 fw-bold'>{articleSelected.titulo} - {precioArticleSelected.sizeArticle}"</h2>
             : <h2 className='fs-1 fw-bold'>{articleSelected.titulo}</h2>
@@ -315,9 +334,10 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
           }
 
         </div>
-
-        <footer className='row h-auto mb-5' style={{}}>
-          <div className='d-flex gap-3 align-items-center col-5'>
+        
+        <footer className='row h-auto mb-5- position-fixed bottom-0 start-0 w-100 mx-auto bg-white p-3 border-top- shadow-lg' style={{}}>
+        {/* <footer className='row h-auto mb-5' style={{}}> */}
+          <div className='d-flex ps-0 gap-3 align-items-center col-5'>
             <GrSubtractCircle className='display-6' onClick={handleClickReduceCantidadArticulo} />
             <p className='mb-2 display-4 fw-medium text-center'>{cantidadArticulo}</p>
             <BsPlusCircle className='display-6' onClick={handleClickAddCantidadArticulo} />

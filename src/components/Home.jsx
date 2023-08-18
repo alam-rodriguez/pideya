@@ -126,25 +126,27 @@ const Home = () => {
         setCategoriesOfMenu(categoriesOfMenu);
     
 
-        let articles = [];
-        await Promise.all(categoryiesOfHome.map(async (category) => {
-          let articlesOfCategory = await getArticlesByCategory(category.id);
-          articlesOfCategory.forEach((article) => {
-            articles.push(article.id);
-          });
-        }));
-        let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
-        setImagenesArticulos(articlesOfHome);
+        // let articles = [];
+        // await Promise.all(categoryiesOfHome.map(async (category) => {
+        //   let articlesOfCategory = await getArticlesByCategory(category.id);
+        //   articlesOfCategory.forEach((article) => {
+        //     articles.push(article.id);
+        //   });
+        // }));
+        // let articlesOfHome = await getImagesFromFolderForHome('imagenes-articulos', articles);
+        // setImagenesArticulos(articlesOfHome);
         
-        console.log(articlesOfHome);
-        console.warn('Debe de verse');
+        // console.log(articlesOfHome);
+        // console.warn('Debe de verse');
 
   
         const imagesOfCategories = await getImagesFromFolder('imagenes-categorias');
         setImagenesCategorias(imagesOfCategories);
         console.warn('Cargaron categorias'); 
-        
+
         sethaEstadoEnHome(true);
+        
+        
         
       }
       getInfo();
@@ -192,10 +194,28 @@ const Home = () => {
     })
   }, [] );
 
+  function requestPermission() {
+    console.log('Requesting permission...');
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+      }else {
+        console.log('permiso denegado');
+      }
+    });
+
+    console.log(imagenesArticulos);
+
+    console.log(haEstadoEnHome);
+  }
+
+  useEffect( () => {
+    requestPermission();
+  }, [] );
 
   if(categories != null){
     return(
-      <div className={`col-12 col-md-6 mx-auto ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
+      <div className={`col-12 col-md-6 mx-auto ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} container-fluid vh-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}>
         
         {/* Menu  */}
         <Menu />
@@ -205,6 +225,8 @@ const Home = () => {
 
             {/* Header */}
             <Header className='' />
+
+            <button onClick={requestPermission}>aceptar notificaciones</button>
             
             {/* Order Section */}
             <OrderSection />            

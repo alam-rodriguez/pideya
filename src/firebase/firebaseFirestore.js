@@ -64,6 +64,19 @@ export const guardarSemisAdmins = async (admins, adminsTokens) => {
 }
 
 // Guardar el admin
+export const actualizarTokensAdmins = async (adminsTokens) => {
+  try{
+    await updateDoc(doc(db, 'app', 'app-info'), {
+      adminsTokens: adminsTokens,
+    });
+    return true;
+  }catch(e){
+    console.log(e);
+    return false;
+  }
+}
+
+// Guardar el admin
 export const guardarSemiAdmin = async (admin) => {
   try{
     await setDoc(doc(db, 'app', 'app-info'), {
