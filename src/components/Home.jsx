@@ -226,7 +226,7 @@ const Home = () => {
             {/* Header */}
             <Header className='' />
 
-            <button onClick={requestPermission}>aceptar notificaciones</button>
+            {/* <button onClick={requestPermission}>aceptar notificaciones</button> */}
             
             {/* Order Section */}
             <OrderSection />            
