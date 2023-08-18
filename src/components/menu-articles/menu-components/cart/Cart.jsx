@@ -569,7 +569,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
   const [close, setClose] = useState(false);
 
   return (
-    <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute top-0 start-0 bg-white overflow-hidden z-3`}>
+    <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-fixed top-0 start-0 bg-white overflow-hidden z-3`}>
 
       <form onSubmit={handleClickOrdenar}>
         {/* Header del cart */}
