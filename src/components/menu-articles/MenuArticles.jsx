@@ -217,7 +217,7 @@ const MenuArticles = () => {
         
         <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected}/>
         
-        <div className='  overflow-scroll bg-danger- px-3 top-0 start-0' style={{height:'90vh', paddingBottom:60}} onScroll={handleScroll}>
+        <div className='  overflow-scroll bg-danger- px-3 top-0 start-0' style={{height:'90%', paddingBottom:60}} onScroll={handleScroll}>
 
           {/* <div className={`position-absolute px-3 vh-100 vw-100 p-0 m-0 start-0 animate__animated animate__fadeIn z-0${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}> */}
           {/* Header */}

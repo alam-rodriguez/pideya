@@ -45,7 +45,7 @@ const MenuHeader = ({viewSectionInHeader, text, viewMenu, setViewMenu, setArticl
 	}, [] );
 
   return (
-    <header className='d-flex justify-content-between py-4 position-relative' style={{height:'10vh'}}>
+    <header className='d-flex justify-content-between py-4 position-relative' style={{height:'10%'}}>
       <IoIosArrowBack className='display-4' onClick={handleClickBack} /> 
       <p className='fs-5 w-75 fw-medium position-absolute start-50 top-50 translate-middle text-center'>{viewSectionInHeader ? text : null}</p>
       <div className='d-flex me-4 align-items-center gap-2'>
