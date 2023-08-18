@@ -194,24 +194,24 @@ const Home = () => {
     })
   }, [] );
 
-  function requestPermission() {
-    console.log('Requesting permission...');
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-      }else {
-        console.log('permiso denegado');
-      }
-    });
+  // function requestPermission() {
+  //   console.log('Requesting permission...');
+  //   Notification.requestPermission().then((permission) => {
+  //     if (permission === 'granted') {
+  //       console.log('Notification permission granted.');
+  //     }else {
+  //       console.log('permiso denegado');
+  //     }
+  //   });
 
-    console.log(imagenesArticulos);
+  //   console.log(imagenesArticulos);
 
-    console.log(haEstadoEnHome);
-  }
+  //   console.log(haEstadoEnHome);
+  // }
 
-  useEffect( () => {
-    requestPermission();
-  }, [] );
+  // useEffect( () => {
+  //   requestPermission();
+  // }, [] );
 
   if(categories != null){
     return(
