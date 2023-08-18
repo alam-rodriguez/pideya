@@ -222,7 +222,7 @@ const Home = () => {
         {/* Menu  */}
         <Menu />
   
-        <div className={`container-sm main px-4 z-3 ${viewMenu ? 'border border-secondary shadow-lg overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '' : ''}} onClick={handleClickMain}>
+        <div className={`container-sm main px-4 z-3 ${viewMenu ? 'border border-secondary shadow-lg overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '' : ''}} onClick={handleClickMain} >
           <main className={`mx-auto ${viewMenu ? 'position-absolute w-100': ''} `}>
 
             {/* Header */}

@@ -213,7 +213,7 @@ const MenuArticles = () => {
 
   if(categoriesOfMenu != null){
     return (
-      <main className={`d-flex flex-column flex-grow-1 overflow-auto col-12 col-md-6 mx-auto ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-3 px-3- vh-100- ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25' : ''}`} style={{maxHeight:'100vh'}}>
+      <main className={`d-flex flex-column flex-grow-1 h-100 overflow-auto col-12 col-md-6 mx-auto ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-3 px-3- vh-100- ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25' : ''}`} style={{maxHeight:'100vh'}}>
         
         <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected}/>
         
