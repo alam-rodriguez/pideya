@@ -569,13 +569,14 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
   const [close, setClose] = useState(false);
 
   return (
-    <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-fixed top-0 start-0 bg-white overflow-hidden z-3`}>
+    <div className={`overflow-scroll animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute h-100 top-0 start-0 bg-white z-3`}>
 
-      <form onSubmit={handleClickOrdenar}>
+      <main>
+      <form className='' onSubmit={handleClickOrdenar}>
         {/* Header del cart */}
       <CartHeader handleClickBack={handleClickBack} />
 
-        <section className='w-100 vh-100 overflow-y-scroll pt-5' style={{paddingBottom:70}}>
+        <section className='w-100 overflow-scroll py-'>
 
           <div className='px-4'>
 
@@ -600,7 +601,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
         {/* Btn para ordenar */}
         {/* <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100 shadow-lg border-top' style={{}}> */}
-        <div className='p-4 bg-white position-fixed bottom-0 w-100 shadow-lg border-top' style={{}}>
+        <div className='p-3 bg-white position-sticky bottom-0 start-0 w-100' style={{height:'10%'}}>
           { existUser && !isOrdenando
             ? <button type='submit' className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Ordenar</button>
               : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>
@@ -609,6 +610,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
           }
         </div>
       </form>
+      </main>
       <ToastContainer />
     </div>
   );

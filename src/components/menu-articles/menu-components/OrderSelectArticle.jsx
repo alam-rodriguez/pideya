@@ -247,8 +247,8 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
         <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
           <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
         </div>
-        { imagenesArticulos != null
-          ? <img src={imagenesArticulos[articleSelected.imgpath.split('/')[1]]} className='w-100 object-fit-cover ' style={{height:'100%'}} />
+        { imgUrl != null
+          ? <img src={imgUrl} className='w-100 object-fit-cover ' style={{height:'100%'}} />
           : <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
               <span className="visually-hidden">Loading...</span>
             </div> 
@@ -335,7 +335,7 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
 
         </div>
         
-        <footer className='row h-auto mb-5- position-fixed bottom-0 start-0 w-100 mx-auto bg-white p-3 border-top- shadow-lg' style={{}}>
+        <footer className='container row mb-5- position-fixed bottom-0 start-0 w-100 mx-auto bg-white p-3 border-top- shadow-lg-' style={{}}>
         {/* <footer className='row h-auto mb-5' style={{}}> */}
           <div className='d-flex ps-0 gap-3 align-items-center col-5'>
             <GrSubtractCircle className='display-6' onClick={handleClickReduceCantidadArticulo} />
