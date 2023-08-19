@@ -116,9 +116,9 @@ const AjustesPuntos = () => {
   return (
     <main>
 
-      <Header handleClickAtras={handleClickAtras} />
+      <Header handleClickAtras={handleClickAtras}  />
 
-      <section className='mx-4'>
+      <section className='mx-4' >
         <p className='m-0 fs-5'>Los puntos son recompensas que los usuarios obtienen al hacer compras, y estas recompensas o puntos los pueden utilizar para hacer compras gratuitas de articulos.</p>
 
 

@@ -569,9 +569,9 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
   const [close, setClose] = useState(false);
 
   return (
-    <div className={`overflow-scroll animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute h-100 top-0 start-0 bg-white z-3`}>
-
       <main>
+    <div className={`overflow-scroll- animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute h-100 top-0 start-0 bg-white z-3`}>
+
       <form className='' onSubmit={handleClickOrdenar}>
         {/* Header del cart */}
       <CartHeader handleClickBack={handleClickBack} />
@@ -610,9 +610,9 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
           }
         </div>
       </form>
-      </main>
       <ToastContainer />
     </div>
+      </main>
   );
 }
 
