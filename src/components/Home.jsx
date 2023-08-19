@@ -232,7 +232,7 @@ const Home = () => {
 
   if(categories != null){
     return(
-      <main className={`${viewMenu ? 'overflow-hidden' : 'container'}`}>
+      <main className={`${viewMenu ? 'overflow-hidden' : ''}`}>
 
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
         <main onClick={handleClickMain} >

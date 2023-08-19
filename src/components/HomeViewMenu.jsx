@@ -10,7 +10,7 @@ const HomeViewMenu = ({children, Menu, ContactDev}) => {
          
       <Menu />
 
-      <div className={`main-normal overflow-scroll container bg-white z-2 ${viewMenu ? 'main-container-view-menu': ''} `}  >
+      <div className={`main-normal w-100 container bg-white z-2 ${viewMenu ? 'main-container-view-menu': ''} `}  >
         {children} 
       </div>
       
