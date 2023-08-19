@@ -181,13 +181,7 @@ const MenuArticles = () => {
   }
 
 
-  const [viewSectionInHeader, setViewSectionInHeader] = useState(false);
-  const handleScroll = (e) => {
-    const scrollTop = e.target.scrollTop;
-    console.log(scrollTop);
-    if(scrollTop > 30) setViewSectionInHeader(true);
-    else setViewSectionInHeader(false);
-  };
+  
 
   // Obtiene imagenes de articulos que no tengo
   // useEffect(() => {
@@ -207,6 +201,33 @@ const MenuArticles = () => {
     
   // }, [categorySelected, articlesOfCategorySelected]);
 
+  // const [viewSectionInHeader, setViewSectionInHeader] = useState(false);
+  // const handleScroll = (e) => {
+  //   const scrollTop = e.target.scrollTop;
+  //   console.log(scrollTop);
+  //   if(scrollTop > 30) setViewSectionInHeader(true);
+  //   else setViewSectionInHeader(false);
+  // };
+
+
+  // const [scrollY, setScrollY] = useState(0);
+
+  const [viewSectionInHeader, setViewSectionInHeader] = useState(false);
+  const handleScroll2 = () => {
+    // console.log(window.scrollY)
+    const scrollTop = window.scrollY;
+    if(scrollTop > 30) setViewSectionInHeader(true);
+    else setViewSectionInHeader(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll2);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll2);
+    };
+  }, []);
+
   
   
 
@@ -214,12 +235,12 @@ const MenuArticles = () => {
 
   if(categoriesOfMenu != null){
     return (
-      <main onScroll={handleScroll}>
+      <main>
         
-        <div className={`d-flex flex-column flex-grow-1 col-12 col-md-6 mx-auto h-100 ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-3 px-3-  ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} style={{maxHeight:'100vh'}} >
+        <div className={`d-flex flex-column flex-grow-1 col-12 col-md-6 mx-auto h-100 ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-3 px-3-  ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} >
         <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected} viewPreviewInfoArticle={viewPreviewInfoArticle}/>
         
-        <div className='overflow-auto bg-danger- px-3 top-0 start-0 ' style={{flex:'1', paddingBottom:60, marginTop:90}} onScroll={handleScroll}>
+        <div className='bg-danger- px-3 top-0 start-0 ' style={{flex:'1', paddingBottom:60, marginTop:90}} >
 
           {/* <div className={`position-absolute px-3 vh-100 vw-100 p-0 m-0 start-0 animate__animated animate__fadeIn z-0${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}> */}
           {/* Header */}
