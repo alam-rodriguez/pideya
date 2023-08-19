@@ -232,10 +232,10 @@ const Home = () => {
 
   if(categories != null){
     return(
-      <main className='overflow-hidden'>
+      <div className='overflow-hidden'>
 
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
-        <div onClick={handleClickMain} >
+        <main onClick={handleClickMain} >
 
           <div className=''>
 
@@ -274,7 +274,7 @@ const Home = () => {
             }
 
           </div>
-        </div>
+        </main>
       </HomeViewMenu>
 
 
@@ -284,7 +284,7 @@ const Home = () => {
         
         
         <ToastContainer />
-      </main>
+      </div>
     );
   }else {
     return(
