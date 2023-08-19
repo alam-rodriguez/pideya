@@ -215,7 +215,7 @@ const MenuArticles = () => {
     return (
       <main >
         
-        <div className={`d-flex flex-column flex-grow-1 h-100 overflow-hidden col-12 col-md-6 mx-auto ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-3 px-3- vh-100- ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} style={{maxHeight:'100vh'}}>
+        <div className={`d-flex flex-column flex-grow-1 h-100- overflow-hidden- col-12 col-md-6 mx-auto ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-3 px-3- vh-100- ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} style={{maxHeight:'100vh'}}>
         <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected} viewPreviewInfoArticle={viewPreviewInfoArticle}/>
         
         <div className=' overflow-scroll bg-danger- px-3 top-0 start-0 ' style={{flex:'1', paddingBottom:60, marginTop:90}} onScroll={handleScroll}>
