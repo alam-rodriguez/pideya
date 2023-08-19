@@ -243,7 +243,7 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
   
   return (
     <main>
-      <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-fixed top-0 start-0 w-100 bg-white vh-100- overflow-hidden z-3 h-100`} style={{}}>
+      <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-fixed top-0 start-0 w-100 bg-white overflow-hidden- z-3 h-100`} style={{}}>
       <section className='z-0 overflow-y-hidden d-flex justify-content-center align-items-center' style={{height:'25%'}}>
         <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
           <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
