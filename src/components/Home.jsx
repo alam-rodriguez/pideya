@@ -35,6 +35,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
 
 import { getImagesFromFolder, getImagesFromFolderForHome } from '../firebase/firebaseStorage';
+import HomeViewMenu from './HomeViewMenu';
 
 // Temporizador
 // import Temporizador from './home/temporizador/Temporizador';
@@ -214,17 +215,29 @@ const Home = () => {
   // }, [] );
 
   
+  const [seguirViendo, setSeguirViendo] = useState(true);
+	useEffect(() => {
+		setSeguirViendo(true);
+		if(!viewMenu){
+			setTimeout(() => {
+				setSeguirViendo(false);
+			}, 1000);
+		}
+	}, [viewMenu]);
+
+
+  const [height, setheight] = useState(window.innerHeight);
+
+  
 
   if(categories != null){
     return(
-      <main>
-        {/* <div className={`col-12 col-md-6 mx-auto ${viewSearchCode == 'abrir' || articleSeleted != null || viewCodeUser == 'open-' ? 'overflow-hidden' : ''} ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} container overflow-x-hidden ${!viewMenu ? 'px-0': 'px-0'} container-fluid h-100 vw-100 position-absolute main-container ${viewMenu ? 'main-container-view-menu': ''}`} style={{}}> */}
-        
-        {/* Menu  */}
-        {/* <Menu /> */}
-  
-        <div className={`container-sm main px-4 z-3 ${viewMenu ? 'border border-secondary shadow-lg overflow-hidden h-75 w-100 bg-white ms-5 my-5 ' : ''}`} style={{left:viewMenu?'63%' : '', maxWidth:viewMenu ? '' : ''}} onClick={handleClickMain} >
-          <div className={`mx-auto ${viewMenu ? 'position-absolute w-100': ''} `}>
+      <main className='overflow-hidden'>
+
+      <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
+        <div onClick={handleClickMain} >
+
+          <div className=''>
 
             {/* Header */}
             <Header className='' />
@@ -233,10 +246,10 @@ const Home = () => {
             
             {/* Order Section */}
             <OrderSection />            
-    
+
             {/* Use Code Section */}
             <UseCode viewSearchCode={viewSearchCode} setViewSearchCode={setViewSearchCode} />
-    
+
             { (categories != null)
               ? categories.map( (category) => (
                   <CategoryMenu key={category.id} category={category} color1={color1} setViewArticleSelected={setViewArticleSelected} />
@@ -248,7 +261,7 @@ const Home = () => {
 
             {/* Seccion para mostrar codigo de usuario */}
             <PrevieCodeUser viewCodeUser={viewCodeUser} setViewCodeUser={setViewCodeUser} />
-    
+
             {/* Seccion de contacto del negocio */}
             <ContactUs />
             
@@ -259,15 +272,18 @@ const Home = () => {
               ? <AddSection />
               : <></>
             }
-    
+
           </div>
         </div>
-        
-        {/* zona para contactarme */}
-        <ContactDev />
+      </HomeViewMenu>
 
+
+
+
+
+        
+        
         <ToastContainer />
-      {/* </div> */}
       </main>
     );
   }else {
@@ -284,6 +300,7 @@ const Home = () => {
 
 export default React.memo(Home);
 // export default Home;
+
 
 
 
