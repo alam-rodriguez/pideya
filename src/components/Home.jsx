@@ -244,14 +244,13 @@ const Home = () => {
 
   if(categories != null){
     return(
-      <main className={`${viewMenu || articleSeleted != null ? 'overflow-hidden' : ''}`}>
+      <main className={`${viewMenu ? 'overflow-hidden' : ''}`}>
 
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
         <main onClick={handleClickMain} >
 
             
-          <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
-          <div className={`${articleSeleted != null ? 'overflow-hidden d-none':''}`}>
+          <div className={`${articleSeleted != null ? '':''}`}>
 
             {/* Header */}
             <Header className='' />
@@ -266,11 +265,12 @@ const Home = () => {
 
             { (categories != null)
               ? categories.map( (category) => (
-                  <CategoryMenu key={category.id} category={category} color1={color1} setViewArticleSelected={setViewArticleSelected} />
+                <CategoryMenu key={category.id} category={category} color1={color1} setViewArticleSelected={setViewArticleSelected} />
                 ))
-              : <></>
-            }
+                : <></>
+              }
 
+              <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
 
             {/* Seccion para mostrar codigo de usuario */}
             <PrevieCodeUser viewCodeUser={viewCodeUser} setViewCodeUser={setViewCodeUser} />
