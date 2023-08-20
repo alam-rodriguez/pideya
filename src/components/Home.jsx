@@ -237,7 +237,7 @@ const Home = () => {
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
         <main onClick={handleClickMain} >
 
-          <div className=''>
+          <div className='' style={{marginTop:90}}>
 
             {/* Header */}
             <Header className='' />

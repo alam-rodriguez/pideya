@@ -86,11 +86,11 @@ const ArticleCard = ({title, subTitle, price, imgPath, size, isCategoryOfPoints,
   if(size == 'small'){
     if(isCategoryOfPoints){
       return (
-        <div className={`${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}  me-4 rounded-5 overflow-hidden d-flex flex-column`} style={{height:190, width:160, minWidth:160}}>
+        <div className={`${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex flex-column`} style={{height:190, width:160, minWidth:160}}>
           <div className='d-flex justify-content-center align-items-center position-relative' style={{height:'65%'}}  onClick={handleClick}>
             
             { imgUrl != null
-              ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
+              ? <img className={`w-100 h-100 object-fit-cover rounded-top-5 ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
               : <></>
             }
 
@@ -106,9 +106,9 @@ const ArticleCard = ({title, subTitle, price, imgPath, size, isCategoryOfPoints,
       );
     }else{
       return (
-        <div className={`${!haEstadoEnHome ? 'animate__animated...animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:190, width:160, minWidth:160}} onClick={handleClick}>
+        <div className={`${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:190, width:160, minWidth:160}} onClick={handleClick}>
         { setImgUrl != null
-          ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
+          ? <img className={`w-100 h-100 object-fit-cover rounded-5 ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
           : <></>
         }
       </div>
@@ -116,16 +116,16 @@ const ArticleCard = ({title, subTitle, price, imgPath, size, isCategoryOfPoints,
     }
   }else if(size == 'normal'){
     return (
-      <div className={`${!haEstadoEnHome ? 'animate__animated...animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:160, width:240, minWidth:240}} onClick={handleClick}>
+      <div className={`${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:160, width:240, minWidth:240}} onClick={handleClick}>
         { setImgUrl != null
-          ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
+          ? <img className={`w-100 h-100 object-fit-cover rounded-5 ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
           : <></>
         }
       </div>
     );
   }else if(size == 'big'){
     return (
-      <div className={`${!haEstadoEnHome ? 'animate__animated...animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:200, width:350, minWidth:350}} onClick={handleClick}>
+      <div className={`${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''} me-4 rounded-5 overflow-hidden d-flex justify-content-center align-items-center border`} style={{height:200, width:350, minWidth:350}} onClick={handleClick}>
         {/* { imgUrl == null ? 
           <div className="spinner-border text-success fs-1" style={{height:50, width:50}} role="status">
             <span className="visually-hidden">Loading...</span>
@@ -137,7 +137,7 @@ const ArticleCard = ({title, subTitle, price, imgPath, size, isCategoryOfPoints,
           : <></>
         } */}
         { setImgUrl != null
-          ? <img className={`w-100 h-100 object-fit-cover ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
+          ? <img className={`w-100 h-100 object-fit-cover rounded-5 ${!haEstadoEnHome ? 'animate__animated animate__fadeIn' : ''}`} src={imgUrl} alt="" />
           : <></>
         }
       </div>
