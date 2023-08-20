@@ -244,7 +244,7 @@ const Home = () => {
 
   if(categories != null){
     return(
-      <main className={`${viewMenu ? 'overflow-hidden' : ''}`}>
+      <main className={`${viewMenu || articleSeleted != null ? 'overflow-hidden' : ''}`}>
 
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
         <main onClick={handleClickMain} >
