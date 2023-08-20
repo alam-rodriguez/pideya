@@ -59,7 +59,7 @@ const PrevieCodeUser = ({viewCodeUser, setViewCodeUser}) => {
   }
 
   return (
-    <>
+    <main>
       <section className={`${color1.bgColor} rounded-4 w-100 my-5 d-flex flex-row overflow-hidden`} style={{height:120, minWidth:'100%'}} onClick={handleClick}>
       
         <div className='d-flex flex-column ms-4 justify-content-center'>
@@ -77,7 +77,7 @@ const PrevieCodeUser = ({viewCodeUser, setViewCodeUser}) => {
         ? <ShowCodeUser viewCodeUser={viewCodeUser} setViewCodeUser={setViewCodeUser} />
         : <></>
       }
-    </>
+    </main>
   );
 }
 

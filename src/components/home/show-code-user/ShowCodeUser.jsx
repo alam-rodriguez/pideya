@@ -26,7 +26,7 @@ const ShowCodeUser = ({viewCodeUser, setViewCodeUser}) => {
 
   return (
     <div className={`animate__animated ${viewCodeUser == 'open' ? 'animate__slideInRight' : viewCodeUser == 'close' ? 'animate__slideOutRight' : ''} container-fluid vh-100 vw-100 position-fixed bg-white top-0 start-0 z-3`}>
-      <section className='mx-4 d-flex flex-column justify-content-between py-4' style={{height:'100vh'}}>
+      <section className='mx-4 d-flex flex-column justify-content-between py-4' style={{height:'70vh'}}>
 
         <h1 className='fw-bold text-center display-1 text-danger'>{appInfo.nombre}</h1>
         
@@ -36,8 +36,9 @@ const ShowCodeUser = ({viewCodeUser, setViewCodeUser}) => {
           <p className='text-center fw-bold fs-4 mb-0'>{codeUser}</p>
         </div>
 
-        <button className={`btn ${color1.btn} text-center form-control fs-4 p-3`} onClick={handleClickDone}>Hecho</button>
-
+        <div className='position-fixed bottom-0 start-0 w-100 p-4'>
+          <button className={`btn ${color1.btn} text-center form-control fs-4 p-3`} onClick={handleClickDone}>Hecho</button>
+        </div>
       </section>
     </div>
   )
