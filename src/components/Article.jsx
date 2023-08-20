@@ -45,7 +45,7 @@ const Article = ({viewArticleSelected, setViewArticleSelected}) => {
           ? <img className='w-100 object-fit-cover' src={imgUrl} style={{height:'78%'}} />
           : <></>
         }
-        <div className='d-flex flex-column position-fixed justify-content-between h-25 bg-white rounded-5 position-absolute bottom-0 w-100 p-4 pt-0 shadow-lg'>
+        <div className='d-flex flex-column position-fixed justify-content-between h-25 bg-white rounded-top-5 position-absolute bottom-0 w-100 p-4 pt-0 shadow-lg'>
             <div className='align-self-center mt-2 bg-secondary rounded-5' style={{height:4, width:40}}></div>
             <h3 className='fw-bold fs-2 mt-3'>{articleSeleted.title}</h3>
             <p className='fs-6 fw-medium overflow-y-scroll over'>{articleSeleted.subTitle}</p>
