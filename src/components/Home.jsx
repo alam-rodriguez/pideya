@@ -229,6 +229,18 @@ const Home = () => {
   const [height, setheight] = useState(window.innerHeight);
 
   
+  const handleScroll2 = () => {
+    const scrollTop = window.scrollY;
+    console.log(scrollTop);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll2);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll2);
+    };
+  }, []);
 
   if(categories != null){
     return(

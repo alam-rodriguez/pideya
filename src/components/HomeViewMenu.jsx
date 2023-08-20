@@ -6,7 +6,7 @@ const HomeViewMenu = ({children, Menu, ContactDev}) => {
 
   const {viewMenu} = useContext(AppContext);
   return (
-    <div className='d-flex h-100 w-100'>
+    <div className='d-flex h-100- w-100-'>
          
       <Menu />
 
