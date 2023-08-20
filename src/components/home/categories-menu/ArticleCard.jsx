@@ -94,7 +94,7 @@ const ArticleCard = ({title, subTitle, price, imgPath, size, isCategoryOfPoints,
               : <></>
             }
 
-            <div className='d-flex align-items-center gap-1 py-1 px-2 rounded-end-5 position-absolute bottom-0 start-0 z-2 bg-success'>
+            <div className='d-flex align-items-center gap-1 py-1 px-2 rounded-end-5 position-absolute bottom-0 start-0 z-0 bg-success'>
               <p className='m-0 text-white fs-6'>{price}</p>
               <FaPizzaSlice className='fs-6 text-white' />
             </div>
