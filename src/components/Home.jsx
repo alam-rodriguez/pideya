@@ -250,7 +250,7 @@ const Home = () => {
         <main onClick={handleClickMain} >
 
             
-            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
+          <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
           <div className={`${articleSeleted != null ? 'overflow-hidden d-none':''}`}>
 
             {/* Header */}
