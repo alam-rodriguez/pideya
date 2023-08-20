@@ -72,7 +72,7 @@ const Header = () => {
   return (
     <header className='d-flex justify-content-between align-items-center py-4 bg-white position-sticky top-0 start-0 w-100 z-1 m-0' onClick={handleClickMenu}>
 			<FiMenu className={`fs-3 ${color1.textColor}`} />
-			<h2 className='position-absolute start-50 translate-middle-x display-4 fw-bold text-danger'>{appName}</h2>
+			<h2 className='position-absolute start-50 translate-middle-x display-3 fw-bold text-danger'>{appName}</h2>
 			<div className='d-flex align-items-center gap-2'>
 				<p className={`m-0 fs-4 ${color1.textColor}`}>{amountPoints}</p>
 				<FaPizzaSlice className={`fs-5 ${color1.textColor}`} />
