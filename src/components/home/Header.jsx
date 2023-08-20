@@ -70,7 +70,7 @@ const Header = () => {
 	const handleClickMenu = () => setViewMenu(!viewMenu);
 
   return (
-    <header className='d-flex justify-content-between align-items-center py-4 bg-white position-sticky top-0 start-0 w-100 z-1 m-0' onClick={handleClickMenu}>
+    <header className='d-flex justify-content-between align-items-center py-4 bg-white position-fixed top-0 start-0 w-100 z-1 m-0' onClick={handleClickMenu}>
 			<FiMenu className={`fs-3 ${color1.textColor}`} />
 			<h2 className='position-absolute start-50 translate-middle-x display-3 fw-bold text-danger'>{appName}</h2>
 			<div className='d-flex align-items-center gap-2'>
