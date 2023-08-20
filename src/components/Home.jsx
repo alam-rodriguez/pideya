@@ -244,7 +244,7 @@ const Home = () => {
 
   if(categories != null){
     return(
-      <main className={`${viewMenu ? 'overflow-hidden' : ''}`} style={{maxHeight:articleSeleted != null ? '100vh' : ''}}>
+      <main className={`${viewMenu || viewCodeUser == 'open' || viewSearchCode == 'abrir' ? 'overflow-hidden' : ''}`} style={{maxHeight:articleSeleted != null ? '100vh-' : ''}}>
 
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
         <main onClick={handleClickMain} >
@@ -270,7 +270,7 @@ const Home = () => {
                 : <></>
               }
 
-              <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
+            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
 
             {/* Seccion para mostrar codigo de usuario */}
             <PrevieCodeUser viewCodeUser={viewCodeUser} setViewCodeUser={setViewCodeUser} />
