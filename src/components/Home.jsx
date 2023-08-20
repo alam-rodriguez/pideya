@@ -249,7 +249,9 @@ const Home = () => {
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
         <main onClick={handleClickMain} >
 
-          <div className={`${articleSeleted != null ? 'overflow-hidden':''}`}>
+            
+            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
+          <div className={`${articleSeleted != null ? 'overflow-hidden d-none':''}`}>
 
             {/* Header */}
             <Header className='' />
@@ -269,7 +271,6 @@ const Home = () => {
               : <></>
             }
 
-            <Article viewArticleSelected={viewArticleSelected} setViewArticleSelected={setViewArticleSelected} />
 
             {/* Seccion para mostrar codigo de usuario */}
             <PrevieCodeUser viewCodeUser={viewCodeUser} setViewCodeUser={setViewCodeUser} />
