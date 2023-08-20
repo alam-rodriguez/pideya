@@ -41,7 +41,7 @@ const Article = ({viewArticleSelected, setViewArticleSelected}) => {
     return (
       <main className='overflow-hidden-'>
         <div className={`animate__animated ${viewArticleSelected=='abrir' ? 'animate__slideInRight' : viewArticleSelected=='cerrar' ? 'animate__slideOutRight' : ''}  container-fluid- p-0- position-fixed start-0 top-0 vh-100 w-100 bg-light z-3`}>
-          <ImCancelCircle className='position-fixed text-white display-3' style={{top:20, left:20}} onClick={handleClickBack} />
+          <ImCancelCircle className='position-relative text-white display-3' style={{top:20, left:20}} onClick={handleClickBack} />
           { imgUrl != null
             ? <img className='w-100 object-fit-cover ' src={imgUrl} style={{height:'78%'}} />
             : <></>
