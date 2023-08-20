@@ -249,7 +249,7 @@ const Home = () => {
       <HomeViewMenu Menu={Menu} ContactDev={ContactDev}>
         <main onClick={handleClickMain} >
 
-          <div className=''>
+          <div className={`${articleSeleted != null ? 'overflow-hidden':''}`}>
 
             {/* Header */}
             <Header className='' />
