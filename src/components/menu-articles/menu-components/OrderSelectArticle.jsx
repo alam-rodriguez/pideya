@@ -242,105 +242,105 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
   const [close, setClose] = useState(false);
   
   return (
-    <main className='z-3 bg-danger '>
-      <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-fixed top-0 start-0 w-100 bg-white overflow-scroll z-3 vh-100`} style={{}}>
-      <section className=' position-fixed- start-0 top-0 w-100 z-0 overflow-y-hidden- d-flex- justify-content-center- align-items-center- ' style={{height: '25%',maxHeight:'25%'}}>
-        <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
-          <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
-        </div>
-        { imgUrl != null
-          ? <img src={imgUrl} className='w-100 object-fit-cover ' style={{height:'100%'}} />
-          : <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
-              <span className="visually-hidden">Loading...</span>
-            </div> 
-        }
-      </section>
-      <section className='bg-white rounded-top-5 shadow-lg w-100 position-relative p-4 d-flex flex-column justify-content-between overflow-y-scroll- pb-5-' style={{height:'auto', bottom:30, marginTop:'0%'}}>
-
-        <div className='mb-5' style={{marginBottom:0}}>
-          { articleSelected.complex 
-            ? <h2 className='fs-1 fw-bold'>{articleSelected.titulo} - {precioArticleSelected.sizeArticle}"</h2>
-            : <h2 className='fs-1 fw-bold'>{articleSelected.titulo}</h2>
+    <main className=''>
+      <div className={`overflow-scroll animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-fixed top-0 start-0 bg-white z-3 w-100 h-100`} style={{}}>
+        <section className=' w-100 z-0 d-flex justify-content-center align-items-center' style={{height: 220}}>
+          <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
+            <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
+          </div>
+          { imgUrl != null
+            ? <img src={imgUrl} className='w-100 object-fit-cover ' style={{height:'100%'}} />
+            : <div className="spinner-border text-success fs-2" role="status" style={{height:50, width:50}}>
+                <span className="visually-hidden">Loading...</span>
+              </div> 
           }
-          
+        </section>
+        <section className='bg-white rounded-top-5 shadow-lg w-100 h-100 position-relative p-4 d-flex flex-column justify-content-between pb-5' style={{bottom:30}}>
 
-          <p className='m-0 fs-4 fw-normal overflow-scroll' style={{maxHeight: articleSelected.complex ?'150px': ''}}>{articleSelected.subtitulo}</p>
+          <div className='mb-5' style={{marginBottom:0}}>
+            { articleSelected.complex 
+              ? <h2 className='fs-1 fw-bold'>{articleSelected.titulo} - {precioArticleSelected.sizeArticle}"</h2>
+              : <h2 className='fs-1 fw-bold'>{articleSelected.titulo}</h2>
+            }
 
-          { articleSelected.complex ?
-            <div className="accordion my-4" id="accordionExample">
-              <div className="accordion-item">
-                <h2 className="accordion-header">
-                  <button className="btn form-control d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <p className='fs-5 m-0 fw-bold'>Ingredientes adicionales</p>
-                    <p className='fs-6 m-0 text-secondary'>Requerido</p>
-                  </button>
-                </h2>
-                <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                  <div className="accordion-body">
+            <p className='m-0 fs-4 fw-normal overflow-scroll' style={{height: articleSelected.complex ? '150px': ''}}>{articleSelected.subtitulo}</p>
+            
 
-                    { Object.keys(precioArticleSelected.adicionales).map((adicional, i)=>( 
-                        <div key={i} className="form-check d-flex justify-content-between">
-                          <div>
-                            <input className="form-check-input" type="checkbox" value="" id={`flexCheck${i}`} onClick={(e)=>handleClickAdicional(e, adicional, precioArticleSelected.adicionales[adicional])}/>
-                            <label className="form-check-label" htmlFor={`flexCheck${i}`}>
-                              {adicional}
-                            </label>
+            { articleSelected.complex ?
+              <div className="accordion my-4" id="accordionExample">
+                <div className="accordion-item">
+                  <h2 className="accordion-header">
+                    <button className="btn form-control d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      <p className='fs-5 m-0 fw-bold'>Ingredientes adicionales</p>
+                      <p className='fs-6 m-0 text-secondary'>Requerido</p>
+                    </button>
+                  </h2>
+                  <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div className="accordion-body">
+
+                      { Object.keys(precioArticleSelected.adicionales).map((adicional, i)=>( 
+                          <div key={i} className="form-check d-flex justify-content-between">
+                            <div>
+                              <input className="form-check-input" type="checkbox" value="" id={`flexCheck${i}`} onClick={(e)=>handleClickAdicional(e, adicional, precioArticleSelected.adicionales[adicional])}/>
+                              <label className="form-check-label" htmlFor={`flexCheck${i}`}>
+                                {adicional}
+                              </label>
+                            </div>
+                            <p className='m-0 text-secondary'>
+                              {precioArticleSelected.adicionales[adicional].precio}
+                            </p>
                           </div>
-                          <p className='m-0 text-secondary'>
-                            {precioArticleSelected.adicionales[adicional].precio}
-                          </p>
-                        </div>
-                      ))
+                        ))
+                      }
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              : <></>
+            }
+
+            { articleSelected.complex && mitades != null? 
+              // SI ES MITAD Y MITAD
+              <div className="accordion my-4" id="accordionExample">
+                <div className="accordion-item">
+                  <h2 className="accordion-header">
+                    <button className="btn form-control d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      <p className='fs-5 m-0 fw-bold'>Mitad</p>
+                      <p className='fs-6 m-0 text-secondary'>Obcional</p>
+                    </button>
+                  </h2>
+                  <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div className="accordion-body">
+                      
+                    {/* { Object.keys(precioArticleSelected.adicionales).map((adicional, i)=>( 
+                      <AdicionalesList key={i} adicional={adicional} isMiddle={precioArticleSelected.adicionales[adicional].isMiddle} i={i} handleClickMitad={handleClickMitad} />
+                    ))
+                    } */}
+                    { (mitades != null)
+                      ? (mitades.length > 0) 
+                        ? mitades.map( (mitad, i) => ( 
+                          <AdicionalesList mitad={mitad} articlesOfCategorySelected={articlesOfCategorySelected} key={mitad.id} i={i} handleClickMitad={handleClickMitad} />
+                          // <AdicionalesList mitad={mitad} articlesOfCategorySelected={articlesOfCategorySelected} key={i} adicional={adicional} isMiddle={precioArticleSelected.adicionales[adicional].isMiddle} i={i} handleClickMitad={handleClickMitad} />
+                        ))
+                        : <></>
+                      : <></>
                     }
 
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             : <></>
-          }
+            }
 
-          { articleSelected.complex && mitades != null? 
-            // SI ES MITAD Y MITAD
-            <div className="accordion my-4" id="accordionExample">
-              <div className="accordion-item">
-                <h2 className="accordion-header">
-                  <button className="btn form-control d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <p className='fs-5 m-0 fw-bold'>Mitad</p>
-                    <p className='fs-6 m-0 text-secondary'>Obcional</p>
-                  </button>
-                </h2>
-                <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                  <div className="accordion-body">
-                    
-                  {/* { Object.keys(precioArticleSelected.adicionales).map((adicional, i)=>( 
-                    <AdicionalesList key={i} adicional={adicional} isMiddle={precioArticleSelected.adicionales[adicional].isMiddle} i={i} handleClickMitad={handleClickMitad} />
-                  ))
-                  } */}
-                  { (mitades != null)
-                    ? (mitades.length > 0) 
-                      ? mitades.map( (mitad, i) => ( 
-                        <AdicionalesList mitad={mitad} articlesOfCategorySelected={articlesOfCategorySelected} key={mitad.id} i={i} handleClickMitad={handleClickMitad} />
-                        // <AdicionalesList mitad={mitad} articlesOfCategorySelected={articlesOfCategorySelected} key={i} adicional={adicional} isMiddle={precioArticleSelected.adicionales[adicional].isMiddle} i={i} handleClickMitad={handleClickMitad} />
-                      ))
-                      : <></>
-                    : <></>
-                  }
+          </div>
+          
 
-                  </div>
-                </div>
-              </div>
-            </div>
-          : <></>
-          }
-
-        </div>
-        
-
-      </section>
+        </section>
 
         {/* <footer className='row h-auto mb-5' style={{}}> */}
-        <footer className='container row mb-5- position-fixed bottom-0 start-0 w-100 mx-auto bg-white p-3 border-top- shadow-lg-' style={{}}>
+        <footer className='row mb-5- position-fixed bottom-0 start-0 w-100 mx-auto bg-white p-3 border-top- shadow-lg-' style={{}}>
           <div className='d-flex ps-0 gap-3 align-items-center col-5'>
             <GrSubtractCircle className='display-6' onClick={handleClickReduceCantidadArticulo} />
             <p className='mb-2 display-4 fw-medium text-center'>{cantidadArticulo}</p>
