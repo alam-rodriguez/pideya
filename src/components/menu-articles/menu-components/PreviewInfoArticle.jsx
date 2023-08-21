@@ -40,7 +40,7 @@ const PreviewInfoArticle = ({setViewPreviewInfoArticle, setViewOrderSelectArticl
 
   if( articleSelected.complex ){
     return (
-      <div className={`d-flex justify-content-center align-items-end z-2 animate__animated ${!close ? 'animate__fadeInUp' : 'animate__fadeOutDown'} vw-100 vh-100 position-fixed position-sticky- start-0 top-0`} onClick={handleClickCancelar}>
+      <div className={`d-flex justify-content-center align-items-end z-2 animate__animated ${!close ? 'animate__fadeInUp' : 'animate__fadeOutDown'} vw-100 h-100 position-fixed position-sticky- start-0 top-0`} onClick={handleClickCancelar}>
         
         <div className='animate__animated animate__fadeInUp z-3 bg-white overflow-y-scroll border mb-3 rounded-3 shadow p-4 d-flex flex-column justify-content-between' style={{width:'95%', height:'52%'}}>
             <div className=''>
