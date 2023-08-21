@@ -568,9 +568,18 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
   const [close, setClose] = useState(false);
 
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+      });
+    }, 0);
+  }, [] );
+
   return (
-      <main className='z-3'>
-    <div className={`overflow-scroll- animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute h-100 top-0 start-0 bg-white z-3`}>
+    <main className='z-3 bg-white'>
+    <div className={`overflow-hidden- animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute 100vh top-0 start-0 bg-warning z-3`} style={{minHeight:'100vh'}}>
 
       <form className='' onSubmit={handleClickOrdenar}>
         {/* Header del cart */}

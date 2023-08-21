@@ -240,7 +240,7 @@ const MenuArticles = () => {
         <div className={`d-flex flex-column flex-grow-1 col-12 col-md-6 mx-auto h-100 ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-2 px-3-  ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} >
         <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected} viewPreviewInfoArticle={viewPreviewInfoArticle}/>
         
-        <div className='bg-danger- px-3 top-0 start-0 ' style={{paddingBottom:60, marginTop:90}} >
+        <div className='bg-danger- px-3 top-0 start-0 ' style={{marginBottom: !viewCart ?60:'', marginTop:!viewCart ? 90 : ''}} >
 
           {/* <div className={`position-absolute px-3 vh-100 vw-100 p-0 m-0 start-0 animate__animated animate__fadeIn z-0${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}> */}
           {/* Header */}

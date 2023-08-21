@@ -24,6 +24,10 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
   const [imgUrl, setImgUrl] = useState(null);
 
   useEffect( () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
     console.log(articleSelected);
     const imgId = articleSelected.imgpath.split('/')[1];
     if(imagenesArticulos[imgId]){
@@ -99,8 +103,7 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
   }, [] );
 
   // Para establecer precio o puntos
-  useEffect( () => {
-    
+  useEffect( () => {  
     if(articleSelected.complex){
       console.log('-----------')
       let valor = 0;
@@ -241,19 +244,19 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
 
   const [close, setClose] = useState(false);
 
-  const handleScroll2 = () => {
-    console.log(window.scrollY)
-    const scrollTop = window.scrollY;
-  };
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll2);
-    return () => {
-      window.removeEventListener('scroll', handleScroll2);
-    };
-  }, []);
+  // const handleScroll2 = () => {
+  //   console.log(window.scrollY)
+  //   const scrollTop = window.scrollY;
+  // };
+  // useEffect(() => {
+  //   window.addEventListener('scroll', handleScroll2);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll2);
+  //   };
+  // }, []);
   
   return (
-    <main className=''>
+    <main className='bg-white'>
       <div className={`overflow-auto- animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-absolute top-0 start-0 bg-white z-3 w-100 h-100`} style={{}}>
         <section className=' w-100 z-0 d-flex justify-content-center align-items-center' style={{height: 220}}>
           <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
@@ -266,7 +269,7 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
               </div> 
           }
         </section>
-        <section className='bg-white rounded-top-5 shadow-lg w-100 h-100 position-relative p-4 d-flex flex-column justify-content-between pb-5' style={{bottom:30}}>
+        <section className='bg-white rounded-top-5 shadow-lg w-100 h-100 position-relative p-4 d-flex flex-column justify-content-between pb-0' style={{bottom:30}}>
 
           <div className='mb-5' style={{marginBottom:0}}>
             { articleSelected.complex 
@@ -274,7 +277,7 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
               : <h2 className='fs-1 fw-bold'>{articleSelected.titulo}</h2>
             }
 
-            <p className='m-0 fs-4 fw-normal overflow-scroll' style={{height: articleSelected.complex ? '150px': ''}}>{articleSelected.subtitulo}</p>
+            <p className='m-0 fs-4 fw-normal overflow-scroll' style={{maxHeight: articleSelected.complex ? '150px': ''}}>{articleSelected.subtitulo}</p>
             
 
             { articleSelected.complex ?
