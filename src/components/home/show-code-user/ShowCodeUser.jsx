@@ -25,7 +25,7 @@ const ShowCodeUser = ({viewCodeUser, setViewCodeUser}) => {
   const handleClickDone = () => setViewCodeUser('close')
 
   return (
-    <main className='position-fixed top-0'>
+    <main className='position-fixed top-0 vh-100 bg-white z-3' >
         <div className={`animate__animated ${viewCodeUser == 'open' ? 'animate__slideInRight' : viewCodeUser == 'close' ? 'animate__slideOutRight' : ''} container-fluid vh-100 vw-100  bg-white top-0 start-0 z-3`}>
         <section className='mx-4 d-flex flex-column justify-content-between py-4' style={{height:'70vh'}}>
 
