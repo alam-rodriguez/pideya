@@ -242,9 +242,9 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
   const [close, setClose] = useState(false);
   
   return (
-    <main>
-      <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-fixed top-0 start-0 w-100 bg-white overflow-hidden- z-3 h-100`} style={{}}>
-      <section className='position-fixed start-0- top-0- w-100 z-0 overflow-y-hidden- d-flex justify-content-center align-items-center' style={{height:'25%'}}>
+    <main className='z-3 bg-danger '>
+      <div className={`animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-fixed top-0 start-0 w-100 bg-white overflow-scroll z-3 vh-100`} style={{}}>
+      <section className=' position-fixed- start-0 top-0 w-100 z-0 overflow-y-hidden- d-flex- justify-content-center- align-items-center- ' style={{height: '25%',maxHeight:'25%'}}>
         <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
           <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
         </div>
@@ -255,9 +255,9 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
             </div> 
         }
       </section>
-      <section className='bg-white rounded-5 shadow-lg rounded-bottom-0 w-100 position-relative p-4 d-flex flex-column justify-content-between overflow-y-scroll' style={{height:'77.3%', bottom:0, marginTop:'46%'}}>
+      <section className='bg-white rounded-top-5 shadow-lg w-100 position-relative p-4 d-flex flex-column justify-content-between overflow-y-scroll- pb-5-' style={{height:'auto', bottom:30, marginTop:'0%'}}>
 
-        <div className='' style={{marginBottom:80}}>
+        <div className='mb-5' style={{marginBottom:0}}>
           { articleSelected.complex 
             ? <h2 className='fs-1 fw-bold'>{articleSelected.titulo} - {precioArticleSelected.sizeArticle}"</h2>
             : <h2 className='fs-1 fw-bold'>{articleSelected.titulo}</h2>
@@ -336,8 +336,11 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
 
         </div>
         
-        <footer className='container row mb-5- position-fixed bottom-0 start-0 w-100 mx-auto bg-white p-3 border-top- shadow-lg-' style={{}}>
+
+      </section>
+
         {/* <footer className='row h-auto mb-5' style={{}}> */}
+        <footer className='container row mb-5- position-fixed bottom-0 start-0 w-100 mx-auto bg-white p-3 border-top- shadow-lg-' style={{}}>
           <div className='d-flex ps-0 gap-3 align-items-center col-5'>
             <GrSubtractCircle className='display-6' onClick={handleClickReduceCantidadArticulo} />
             <p className='mb-2 display-4 fw-medium text-center'>{cantidadArticulo}</p>
@@ -348,9 +351,6 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
             <p className={`m-0 ${!categorySelected.isCategoryOfPoints ? 'fs-3' : 'fs-4'}`}>{!categorySelected.isCategoryOfPoints ? `${valorVariosArticulos} RD$` : `${valorPuntosVariosArticulos} puntos` } </p>
           </button>
         </footer>
-
-      </section>
-
     </div>
     </main>
   )
