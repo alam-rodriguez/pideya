@@ -24,10 +24,10 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
   const [imgUrl, setImgUrl] = useState(null);
 
   useEffect( () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
+    // window.scrollTo({
+    //   top: 0,
+    //   behavior: 'instant'
+    // });
     console.log(articleSelected);
     const imgId = articleSelected.imgpath.split('/')[1];
     if(imagenesArticulos[imgId]){
