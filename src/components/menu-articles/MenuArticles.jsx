@@ -239,7 +239,7 @@ const MenuArticles = () => {
       <main>
         
         <div className={`d-flex flex-column flex-grow-1 col-12 col-md-6 mx-auto vh-100 ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-2 px-3-  ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} >
-        <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected} viewPreviewInfoArticle={viewPreviewInfoArticle}/>
+        <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected?.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected} viewPreviewInfoArticle={viewPreviewInfoArticle}/>
         
         <div className=' bg-danger- px-3 top-0 start-0 position-absolute' style={{paddingBottom:60 , paddingTop:90}}>
 
@@ -304,7 +304,7 @@ const MenuArticles = () => {
           }
 
           { ((cart.length > 0 || cartOfCategoryPoints.length > 0) && (!viewOrderSelectArticle) ) 
-            ? <CartPreview setViewCart={setViewCart} />
+            ? <CartPreview setViewMenu={setViewMenu} setViewCart={setViewCart} />
             : <></>
           }
 

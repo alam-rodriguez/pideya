@@ -561,6 +561,8 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
   const handleClickBack = () => {
     setClose(true);
+    if(categorySelected != null) setViewMenu(1);
+    else setViewMenu(0);
     setTimeout(() => {
       setViewCart(false);
     }, 1000);
@@ -579,21 +581,23 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
 
   const handleLoad = () => {
     console.log('first');
-    // window.scrollTo({
-    //   top: 0,
-    //   behavior: 'instant'
-    // });
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+      });
+    }, 0);
   }
 
   return (
-    <main className='z-3 overflow-scroll'>
+    <main className='z-3'>
+    <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute top-0 start-0 bg-white z-2 pb-5- vw-100`} onLoad={handleLoad}>
       <CartHeader handleClickBack={handleClickBack} />
-    <div className={`animate__animated overflow-scroll ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-fixed top-0 start-0 bg-white z-2 pb-5-`} onLoad={handleLoad}>
 
       <form className='' onSubmit={handleClickOrdenar}>
         {/* Header del cart */}
 
-        <section className='w-100 h-100 overflow-scroll pb-5 mb-3'>
+        <section className=' h-100 pb-5-mb-3'>
 
           <div className='px-4'>
 
@@ -620,8 +624,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
         {/* <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100 shadow-lg border-top' style={{}}> */}
       </form>
       <ToastContainer />
-    </div>
-        <div className='p-3 z-3 bg-white position-absolute bottom-0 start-0 w-100'>
+        <div className='p-3 z-3 bg-white position-sticky bottom-0 start-0 w-100'>
           { existUser && !isOrdenando
             ? <button type='submit' className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Ordenar</button>
               : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>
@@ -629,6 +632,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
             : <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickRegistrarse}>Registrarse</button>
           }
         </div>
+    </div>
     </main>
   );
 }
