@@ -47,10 +47,10 @@ const MenuHeader = ({viewSectionInHeader, text, viewMenu, setViewMenu, setArticl
   
 
   return (
-    <header className={`d-flex justify-content-between py-4 position-fixed w-100 bg-white start-0 z-2 ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-10 z-3' : ''}`} style={{height:'10%'}}>
+    <header className={`d-flex justify-content-between py-4 position-sticky top-0 w-100 bg-white start-0 z-2 ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-10 z-3' : ''}`} >
       <IoIosArrowBack className='display-4' onClick={handleClickBack} /> 
       <p className='fs-5 w-75 fw-medium position-absolute start-50 top-50 translate-middle text-center'>{viewSectionInHeader ? text : null}</p>
-      <div className='d-flex me-4 align-items-center gap-2'>
+      <div className='d-flex me-2 align-items-center gap-2'>
         <p className='m-0 fw-medium fs-4'>{amountPoints}</p>
         <FaPizzaSlice className='fs-5' />
       </div>

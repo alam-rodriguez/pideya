@@ -28,7 +28,7 @@ import CartTotal from './CartTotal';
 import { useNavigate } from 'react-router-dom';
 
 
-const Cart = ({setViewCart, setViewMenu, resetCart}) => {
+const Cart = ({setViewCart, setViewMenu, resetCart, setViewmenuOrArticles}) => {
 
   const navigate = useNavigate();
 
@@ -564,6 +564,7 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     if(categorySelected != null) setViewMenu(1);
     else setViewMenu(0);
     setTimeout(() => {
+      setViewmenuOrArticles(true);
       setViewCart(false);
     }, 1000);
   }
@@ -584,56 +585,86 @@ const Cart = ({setViewCart, setViewMenu, resetCart}) => {
     setTimeout(() => {
       window.scrollTo({
         top: 0,
-        behavior: 'instant'
+        behavior: 'auto'
       });
     }, 0);
   }
 
+  const [viewSectionInHeader, setViewSectionInHeader] = useState(false);
+  const handleScroll2 = () => {
+    console.log(window.scrollY)
+    const scrollTop = window.scrollY;
+    if(scrollTop > 30) setViewSectionInHeader(true);
+    else setViewSectionInHeader(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll2);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll2);
+    };
+  }, []);
+
+  // useEffect( () => {
+  //   setTimeout(() => {
+  //     window.scrollTo({
+  //       top: 0,
+  //       behavior: 'instant'
+  //     });
+  //   }, 0);
+  // }, [] );
+
   return (
-    <main className='z-3'>
-    <div className={`animate__animated ${!close ? 'animate__slideInUp' : 'animate__slideOutDown'} position-absolute top-0 start-0 bg-white z-2 pb-5- vw-100`} onLoad={handleLoad}>
+    // <main className='z-3'>
+    // {/* <div className={`animate__animated ${!close ? 'animate__slideInUp- animate__fadeInUpBig' : 'animate__slideOutDown'} position-relative top-0 start-0 bg-white z-3 pb-5- vw-100`} onLoad={handleLoad}> */}
+    // <div className={`position-absolute start-0 top-0 animate__animated ${!close ? 'animate__slideInUp- animate__fadeInUpBig' : 'animate__slideOutDown'} bg-white z-3`} onLoad={handleLoad}>
+
+    <div className={`bg-white animate__animated ${!close ? 'animate__slideInUp- animate__fadeInUpBig' : 'animate__slideOutDown'}`} onLoad={handleLoad}>
+      <>
       <CartHeader handleClickBack={handleClickBack} />
 
-      <form className='' onSubmit={handleClickOrdenar}>
-        {/* Header del cart */}
+<form className='' onSubmit={handleClickOrdenar}>
+  {/* Header del cart */}
 
-        <section className=' h-100 pb-5-mb-3'>
+  <section className='h-100 pb-5-mb-3'>
 
-          <div className='px-4'>
+    <div className='px-4'>
 
-            {/* Info Deal */}
-            <CartInfoDeal setMetodoPago={setMetodoPago} setHoraQuierePedido={setHoraQuierePedido} />
+      {/* Info Deal */}
+      <CartInfoDeal setMetodoPago={setMetodoPago} setHoraQuierePedido={setHoraQuierePedido} />
 
-            {/* Articles view */}
-            <CartArticlesView handleClickBack={handleClickBack} />
+      {/* Articles view */}
+      <CartArticlesView handleClickBack={handleClickBack} />
 
-            {/* Btn para ir a menu */}
-            <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 mt-5`} onClick={handleClickAddMoreArticles}>Agregar mas Articulo</button>
+      {/* Btn para ir a menu */}
+      <button className={`btn ${color1.btnOutline} form-control fs-5 p-2 mt-5`} onClick={handleClickAddMoreArticles}>Agregar mas Articulo</button>
 
-            {/* Info Client */}
-            <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
+      {/* Info Client */}
+      <CartInfoClient nombre={nombre} setNombre={setNombre} direccion={direccion} setDireccion={setDireccion} telefono={telefono} setTelefono={setTelefono} setEntrega={setEntrega} entrega={entrega} setLugarDelivery={setLugarDelivery} setComentario={setComentario} />
 
-          </div>
-
-          {/* Totales */}
-          <CartTotal isDelivery={entrega} precioDelivey={lugarDelivery.costo} lugarDelivery={lugarDelivery} setPrecioTotal={setPrecioTotal} total={total} setTotal={setTotal} puntos={puntos} setPuntos={setPuntos} />
-
-        </section>
-
-        {/* Btn para ordenar */}
-        {/* <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100 shadow-lg border-top' style={{}}> */}
-      </form>
-      <ToastContainer />
-        <div className='p-3 z-3 bg-white position-sticky bottom-0 start-0 w-100'>
-          { existUser && !isOrdenando
-            ? <button type='submit' className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Ordenar</button>
-              : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>
-              : isOrdenando && isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickVolver}>Volver</button>
-            : <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickRegistrarse}>Registrarse</button>
-          }
-        </div>
     </div>
-    </main>
+
+    {/* Totales */}
+    <CartTotal isDelivery={entrega} precioDelivey={lugarDelivery.costo} lugarDelivery={lugarDelivery} setPrecioTotal={setPrecioTotal} total={total} setTotal={setTotal} puntos={puntos} setPuntos={setPuntos} />
+
+  </section>
+
+  {/* Btn para ordenar */}
+  {/* <div className='p-4 pb-5 bg-white position-absolute bottom-0 w-100 shadow-lg border-top' style={{}}> */}
+</form>
+<ToastContainer />
+  <div className='p-3 z-3 bg-white position-sticky bottom-0 start-0 w-100'>
+    { existUser && !isOrdenando
+      ? <button type='submit' className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Ordenar</button>
+        : isOrdenando && !isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`}>Espere</button>
+        : isOrdenando && isOrded ? <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickVolver}>Volver</button>
+      : <button className={`p-2 fs-5 rounded-3 btn ${color1.btn} form-control`} onClick={handleClickRegistrarse}>Registrarse</button>
+    }
+  </div>
+      </>
+    </div>
+    // </main>
   );
 }
 

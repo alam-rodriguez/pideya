@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 // Context
 import { AppContext } from '../../context/AppContext';
@@ -232,23 +232,124 @@ const MenuArticles = () => {
   
   //style={{marginBottom:/*!viewCart ? 60:''*/ , /*marginTop:!viewCart ? 90 : ''*/}}
 
+  const [viewmenuOrArticles, setViewmenuOrArticles] = useState(true);
+
+
+
+  // const child1Ref = useRef();
+  // const child2Ref = useRef();
+  // const [parentHeight, setParentHeight] = useState(0);
+  // const updateParentHeight = () => {
+  //   const child1Height = child1Ref.current.offsetHeight;
+  //   const child2Height = child2Ref.current.offsetHeight;
+  //   const maxHeight = Math.max(child1Height, child2Height);
+  //   setParentHeight(maxHeight);
+  // };
+
+  // // useEffect(() => {
+  // //   updateParentHeight();
+  // //   window.addEventListener('resize', updateParentHeight);
+
+  // //   return () => {
+  // //     window.removeEventListener('resize', updateParentHeight);
+  // //   };
+  // // }, []);
+  // useLayoutEffect(() => {
+  //   const child1Height = child1Ref.current.clientHeight;
+  //   const child2Height = child2Ref.current.clientHeight;
+  //   const maxHeight = Math.max(child1Height, child2Height);
+  //   setParentHeight(maxHeight);
+  // }, []);
+
+  // const child1Ref = useRef(null);
+  // const child2Ref = useRef(null);
+  // const [parentHeight, setParentHeight] = useState(0);
+
+  // useEffect(() => {
+  //   const updateParentHeight = () => {
+  //     if (child1Ref.current && child2Ref.current) {
+  //       const child1Height = child1Ref.current.clientHeight;
+  //       const child2Height = child2Ref.current.clientHeight;
+  //       const maxHeight = Math.max(child1Height, child2Height);
+  //       setParentHeight(maxHeight);
+  //     }
+  //   };
+  //   console.warn(child1Ref.current.clientHeight);
+
+  //   // Call the function once on mount
+  //   updateParentHeight();
+
+  //   // Call the function again when the window is resized
+  //   window.addEventListener('resize', updateParentHeight);
+
+  //   // Cleanup: remove the event listener when the component unmounts
+  //   return () => {
+  //     window.removeEventListener('resize', updateParentHeight);
+  //   };
+  // }, [viewCart]);
+
+  // const parentRef = useRef(null);
+  // const child1Ref = useRef(null);
+  // const child2Ref = useRef(null);
+  // const [parentHeight, setParentHeight] = useState(0);
+
+  // useEffect(() => {
+  //   const updateParentHeight = () => {
+  //     if (parentRef.current && child1Ref.current && child2Ref.current) {
+  //       console.warn('------')
+  //       const child1Height = child1Ref.current.clientHeight;
+  //       const child2Height = child2Ref.current.clientHeight;
+  //       const maxHeight = Math.max(child1Height, child2Height);
+  //       setParentHeight(child1Height);
+  //     }
+  //   };
+
+  //   updateParentHeight();
+  //   window.addEventListener('resize', updateParentHeight);
+
+  //   return () => {
+  //     window.removeEventListener('resize', updateParentHeight);
+  //   };
+  // }, [viewCart]);
+
+  const [heightCart, setHeightCart] = useState(0);
+
+  useEffect( () => {
+    
+    const cart = document.querySelector('.cart');
+    if(cart != null) {
+      console.log(cart.clientHeight)
+      setHeightCart(cart.clientHeight);
+      // if(cart.current != undefined)console.warn(cart.current.clientHeight);
+
+    }
+  }, [viewCart] );
   
 
   if(categoriesOfMenu != null){
     return (
-      <main>
+      <main className={`${viewCart ? 'overflow-hidden': ''}`} style={{maxHeight:viewCart ? heightCart:''}}>
         
-        <div className={`d-flex flex-column flex-grow-1 col-12 col-md-6 mx-auto vh-100 ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-2 px-3-  ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} >
+
+        {/* <div className={` col-12 col-md-6 ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-2 px-3-  ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} > */}
+        
+        { viewCart 
+          ? <div  className={`cart child1 position-absolute start-0 top-0 animate__animated  z-3`} >
+              <Cart  setViewCart={setViewCart} setViewMenu={setViewMenu} resetCart={resetCart} setViewmenuOrArticles={setViewmenuOrArticles} />
+            </div>
+          : <></>
+        }
+
+        
+        <div className={`child2 px-3 z-2 position-relative start-0 top-0 ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} style={{paddingBottom:70 , paddingTop:0}}>
         <MenuHeader viewSectionInHeader={viewSectionInHeader} text={viewMenu == 0 ? 'Menu' : categorySelected?.nombre} className='' viewMenu={viewMenu} setViewMenu={setViewMenu} setArticlesOfCategorySelected={setArticlesOfCategorySelected} viewPreviewInfoArticle={viewPreviewInfoArticle}/>
-        
-        <div className=' bg-danger- px-3 top-0 start-0 position-absolute' style={{paddingBottom:60 , paddingTop:90}}>
 
           {/* <div className={`position-absolute px-3 vh-100 vw-100 p-0 m-0 start-0 animate__animated animate__fadeIn z-0${viewPreviewInfoArticle ? 'bg-black bg-opacity-25' : ''}`}> */}
           {/* Header */}
           
           { viewMenu == 0 ? 
             <>
-              <h2 className='fs-1 fw-bold'>Menu</h2>
+              <h2 className=' fs-1 fw-bold'>Menu</h2>
 
               <div className='d-flex flex-wrap justify-content-between'>
                 { categoriesOfMenu != null
@@ -308,16 +409,13 @@ const MenuArticles = () => {
             : <></>
           }
 
-          { viewCart 
-            ? <Cart setViewCart={setViewCart} setViewMenu={setViewMenu} resetCart={resetCart} />
-            : <></>
-          }
+          
           {/* </div> */}
 
           <ToastContainer />
 
         </div>
-        </div>
+        {/* </div> */}
 
       </main>
     );

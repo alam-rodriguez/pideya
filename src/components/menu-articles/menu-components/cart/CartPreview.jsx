@@ -6,7 +6,7 @@ import { MdShoppingCart } from 'react-icons/md';
 // Context
 import { AppContext } from '../../../../context/AppContext';
 
-const CartPreview = ({setViewCart, setViewMenu}) => {
+const CartPreview = ({setViewCart, setViewMenu, setViewmenuOrArticles}) => {
 
   const { color1, cart, cartOfCategoryPoints, setCartOfCategoryPoints, } = useContext(AppContext);
 
@@ -23,7 +23,8 @@ const CartPreview = ({setViewCart, setViewMenu}) => {
   const handleClick = () => {
     setViewCart(true);
     setTimeout(() => {
-      setViewMenu(3);
+      // setViewmenuOrArticles(false);
+      // setViewMenu(3);
     }, 1000);
   }
 
