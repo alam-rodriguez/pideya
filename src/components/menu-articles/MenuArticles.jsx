@@ -317,18 +317,22 @@ const MenuArticles = () => {
   useEffect( () => {
     
     const cart = document.querySelector('.cart');
-    if(cart != null) {
-      console.log(cart.clientHeight)
+    const articleSelected = document.querySelector('.article-selected');
+    if(cart != null && viewCart) {
+      console.warn(cart.clientHeight)
       setHeightCart(cart.clientHeight);
       // if(cart.current != undefined)console.warn(cart.current.clientHeight);
-
     }
-  }, [viewCart] );
+    if(articleSelected != null){
+      console.warn(articleSelected.clientHeight);
+      setHeightCart(articleSelected.clientHeight);
+    }
+  }, [viewCart, viewOrderSelectArticle] );
   
 
   if(categoriesOfMenu != null){
     return (
-      <main className={`${viewCart ? 'overflow-hidden': ''}`} style={{maxHeight:viewCart ? heightCart:''}}>
+      <main className={` ${viewCart ? 'overflow-hidden ': ''}`} style={{maxHeight:viewCart ? heightCart:''}}>
         
 
         {/* <div className={` col-12 col-md-6 ${!haEstadoEnMenu ? 'animate__animated animate__fadeIn' : ''} z-2 px-3-  ${viewPreviewInfoArticle ? 'animate__animatedanimate__fadeIn z-0 bg-black bg-opacity-25 z-3' : ''}`} > */}
@@ -349,7 +353,7 @@ const MenuArticles = () => {
           
           { viewMenu == 0 ? 
             <>
-              <h2 className=' fs-1 fw-bold'>Menu</h2>
+              <h2 className='fs-1 fw-bold'>Menu</h2>
 
               <div className='d-flex flex-wrap justify-content-between'>
                 { categoriesOfMenu != null
@@ -377,7 +381,7 @@ const MenuArticles = () => {
                 : <></> 
               }
               { viewOrderSelectArticle
-                ? <OrderSelectArticle setViewMenu={setViewMenu} setViewOrderSelectArticle={setViewOrderSelectArticle} articlesOfCategorySelected={articlesOfCategorySelected} />
+                ? <OrderSelectArticle className='article-selected' setViewMenu={setViewMenu} setViewOrderSelectArticle={setViewOrderSelectArticle} articlesOfCategorySelected={articlesOfCategorySelected} />
                 : <></>
               }
               <div >
@@ -404,12 +408,11 @@ const MenuArticles = () => {
           : <></>
           }
 
-          { ((cart.length > 0 || cartOfCategoryPoints.length > 0) && (!viewOrderSelectArticle) ) 
+          { ((cart.length > 0 || cartOfCategoryPoints.length > 0) && (!viewOrderSelectArticle)) 
             ? <CartPreview setViewMenu={setViewMenu} setViewCart={setViewCart} />
             : <></>
           }
 
-          
           {/* </div> */}
 
           <ToastContainer />

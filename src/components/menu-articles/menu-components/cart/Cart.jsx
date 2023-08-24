@@ -564,8 +564,8 @@ const Cart = ({setViewCart, setViewMenu, resetCart, setViewmenuOrArticles}) => {
     if(categorySelected != null) setViewMenu(1);
     else setViewMenu(0);
     setTimeout(() => {
-      setViewmenuOrArticles(true);
       setViewCart(false);
+      setViewmenuOrArticles(true);
     }, 1000);
   }
 

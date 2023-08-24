@@ -15,7 +15,7 @@ const CartPreview = ({setViewCart, setViewMenu, setViewmenuOrArticles}) => {
   useEffect( () => {
     let PedidoPrecios = 0;
     cart.map( (pedido) => {
-      PedidoPrecios += Number(pedido.precioVariosArticles); 
+      return PedidoPrecios += Number(pedido.precioVariosArticles); 
     });
     setTotal(PedidoPrecios);
   }, [cart] );

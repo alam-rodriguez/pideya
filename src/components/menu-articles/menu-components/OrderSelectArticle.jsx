@@ -15,7 +15,7 @@ import { getUrlImage } from '../../../firebase/firebaseStorage';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
-const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfCategorySelected}) => {
+const OrderSelectArticle = ({className, setViewMenu, setViewOrderSelectArticle, articlesOfCategorySelected}) => {
 
   const {color1, articleSelected, categorySelected,  setArticleSelected, precioArticleSelected, setPrecioArticleSelected, setCart,  cartOfCategoryPoints, setCartOfCategoryPoints, infoPointsUser, imagenesArticulos, setImagenesArticulos} = useContext(AppContext);
 
@@ -256,9 +256,9 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
   // }, []);
   
   return (
-    <main className='bg-white'>
-      <div className={`overflow-auto- animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-absolute top-0 start-0 bg-white z-3 w-100 h-100`} style={{}}>
-        <section className=' w-100 z-0 d-flex justify-content-center align-items-center' style={{height: 220}}>
+    <main className='h-100 bg-danger'>
+      <div className={`${className} overflow-auto- animate__animated ${!close ? 'animate__fadeIn': 'animate__fadeOut'} position-absolute top-0 start-0 bg-white z-3 w-100 h-100`} style={{minHeight:'100vh'}}>
+        <section className=' w-100 z-0 d-flex justify-content-center align-items-center h-25' style={{}}>
           <div className='position-absolute start-0 top-0 d-flex' style={{width: '100px', height:'100px', clipPath: 'polygon(0 0, 0% 100%, 100% 0)', background:'linear-gradient(140deg, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0) 55%)'}}>
             <ImCancelCircle className='position-absolute text-white display-3' style={{top:10, left:10}} onClick={handleClickBack} />
           </div>
@@ -269,7 +269,7 @@ const OrderSelectArticle = ({setViewMenu, setViewOrderSelectArticle, articlesOfC
               </div> 
           }
         </section>
-        <section className='bg-white rounded-top-5 shadow-lg w-100 h-100 position-relative p-4 d-flex flex-column justify-content-between pb-0' style={{bottom:30}}>
+        <section className='bg-white rounded-top-5 shadow-lg h-75 position-relative p-4 d-flex flex-column justify-content-between pb-0' style={{bottom:30}}>
 
           <div className='mb-5' style={{marginBottom:0}}>
             { articleSelected.complex 
