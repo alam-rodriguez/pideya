@@ -53,8 +53,13 @@ const SignInLikeAdmin1 = () => {
       // console.log(token);
       // const token = requestPermission();
 
-      await registrarAdmin();
-      navigate('/registro-like-admin/details-app');
+      const res2 = await registrarAdmin();
+      if(res2 != false){
+        alert('Te has registrado como admin');
+        setTimeout( () => {
+          navigate('/registro-like-admin/details-app');
+        }, 5000);
+      }
     }else {
 
       // const res = await registrarUsuario(appInfo.admin, appInfo.adminsTokens);

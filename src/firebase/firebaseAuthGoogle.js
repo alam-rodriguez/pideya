@@ -23,8 +23,13 @@ export const registrarAdmin = async (token) => {
           const token = await getToken(messaging, {
             vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
           });
+
+          await guardarAdmin(result.user.email, token);
           console.log(token);
-          return(token);
+          alert(token);
+          return result.user.email;
+
+          // return(token);
         } else {
           console.log('permiso denegado');
           return false;
@@ -33,11 +38,13 @@ export const registrarAdmin = async (token) => {
     }
     const token = requestPermission();
 
+    // console.log(token);
+
     await guardarAdmin(result.user.email, token);
     return result.user.email;
   } catch (e) {
     console.log(e);
-    return e;
+    return false;
   }
 }
 
