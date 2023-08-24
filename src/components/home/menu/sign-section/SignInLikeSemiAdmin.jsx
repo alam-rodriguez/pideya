@@ -46,25 +46,42 @@ const SignInLikeSemiAdmin = () => {
     }
   }, [] );
 
-  const genearToken = () => {
-    const messaging = getMessaging();
-    getToken(messaging, { vapidKey: '<YOUR_PUBLIC_VAPID_KEY_HERE>' }).then((currentToken) => {
-      if (currentToken) {
-        return currentToken;
-      } else {
-        function requestPermission() {
-          console.log('Requesting permission...');
-          Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-              console.log('Notification permission granted.');
-            }
-          })
+  // const generarToken = async () => {
+    function requestPermission() {
+      console.log('Requesting permission...');
+      Notification.requestPermission().then( async (permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+          const token = await getToken(messaging, {
+            vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+          });
+          console.log(token);
+          return(token);
+        } else {
+          console.log('permiso denegado');
+          return false;
         }
-      }
-    }).catch((err) => {
-      console.log(err);
-      // ...
-    });
+      });
+    // }
+    // const messaging = getMessaging();
+    // getToken(messaging, { vapidKey: '<YOUR_PUBLIC_VAPID_KEY_HERE>' }).then((currentToken) => {
+    //   if (currentToken) {
+    //     return currentToken;
+    //   } else {
+    //     function requestPermission() {
+    //       console.log('Requesting permission...');
+    //       Notification.requestPermission().then((permission) => {
+    //         if (permission === 'granted') {
+    //           console.log('Notification permission granted.');
+    //         }
+    //       })
+    //     }
+    //   }
+    // }).catch((err) => {
+    //   console.log(err);
+    //   // ...
+    // });
+    
   }
 
   const logUserAdmin = async () => {
@@ -85,10 +102,11 @@ const SignInLikeSemiAdmin = () => {
 
         admin = await registrarSemiAdmin();
 
-        const token = await getToken(messaging, {
-          vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
-        }).catch(e => console.log(e));
-        console.log(token);
+        // const token = await getToken(messaging, {
+        //   vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+        // }).catch(e => console.log(e));
+        // console.log(token);
+        const token = requestPermission();
 
         const admins = [ admin ];
         const newAdminsTokens = {...semiAdmins.adminsTokens};
@@ -100,10 +118,11 @@ const SignInLikeSemiAdmin = () => {
         // else console.log('ha ocurrido un error');
       } else if(semiAdmins.semisAdmins.length <= 5){
 
-        const token = await getToken(messaging, {
-          vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
-        }).catch(e => console.log(e));
-        console.log(token); 
+        // const token = await getToken(messaging, {
+        //   vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+        // }).catch(e => console.log(e));
+        // console.log(token); 
+        const token = requestPermission();
 
         let createAdmin = true;
         admin = await registrarSemiAdmin();
@@ -125,19 +144,23 @@ const SignInLikeSemiAdmin = () => {
           if(admin != false) saveAdminBD = await guardarSemisAdmins( admins, newAdminsTokens );
         }else {
 
-          const admin = registrarSemiAdmin();
+          const admin = await registrarSemiAdmin();
           console.log(admin)
 
-          const token = await getToken(messaging, {
-            vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
-          }).catch(e => console.log(e));
-          console.log(token);
-          console.log(admin);
+          // const token = await getToken(messaging, {
+          //   vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+          // }).catch(e => console.log(e));
+          // console.log(token);
+          // console.log(admin);
+        const token = requestPermission();
 
+
+        console.log(semiAdmins.adminsTokens)
           let newAdminsTokens = {...semiAdmins.adminsTokens};
           newAdminsTokens[admin] = token;
           // const adminsTokens =  {...semiAdmins.adminsTokens, admin:token};
-          if(admin != false) saveAdminBD = await guardarSemisAdmins( semiAdmins.admins, newAdminsTokens );
+          console.log(semiAdmins.admins);
+          if(admin != false) saveAdminBD = await guardarSemisAdmins( semiAdmins.semisAdmins, newAdminsTokens );
           alert('Ya esta cuenta esta registrada como semi admin');
         }
         // if(saveAdminBD) navigate('/home');
