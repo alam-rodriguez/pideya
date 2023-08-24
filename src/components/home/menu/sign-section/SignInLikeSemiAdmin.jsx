@@ -90,8 +90,17 @@ const SignInLikeSemiAdmin = () => {
 
       const semiAdmins = await obtenerInfoApp();
 
-      let admin = undefined;
+      // let admin = undefined;
       let saveAdminBD = true;
+
+      let admin = await registrarSemiAdmin();
+
+      if(admin == semiAdmins.admin){
+        alert('eres admin y esta pagina es solo para los semis-Admins.');
+        resolve();
+        return;
+      }
+
 
       // const token = await getToken(messaging, {
       //   vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
@@ -108,6 +117,7 @@ const SignInLikeSemiAdmin = () => {
         // console.log(token);
         const token = requestPermission();
 
+        console.log(1)
         const admins = [ admin ];
         const newAdminsTokens = {...semiAdmins.adminsTokens};
         newAdminsTokens[admin] = token;
@@ -123,6 +133,7 @@ const SignInLikeSemiAdmin = () => {
         // }).catch(e => console.log(e));
         // console.log(token); 
         const token = requestPermission();
+        console.log(2)
 
         let createAdmin = true;
         admin = await registrarSemiAdmin();
@@ -159,7 +170,7 @@ const SignInLikeSemiAdmin = () => {
           let newAdminsTokens = {...semiAdmins.adminsTokens};
           newAdminsTokens[admin] = token;
           // const adminsTokens =  {...semiAdmins.adminsTokens, admin:token};
-          console.log(semiAdmins.admins);
+          console.log(semiAdmins.semisAdmins);
           if(admin != false) saveAdminBD = await guardarSemisAdmins( semiAdmins.semisAdmins, newAdminsTokens );
           alert('Ya esta cuenta esta registrada como semi admin');
         }

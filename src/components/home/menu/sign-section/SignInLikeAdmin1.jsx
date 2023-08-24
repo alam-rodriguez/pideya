@@ -14,8 +14,8 @@ import SingInButton from './SingInButton';
 import { useNavigate } from 'react-router-dom';
 
 // Firebase 
-import { registrarAdmin } from '../../../../firebase/firebaseAuthGoogle';
-import { existAdmin } from '../../../../firebase/firebaseFirestore';
+import { changeTokenAdmin, registrarAdmin, registrarUsuario } from '../../../../firebase/firebaseAuthGoogle';
+import { existAdmin, obtenerInfoApp } from '../../../../firebase/firebaseFirestore';
 // import { existAdmin, registrarAdmin, registrarUsuario } from '../../../../firebase/firebase';
 
 // Contetx
@@ -41,19 +41,53 @@ const SignInLikeAdmin1 = () => {
     }
   }, [] );
 
+  
+
   const logUserAdmin = async () => {
     
     const res = await existAdmin();
     if(res == false){
-      const token = await getToken(messaging, {
-        vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
-      }).catch(e => console.log(e));
-      console.log(token);
+      // const token = await getToken(messaging, {
+      //   vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+      // }).catch(e => console.log(e));
+      // console.log(token);
+      // const token = requestPermission();
 
-      await registrarAdmin(token);
+      await registrarAdmin();
       navigate('/registro-like-admin/details-app');
     }else {
-      console.log('Lo siento pero no se puede cambiar el admin de la app una vez creado, para mas informacion comuniquese con el desarrollador');
+
+      // const res = await registrarUsuario(appInfo.admin, appInfo.adminsTokens);
+
+      // function requestPermission() {
+      //   console.log('Requesting permission...');
+      //   Notification.requestPermission().then( async (permission) => {
+      //     if (permission === 'granted') {
+      //       console.log('Notification permission granted.');
+      //       const token = await getToken(messaging, {
+      //         vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+      //       });
+      //       console.log(token);
+      //       return(token);
+      //     } else {
+      //       console.log('permiso denegado');
+      //       return false;
+      //     }
+      //   });  
+      // }
+      // const token = requestPermission();
+
+      // const newAdminsTokens = {...adminsTokens};
+      //     newAdminsTokens[admin] = currentToken; 
+
+      //     actualizarTokensAdmins(newAdminsTokens);
+
+      const infoApp = await obtenerInfoApp();
+
+      console.log(infoApp);
+
+      await changeTokenAdmin(infoApp.admin, infoApp.adminsTokens);
+      alert('Lo siento pero no se puede cambiar el admin de la app una vez creado, para mas informacion comuniquese con el desarrollador');
     }
   }
 

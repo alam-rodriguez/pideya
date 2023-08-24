@@ -14,6 +14,25 @@ const provider = new GoogleAuthProvider();
 export const registrarAdmin = async (token) => {
   try {
     const result = await signInWithPopup(auth, provider);
+
+    function requestPermission() {
+      console.log('Requesting permission...');
+      Notification.requestPermission().then( async (permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+          const token = await getToken(messaging, {
+            vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+          });
+          console.log(token);
+          return(token);
+        } else {
+          console.log('permiso denegado');
+          return false;
+        }
+      });  
+    }
+    const token = requestPermission();
+
     await guardarAdmin(result.user.email, token);
     return result.user.email;
   } catch (e) {
@@ -21,7 +40,6 @@ export const registrarAdmin = async (token) => {
     return e;
   }
 }
-
 
 // Registro de usuario como semi admin
 export const registrarSemiAdmin = async () => {
@@ -61,7 +79,7 @@ export const registrarUsuario = async (admin, adminsTokens) => {
 
 
       // const messaging = getMessaging();
-      getToken(messaging, { vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co' }).then( (currentToken) => {
+      getToken(messaging, { vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co' }).then( async (currentToken) => {
         if (currentToken) {
         
           console.log('Si hay token', currentToken)
@@ -72,7 +90,7 @@ export const registrarUsuario = async (admin, adminsTokens) => {
           const newAdminsTokens = {...adminsTokens};
           newAdminsTokens[admin] = currentToken; 
 
-          actualizarTokensAdmins(newAdminsTokens);
+          await actualizarTokensAdmins(newAdminsTokens);
         } else {
           // Show permission request UI
           console.log('No registration token available. Request permission to generate one.');
@@ -103,6 +121,53 @@ export const registrarUsuario = async (admin, adminsTokens) => {
     await saveInfoUser(infoUser);
     await createEstadisticas(result.user.email);
     return result.user.email;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// Cambiar token de admin
+export const changeTokenAdmin = async (admin, adminsTokens) => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    
+    function requestPermission() {
+      console.log('Requesting permission...');
+      Notification.requestPermission().then( async (permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+          const token = await getToken(messaging, {
+            vapidKey: 'BFawL779CXJIflZHL6ERnDErm4qUQZiixQPTxAyKyiO3G6Sxv9tyBL3JEtNZhrxTxmzz6hjoepQEjtsf7fXw_co'
+          });
+          if(result.user.email != admin){
+            alert('no eres el admin')
+            return;
+          }
+          console.log(token);
+          const newAdminsTokens = {...adminsTokens};
+          newAdminsTokens[admin] = token; 
+          console.log(newAdminsTokens);
+          await actualizarTokensAdmins(newAdminsTokens);
+          return token;
+        } else {
+          console.log('permiso denegado');
+          return false;
+        }
+      });  
+    }
+    const token = requestPermission();
+    console.log(token)
+
+    if(token){
+      // const newAdminsTokens = {...adminsTokens};
+      // newAdminsTokens[admin] = token; 
+      // console.log(newAdminsTokens);
+      // await actualizarTokensAdmins(newAdminsTokens);
+    }
+
+    // await guardarAdmin(result.user.email, token);
+    return true;
   } catch (e) {
     console.log(e);
     return false;
