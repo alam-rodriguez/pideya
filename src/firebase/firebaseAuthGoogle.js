@@ -144,6 +144,7 @@ export const changeTokenAdmin = async (admin, adminsTokens) => {
             alert('no eres el admin')
             return;
           }
+          alert(token);
           console.log(token);
           const newAdminsTokens = {...adminsTokens};
           newAdminsTokens[admin] = token; 
